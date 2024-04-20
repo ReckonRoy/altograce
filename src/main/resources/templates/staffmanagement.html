@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Company_name: Staff management</title>
+	<link rel="stylesheet" href="../static/css/modals.css" th:href="@{/css/modals.css}" />
+	<link rel="stylesheet" type="text/css" href="../static/css/users/staffmanagement.css" th:href="@{/css/users/staffmanagement.css}">
+</head>
+<body>
+	<div id="wrapper">
+		<div id="shadow-wrapper"></div>
+		<div id="result-container"></div>
+		<!--Modal box for messages-->
+		<div id="modal-messages" class="modal-messages">
+			<div id="modal-bar">
+				<div id="mb-header"></div>
+				<div><button id="modal-close-btn">X</button></div>
+			</div>
+			<div id="modal-body">
+				<p id="modal-message"></p>
+			</div>
+			<div id="modal-footer">
+				<button id="modal-ok-btn">OK</button>
+			</div>
+		</div>
+		<!-- close modal box -->
+		
+		<admin-header id="nav-wrapper">
+		</admin-header>
+		<!-- End Side Nav -->
+
+		<div id="main">
+			<div id="main-header">
+				<div id="company-profile">
+					<label>Select company you would like to interact with:</label>
+					<div id="selected-company">
+						<!-- Displayed company text from selected list -->
+						Company?
+						<span class="dropdown-icon">▼</span>
+					</div>
+					<div class="company-list">
+						<!-- Message to display if there is no registered company -->
+						<p class="no-companies-message">No available companies registered</p>
+						<!-- List of companies will be dynamically added here -->
+					</div>
+				</div>
+			</div>
+
+			<!--Section for View Content-->
+			<div id="view-content">
+				<employee-component id="employee-component"></employee-component>
+			</div>
+			<!-- Next of Kin Popup -->
+			<div class="overlay" id="nextOfKinOverlay">
+				<div class="popup next-of-kin-popup">
+					<h2>Next of Kin Details</h2>
+					<p><strong>Name:</strong> Jane Doe</p>
+					<p><strong>Relationship:</strong> Spouse</p>
+					<p><strong>Contact Number:</strong> +1 555-6789</p>
+					<button class="close-btn">Close</button>
+				</div>
+			</div>
+		
+			<!-- Add Next of Kin Form -->
+<div class="overlay" id="addNextOfKinOverlay">
+    <div class="popup">
+        <h2>Add Next of Kin</h2>
+        <div id="addNextOfKinForm">
+            <!-- Original Input Fields -->
+            <label for="kinName">Name:</label>
+            <input type="text" id="kinName" required>
+
+            <label for="kinRelationship">Relationship:</label>
+            <input type="text" id="kinRelationship" required>
+
+            <label for="kinContact">Contact Number:</label>
+            <input type="tel" id="kinContact" required>
+
+            <!-- Remove Duplicate Input Fields -->
+            
+            <!-- Updated Button -->
+            <button type="button" class="add-next-of-kin-btn">Submit</button>
+
+            <button type="button" class="close-btn">Close</button>
+		</div>
+    </div>
+</div>
+
+			<!--Section for Update Password Content-->
+			<div id="register-content-div">
+				<p id="error-message"></p>
+				<fieldset class="register-content">
+					<legend>Personal</legend>
+					<label for="honorofic-field">Honorofic:</label>
+					<select class="user-field" id="honorofic-field" name="honorofic">
+						<option value="Mr">Mr</option>
+						<option value="Mrs">Mrs</option>
+						<option value="Miss">Miss</option>
+						<option value="Doctor">Dr</option>
+						<option value="Profesor">Proffesor</option>
+					</select>
+					<label for="r-name">Name: </label>
+					<input type="text" id="r-name" class="r-field"/>
+
+					<label for="r-surname">Surname:</label>
+					<input type="text" id="r-surname" class="r-field"/> 
+
+					<p id="email-error"></p>
+					<label for="r-email">Email: </label>
+					<input type="text" id="r-email" class="r-field"/>
+
+					<label for="r-id">ID/Passport No:</label>
+					<input type="text" id="r-id" class="r-field"/>
+
+					<label for="ethnicity">Ethnicity:</label>
+					<select name="ethnicity" id="ethnicity-field" class="r-field">
+						<option>African</option>
+						<option>Asian</option>
+						<option>European</option>
+						<option>Hispanic</option>
+					</select>
+
+					<label for="r-nationality">Nationality:</label>
+					<input type="text" id="r-nationality" class="r-field"/>
+
+					<label for="name">Gender:</label>
+					<div class="r-field" id="gender-div">
+						<label>Male:</label>
+						<input type="radio" name="gender" value="male" class="gender-field"/>
+						<label>Female:</label>
+						<input type="radio" name="gender" value="female" class="gender-field"/>
+					</div>
+					
+					<label for="dob">DOB:</label>
+					<input type="date" id="dob" class="r-field"/>
+
+					<label for="marital-div">Marital Status:</label>
+					<div class="r-field" id="marital-div">
+						<label>Single:</label>
+						<input type="radio" name="marital_status" value="single" class="marital-field"/>
+						<label>Maried:</label>
+						<input type="radio" name="marital_status" value="married" class="marital-field"/>
+					</div>
+				</fieldset>
+				<fieldset class="register-content">
+					<legend>Contact</legend>
+					<label for="r-contact-det">Contact Details</label>
+					<input type="text" id="r-contact-det" class="r-field"/>
+				</fieldset>
+
+				<fieldset class="register-content">
+					<legend>Account</legend>
+					<label for="designation-field">Designation:</label>
+					<select class="user-field" id="designation-field">
+						<option value="CEO">CEO</option>
+						<option value="COO">CTO</option>
+						<option value="FIELD">FIELD</option>
+						<option value="RECEPTIONIST">RECEPTIONIST</option>
+					</select>
+
+					<label>Authority</label>
+					<select name="role" id="role-field" class="r-field">
+						<option>SUPER ADMIN</option>
+						<option>ADMIN</option>
+						<option>USER</option>
+					</select>
+				</fieldset>
+
+				<fieldset class="register-content">
+					<legend>Address</legend>
+					<label for="country">Country: </label>
+					<input type="text" class="r-field" id="country"/>
+
+					<label for="province">Province:</label>
+					<input type="text" class="r-field" id="province"/>
+
+					<label for="city">City:</label>
+					<input type="text" class="r-field" id="city"/>
+					
+					<label for="postal-code">Postal Code:</label>
+					<input type="text" class="r-field" id="postal-code"/>
+
+					<label for="street">Street:</label>
+					<input type="text" class="r-field" id="street"/>
+
+					<label for="stand-unit">Stand Unit:</label>
+					<input type="text" class="r-field" id="stand-unit"/>
+				</fieldset>
+                <button id="register-btn">Register</button>
+			</div>
+
+            <!-- Main Right Navigation Bar-->
+			<div id="content-profile-menu">
+				<ul>
+					<li class="c-p-c">View</li>
+					<li class="c-p-c">Add Staff Member</li>
+				</ul>
+			</div>
+		</div>
+
+		<footer></footer>
+	</div>
+</body>
+<script type="text/javascript" src="../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
+<script type="text/javascript" src="../static/js/modals.js" th:src="@{/js/modals.js}"></script>
+<script type="text/javascript" src="../static/js/users/staffmanagement.js" th:src="@{/js/users/staffmanagement.js}"></script>
+<script type="text/javascript" src="../static/js/users/employees-component.js" th:src="@{/js/users/employees-component.js}"></script>
+
+</html>

@@ -1,0 +1,21 @@
+{
+    "elements": {
+        "admin-header": {},
+        "employee-component": {
+            "attributes": {
+                "id": {}
+            }
+        }
+    },
+    "attributes": {
+        "th:text": {
+            "context": "div"
+        },
+        "th:src": {
+            "context": "script"
+        },
+        "th:href": {
+            "context": "link"
+        }
+    }
+}

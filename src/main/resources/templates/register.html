@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>AltoGraceSystemSolutions: Registration</title>
+
+	<link rel="stylesheet" type="text/css" href="../static/css/public/header.css" th:href="@{/css/public/header.css}"/>
+	<link rel="stylesheet" href="../static/css/modals.css" th:href="@{/css/modals.css}" />
+	<link rel="stylesheet" type="text/css" href="../static/css/public/register/main.css" th:href="@{/css/public/register/main.css}"/>
+	<link rel="stylesheet" type="text/css" href="../static/css/public/footer.css" th:href="@{/css/public/footer.css}"/>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="shadow-wrapper"></div>
+		<!--Modal box for messages-->
+		<div id="result-container"></div>
+		<div id="modal-messages" class="modal-messages">
+			<div id="modal-bar">
+				<div id="mb-header"></div>
+				<div><button id="modal-close-btn">X</button></div>
+			</div>
+			<div class="modal-common" id="modal-body">
+				<p id="modal-message"></p>
+			</div>
+			<div id="modal-footer">
+				<button id="modal-ok-btn">OK</button>
+			</div>
+		</div>
+		<!-- close modal box -->
+		<nav>
+			<div>Alto Grace System Solutions</div>
+			<ul>
+				<li><a href="#">Home</a></li>	
+				<li><a href="#">About us</a></li>
+				<li><a href="a">Contact us</a></li>
+				
+			</ul>
+			<div>
+				<ul>
+					<li><a th:href="@{/login}">Log In</a></li>/<li><a th:href="@{/register}">Register</a></li>
+				</ul>
+			</div>
+		</nav>
+		<header>
+			<h1>Alto Grace System Solutions</h1>
+			<h2>Profile Registraion</h2>
+		</header>
+		<hr class="hr-line"/>
+		<main>
+			<div id="user">
+				<!-- This form is for User Admin registration -->
+				<form id="user-reg-form">
+					<label for="honorofic-field">Honorofic:</label>
+					<select class="user-field" id="honorofic-field" name="honorofic">
+						<option value="Mr">Mr</option>
+						<option value="Mrs">Mrs</option>
+						<option value="Miss">Miss</option>
+						<option value="Doctor">Dr</option>
+						<option value="Profesor">Proffesor</option>
+					</select>
+					
+					<label for="name-field">Name:</label>
+					<input type="text" class="user-field" id="name-field" required/>
+
+					<label for="surname-field">Last Name:</label>
+					<input type="text" class="user-field" id="surname-field" required/>
+
+					<label for="nationality-field">Nationality:</label>
+					<input type="text" class="user-field" id="nationality-field"/>
+
+					<label for="id-passport">ID/Passport No:</label>
+					<input type="text" class="user-field" id="id-passport" required/>
+
+					<p id="email-error"></p>
+					<label for="email-field">Email:</label>
+					<input type="email" class="user-field" id="email-field" required/>
+
+					<p id="password-error"></p>
+					<label for="password-field">Password:</label>
+					<input type="password" class="user-field" id="password-field" required/>
+
+					<label for="confirm-pwd">Confirm Password:</label>
+					<input type="password" class="user-field" id="confirm-pwd"/>
+
+					<label for="role-field">Authority:</label>
+					<select class="user-field" id="role-field">
+						<option value="SUPER ADMIN">ADMIN</option>
+					</select>
+
+					<label for="designation-field">Designation:</label>
+					<select class="user-field" id="designation-field">
+						<option value="CEO">CEO</option>
+						<option value="COO">CTO</option>
+						<option value="Director">Director</option>
+					</select>
+
+					<span>Gender:</span>
+					<div class="user-field" id="gender_div">
+						<label>Male:</label>
+						<input type="radio" name="gender" class="gender-field" id="male-rad" value="Male"/>
+						<label>Female:</label>
+						<input type="radio" name="gender" class="gender-field" id="female-rad" value="Female"/>
+					</div>
+
+					<label for="contact-details1-field">Cell:</label>
+					<input type="text" class="user-field" id="contact-details1-field" required/>
+
+					<label for="country">Country: </label>
+					<input type="text" class="user-field" id="country" required/>
+
+					<label for="province">Province:</label>
+					<input type="text" class="user-field" id="province" required/>
+
+					<label for="city">City:</label>
+					<input type="text" class="user-field" id="city" required/>
+					
+					<label for="post-code">Postal Code:</label>
+					<input type="text" class="user-field" id="post-code" required/>
+
+					<label for="street">Street:</label>
+					<input type="text" class="user-field" id="street" required/>
+
+					<label for="stand-unit">Stand Unit:</label>
+					<input type="text" class="user-field" id="stand-unit"/>
+					<input type="submit" id="register-btn" value="Register" required>
+				</form>
+			</div>
+			
+		</main>
+		
+		<footer>
+			This Application is a proprietary software belonging to @copyright 2023 AltoGraceSystemSolutions
+		</footer>
+	</div>
+
+	<script type="text/javascript" src="../static/js/modals.js" th:src="@{/js/modals.js}"></script>
+	<script type="text/javascript" src="../static/js/register.js" th:src="@{/js/register.js}"></script>
+</body>
+</html>

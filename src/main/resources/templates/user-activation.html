@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activate Account</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 100px auto; /* Set top and bottom margin to auto, and left and right margins to be calculated */
+            text-align: center; /* Center align the content inside the container */
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            width: 94%;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            padding-left: 0;
+            left: 0;
+            padding-Right: 0;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .alert {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        #instructions-div{
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2><center>Activate Your Account</center></h2>
+    <div id="instructions-div">
+        <p>Hi, to complete activation process kindly provide a <em>secure password</em> for your account!</p>
+        <p>Save your password somewhere or make sure to remember it.</p>
+        <p>Click the <em>Activate Account</em> button when done.</p> 
+    </div>
+    <form id="activationForm">
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="validateAndActivate()">Activate Account</button>
+    </form>
+
+    <div id="alertMessage" class="alert" style="display: none;"></div>
+</div>
+
+<script>
+    function getParameterByName(name) {
+        var url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    // Get email from the URL
+    var email = getParameterByName('email');
+    alert(email);
+
+    // Set email value in the form
+    //document.getElementById("email").value = email;
+
+    function validateAndActivate() {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+
+        // Validate passwords
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return;
+        }
+
+        // Use Fetch API to post data
+        fetch(`/register/activate/account`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle success, e.g., redirect to a success page
+            alert(data.message);
+        })
+        .catch(error => {
+            // Handle errors, e.g., display an error message
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    function displayAlert(message, type) {
+        var alertDiv = document.getElementById('alertMessage');
+        alertDiv.innerHTML = message;
+        alertDiv.className = 'alert alert-' + type;
+        alertDiv.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

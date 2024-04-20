@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Company_name: Company Profile</title>
+	<link rel="stylesheet" href="../static/css/admin/company-management/main.css" th:href="@{/css/admin/company-management/main.css}" />
+	<link rel="stylesheet" href="../static/css/modals.css" th:href="@{/css/modals.css}" />
+	<style>
+		body {
+		margin: 0;
+		font-family: 'Arial', sans-serif;
+		background-color: #f5f5f5;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="shadow-wrapper"></div>
+		<!--Modal box for messages-->
+		<div id="modal-messages" class="modal-messages">
+			<div id="modal-bar">
+				<div id="mb-header"></div>
+				<div><button id="modal-close-btn">X</button></div>
+			</div>
+			<div id="modal-body">
+				<p id="modal-message"></p>
+			</div>
+			<div id="modal-footer">
+				<button id="modal-ok-btn">OK</button>
+			</div>
+		</div>
+		<!-- close modal box -->
+		
+		<admin-header id="nav-wrapper">
+		</admin-header>
+		<!-- End Side Nav -->
+
+        <!---Main Content--->
+		<div id="main">
+			<!--Section for View Content-->
+			<div id="view-content">
+				<!-- If no company is associated with this user account -->
+				<div th:if="${error}" th:text="${error}" class="non-co-assoc"></div>
+
+				<!-- If Company object is not null display company details -->
+				<div class="vc-com-det" th:if="${companies}" th:each="company : ${companies}">
+					<div id="com-details" class="com-details">
+						<span>Company Name:</span><div th:text="${company.name}"></div>
+						<span>Registration Number:</span><div class="registration-number" th:text="${company.regNumber}"></div>
+						<span>Tax Number:</span><div th:text="${company.taxNumber}"></div>
+						<span>FSP Number:</span><div th:text="${company.fspNumber}"></div>
+					</div>
+					<div id="com-contact-details" class="com-details">
+						<span>Email Address:</span><div th:text="${company.email}"></div>
+						<span>Country Code:</span><div th:text="${company.countryCode}"></div>
+						<span>Contact 1:</span><div th:text="${company.contact1}"></div>
+						<span>Contact 2:</span><div th:text="${company.contact2}"></div>
+						<span>Contact 3:</span><div th:text="${company.contact3}"></div>
+					</div>
+					<div id="com-address-details" class="com-details">
+						<span>Country:</span><div th:text="${company.country}"></div>
+						<span>Province:</span><div th:text="${company.province}"></div>
+						<span>City:</span><div th:text="${company.city}"></div>
+						<span>Postal Code:</span><div th:text="${company.postCode}"></div>
+						<span>Street:</span><div th:text="${company.street}"></div>
+						<span>Stand Unit:</span><div th:text="${company.standUnit}"></div>
+					</div>
+				</div>
+			</div>
+			<!--Section for Company Registration Content-->
+			<form id="company-reg-form">
+				<label for="cname-field">Company Name:</label>
+				<input type="text" class="company-field" id="cname-field"/>
+
+				<label for="reg-number">Registration Number:</label>
+				<input type="text" class="company-field" id="reg-number"/>
+
+				<label for="tax-number">Tax Number:</label>
+				<input type="text" class="company-field" id="tax-number"/>
+
+				<label for="fsp-number">FSP Number:</label>
+				<input type="text" class="company-field" id="fsp-number"/>
+
+				<label for="email">Company Email:</label>
+				<input type="text" class="company-field" id="cemail-field"/>
+
+				<label for="country-code">Country Code:</label>
+				<input type="text" class="company-field" placeholder="+27" id="country-code"/>
+
+				<label for="comp-contact_details">Contact Details 1:</label>
+				<input type="text" class="company-field" id="comp-contact-details"/>
+
+				<label for="comp-contact_details2">Contact Details 2:</label>
+				<input type="text" class="company-field" id="comp-contact-details2"/>
+
+				<label for="comp-contact_details3">Contact Details 3:</label>
+				<input type="text" class="company-field" id="comp-contact-details3"/>
+
+				<label for="country">Country: </label>
+				<input type="text" class="company-field" id="country"/>
+
+				<label for="province">Province:</label>
+				<input type="text" class="company-field" id="province"/>
+
+				<label for="city">City:</label>
+				<input type="text" class="company-field" id="city"/>
+				
+				<label for="postal-code">Postal Code:</label>
+				<input type="text" class="company-field" id="postal-code"/>
+
+				<label for="street">Street:</label>
+				<input type="text" class="company-field" id="street"/>
+
+				<label for="stand-unit">Stand Unit:</label>
+				<input type="text" class="company-field" id="stand-unit"/>
+				
+				<input type="submit" id="comp-register-btn" value="Register"/>
+			</form>
+			
+
+			<!--Section for Update Content-->
+			<div id="update-content">
+				<!-- If no company is associated with this user account -->
+				<div id="update-error-msg"></div>
+				<div id="update-content-child">
+					<select class="company-select" id="company-select">
+						<!-- Options will be populated dynamically -->
+					</select>
+					<div id="upload-p-picture">
+						<form enctype="multipart/form-data">
+							<label>Upload letter head:</label><input type="file" name="file"/>
+							<input type="submit" value="Upload" />
+						</form>
+					</div>
+					<label for="country">Country: </label>
+					<input type="text" class="company-field" id="update-country"/>
+
+					<label for="province">Province:</label>
+					<input type="text" class="company-field" id="update-province"/>
+
+					<label for="city">City:</label>
+					<input type="text" class="company-field" id="update-city"/>
+					
+					<label for="postal-code">Postal Code:</label>
+					<input type="text" class="company-field" id="update-post-code"/>
+
+					<label for="street">Street:</label>
+					<input type="text" class="company-field" id="update-street"/>
+
+					<label for="stand-unit">Stand Unit:</label>
+					<input type="text" class="company-field" id="update-stand-unit"/>
+					<button id="update-btn">Update</button>
+				</div>
+				
+			</div>
+
+            <!--Section for Bank Account Content-->
+			<div id="a-bank-det">
+				<!-- Select field to select a company to add bank details to -->
+				<select class="company-select" id="com-bank-select">
+					<!-- Options will be populated dynamically -->
+				</select>
+				<label>Bank Name:</label><input type="text" id="bank-name" class="update-field"/>
+                <label>Account Name:</label><input type="text" id="account-name" class="update-field"/>
+				<label>Account:</label><input type="text" id="account" class="update-field"/>
+				<button id="baccadd-btn">Add/Update Bank Account</button>
+			</div>
+
+			<!--Section for SLA Content-->
+			<div id="sla">
+				<!-- Select field to select a company to add bank details to -->
+				<select class="company-select" id="com-sla-select">
+					<!-- Options will be populated dynamically -->
+				</select>
+				<label for="sla-textarea">Service Level Agreement(SLA):</label><textarea wrap="hard" rows="30" cols="100" id="sla-textarea"></textarea>
+				<button id="add-sla-btn">Save</button>
+			</div>
+
+			<!--Section for Code of Conduct Content-->
+			<div id="code-o-conduct">
+				<!-- Select field to select a company to add bank details to -->
+				<select class="company-select" id="com-cod-select">
+					<!-- Options will be populated dynamically -->
+				</select>
+				<label for="coc-textarea">Code Of Conduct:</label>
+				<textarea wrap="hard" rows="30" cols="100" id="coc-textarea"></textarea>
+				<button id="coc-btn">Save</button>
+			</div>
+
+			<!--Section for ethics Content-->
+			<div id="ethics">
+				<!-- Select field to select a company to add bank details to -->
+				<select class="company-select" id="com-ethics-select">
+					<!-- Options will be populated dynamically -->
+				</select>
+				<label for="ethics-textarea">Company Ethics:</label>
+				<textarea wrap="hard" rows="10" cols="50" id="ethics-textarea"></textarea>
+				<button id="add-ethics-btn">Save</button>
+			</div>
+
+			<div id="content-profile-menu">
+				<ul>
+					<li class="c-p-c" id="view-btn">View</li>
+					<li class="c-p-c">Add Company HQ</li>
+					<li class="c-p-c" id="get-companies">Update Account</li>
+					<li class="c-p-c" id="abc-btn">Bank Account</li>
+					<li class="c-p-c" id="sla-btn">SLA</li>
+					<li class="c-p-c" id="cod-btn">Code Of Conduct</li>
+					<li class="c-p-c" id="ethics-btn">Ethics</li>
+				</ul>
+			</div>
+		</div>        
+
+        <footer></footer>
+	</div>
+	<script type="text/javascript" src="../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
+	<script type="text/javascript" src="../static/js/modals.js" th:src="@{/js/modals.js}"></script>
+	<script type="text/javascript" src="../static/js/admin/company-management/main.js" th:src="@{/js/admin/company-management/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+/*----------------------------- main -----------------------------------*/
+#main{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin-top: 50px;
+    width: 80%;
+    padding: 10px;
+    box-sizing: border-box;
+    justify-items: start;
+    margin-left: 10%;
+}
+
+/*-----------------------------------------------------------------------------------------------------*/
+#main-header {
+    box-sizing: border-box;
+    grid-column: 1/3;
+    display: flex;
+    padding: 20px 0;
+    /* Add your main header styles here */
+}
+
+#selected-company {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px solid #000;
+    cursor: pointer;
+}
+
+#selected-company .dropdown-icon {
+    margin-left: 5px;
+}
+
+.company-list {
+    position: absolute;
+    display: none;
+    border: 1px solid #333;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    border-radius: 4px;
+    z-index: 1;
+    /* Additional styling for the company list */
+}
+
+.company-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.company-list li {
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 8px;
+}
+
+.company-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.no-companies-message {
+    padding: 5px 0;
+}
+/*---------------------------------------------------------------------------------------------------*/
+.toggle-content{
+    display: none;
+}
+
+.branch-section-div{
+    display: grid;
+    grid-column:1/3;
+    padding: 10px 0;
+    grid-template-columns: 1fr 2fr;
+    border: 1px solid gray;
+    border-radius: 5px;
+    align-items: center;
+    color: black;
+    box-sizing: border-box;
+    padding: 10px 5px;
+    width: 100%;
+    margin-bottom: 50px;
+    background-color: rgb(223, 223, 223);
+}
+/*-----------View Content Style----------------------------*/
+#view-branch{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+    width: 90%;
+    row-gap: 15px;
+    border-radius: 10px;
+    background-color: #dcdcfc;
+    box-sizing: border-box;
+}
+
+.view-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 15px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    color: white;
+    padding: 20px 10;
+    margin-bottom: 30px;
+    box-sizing: border-box;
+    background-color: #dcdcfc;
+}
+
+.branch-general-det{
+    display: grid;
+    grid-template-columns: 1fr;
+    background-color: rgb(0, 80, 80);
+    padding: 10px 5px;
+}
+.branch-contact-det{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column: 1/3;
+    background-color: #05058b;
+    padding: 10px 5px;
+}
+
+.branch-address-det{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column: 1/3;
+    background-color: #05058b;
+    padding: 10px 5px;
+}
+
+#get-branches-btn{
+    grid-column: 1/3;
+    border: 1px solid black;
+    outline: 1px solid white;
+    padding: 5px 0;
+    background-color: #05058b;
+    outline: 1px solid rgb(0, 255, 34);
+    width: 15%;
+    margin-left: 25%;
+    color: black;
+}
+
+/*------------------Update Content Stryle--------------------*/
+#add-branch{
+    display: none;
+    grid-template-columns: 1fr 2fr;
+    border: 1px solid gray;
+    align-items: center;
+    width: 90%;
+    grid-row-gap: 10px;
+    padding: 50px 20px;
+    border-radius: 10px;
+    background-color: #dcdcfc;
+}
+#add-branch p{
+    grid-column: 1/3;
+}
+.company-select{
+    grid-column: 1/3;
+    color: rgb(8, 8, 8);
+    font-weight: bold;
+    padding: 10px 0;
+    margin-left: 10%;
+    background-color: rgb(214, 213, 213);
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    width: 80%;
+}
+.update-field{
+    padding: 5px 4px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+#address-field{
+    padding: 5px 4px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+#add-branch-btn{
+    grid-column:1/3;
+    padding: 5px 0;
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 50px;
+    border: 1px solid white;
+    outline: 1px solid blue;
+    border-radius: 5px;
+    background-color: blue;
+    color: white;
+    cursor: pointer;
+}
+
+#add-branch-btn:hover{
+    font-weight: bolder;
+}
+
+/*------------------Update Branch Details Content Style--------------------*/
+#update-branch-det{
+    display: none;
+    grid-template-columns: 1fr 2fr;
+    border: 1px solid gray;
+    align-items: center;
+    width: 90%;
+    grid-row-gap: 10px;
+    padding: 50px 20px;
+    border-radius: 10px;
+    background-color: #dcdcfc;
+}
+
+#b-s{
+    padding: 10px 0;
+    grid-column: 1/3;
+}
+
+.p-instruction{
+    background-color: white;
+    border: 1px solid gray;
+    grid-column: 1/3;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#update-address-field{
+    padding: 5px 4px;
+    border: 1px solid gray;
+    border-radius: 5px;
+} 
+
+#update-branch-btn{
+    grid-column:1/3;
+    padding: 5px 0;
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 50px;
+    border: 1px solid white;
+    outline: 1px solid blue;
+    border-radius: 5px;
+    background-color: blue;
+    color: white;
+    cursor: pointer;
+}
+
+#update-branch-btn:hover{
+    font-weight: bolder;
+}
+/*-------------Content Profile Menu div----------------------*/
+#content-profile-menu{
+    display: block;
+    padding: 5px;
+    background-color: ghostwhite;
+    border: 1px solid gray;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    font-weight: bolder;
+}
+
+#content-profile-menu ul{
+    margin-left: 0;
+    padding: 0;
+    list-style-type: none;
+    font-size: 16px;
+}
+
+.c-p-s{
+    padding: 10px 0;
+    text-align: left;
+    padding-left: 5px;
+    background-color: whitesmoke;
+    border: 1px solid lightgray;
+}
+
+.c-p-s:hover{
+    cursor: pointer;
+    background-color: lightgray;
+}
+
+.c-p-c{
+    padding: 10px 0;
+    text-align: left;
+    padding-left: 5px;
+}
+
+.c-p-c:hover{
+    cursor: pointer;
+    background-color: #af87d7;
+}
+/*------------------------------------------------------------------------*/

@@ -1,0 +1,226 @@
+
+/*Confrimation Modal*/
+/*----------------Modal parent----------------*/
+#modal-messages{
+    position: fixed;
+    display: none;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 3fr 1fr;
+    width: 50%;
+    height: 300px;
+    z-index: 10;
+    box-sizing: border-box;
+    top: 100px;
+    left: 25%;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    padding: 1px;
+}
+
+.success-modal{
+    border: 1px solid rgba(0, 128, 0, 0.479);
+    
+}
+
+.error-modal{
+    border: 1px solid rgba(245, 12, 12, 0.925);
+}
+
+#shadow-wrapper
+{
+    position: fixed;
+    display: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    opacity: 0.8;
+    background-color: black;
+}
+
+/*--------------end-------------------*/
+
+/*--------------Modal Header--------------------*/
+#modal-bar{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
+#mb-header{
+    color: white;
+    font-weight: normal;
+    margin-top: 3%;
+    margin-left: 5%;
+}
+
+#modal-bar button{
+    width: 30px;
+    background-color: rgb(230, 16, 16);
+    border: 1px solid white;
+    color: white;
+    height: 30px;
+    font-weight: bolder;
+    margin-top: 3%;
+    margin-left: 37.5%; 
+    border-radius: 50%; 
+    margin-left: 80%;
+    transition: 1s ease-in;
+}
+
+#modal-bar button:hover{
+    background-color: white;
+    color: red;
+    cursor: pointer;
+}
+/*------------end--------------*/
+/*-------------Modal Body----------------*/
+#modal-body{
+    background-color: white;
+    text-align: center;
+}
+
+#modal-body p{
+    margin-top: 30px;
+}
+
+/*------------end--------------*/
+
+/*---------------Modal Footer------------------*/
+#modal-footer button{
+    width: 25%;
+    background-color: white;
+    border: 1px solid green;
+    outline: 1px solid white;
+    color: black;
+    font-weight: bolder;
+    margin-top: 3%;
+    margin-left: 37.5%;
+}
+
+#modal-footer button:hover{
+    cursor: pointer;
+}
+/*------------end--------------*/
+.success-bar{
+    background-color: rgb(0, 185, 0);
+}
+
+.error-bar{
+    background-color: rgba(243, 15, 15, 0.973);
+}
+/*-----------------------------------------------------------------------------*/
+/*------------------------Password Modal--------------------------*/
+#confirm-password-modal{
+    position: fixed;
+    display: none;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 3fr 1fr;
+    width: 50%;
+    height: 300px;
+    z-index: 10;
+    box-sizing: border-box;
+    top: 100px;
+    left: 25%;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    padding: 1px;
+    font-family: 'Roboto', sans-serif;
+}
+
+#error-field{
+    display: none;
+}
+
+/*--------------Modal Header--------------------*/
+#cpm-bar{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    background-color: black;
+}
+
+#cpm-header{
+    color: white;
+    font-weight: normal;
+    margin-top: 3%;
+    margin-left: 5%;
+}
+
+#cpm-bar button{
+    width: 30px;
+    background-color: rgb(230, 16, 16);
+    border: 1px solid white;
+    color: white;
+    height: 30px;
+    font-weight: bolder;
+    margin-top: 3%;
+    margin-left: 37.5%; 
+    border-radius: 50%; 
+    margin-left: 80%;
+    transition: 1s ease-in;
+}
+
+#cpm-bar button:hover{
+    background-color: white;
+    color: red;
+    cursor: pointer;
+}
+/*------------end--------------*/
+
+/*-------------Modal Body----------------*/
+#cpm-body{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    background-color: white;
+    text-align: center;
+}
+
+#cpm-body p:nth-child(odd){
+    grid-column: 1/3;
+    margin-top: 50px;
+    font-weight: bold;
+}
+#cpm-body label{
+    font-weight: bold;
+}
+
+#cpm-body input[type="password"]{
+    height: 20px;
+    padding: 5px;
+    width: 80%;
+    margin-bottom: 50px;
+}
+
+
+/*------------end--------------*/
+/*---------------Modal Footer------------------*/
+#cpm-footer{
+    border-top: 1px solid black;
+    background-color: white;
+}
+#cpm-footer button{
+    width: 25%;
+    background-color: white;
+    border: 1px solid green;
+    outline: 1px solid white;
+    color: black;
+    font-weight: bolder;
+    margin-top: 3%;
+    margin-left: 37.5%;
+    padding: 5px 0;
+}
+
+#cpm-footer button:hover{
+    cursor: pointer;
+}
+
+#error-field{
+    border: 1px solid red;
+    box-sizing: border-box;
+    grid-column: 1/3;
+    width: 90%;
+    text-align: center;
+    padding: 10px;
+    margin-left: 5%;
+}
+/*------------end--------------*/

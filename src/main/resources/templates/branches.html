@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Company_name: Branches</title>
+	<link type="text/css" rel="stylesheet" th:href="@{/css/admin/branch/branch.css}" href="../static/css/admin/branch/branch.css"/>
+	<link rel="stylesheet" href="../static/css/modals.css" th:href="@{/css/modals.css}" />
+</head>
+<body>
+	<div id="wrapper">
+		<div id="shadow-wrapper"></div>
+		<!--Modal box for messages-->
+		<div id="modal-messages" class="modal-messages">
+			<div id="modal-bar">
+				<div id="mb-header"></div>
+				<div><button id="modal-close-btn">X</button></div>
+			</div>
+			<div id="modal-body">
+				<p id="modal-message"></p>
+			</div>
+			<div id="modal-footer">
+				<button id="modal-ok-btn">OK</button>
+			</div>
+		</div>
+		
+		<!-- Nav Component-->
+		<admin-header id="nav-wrapper">
+		</admin-header>
+		<!-- Nav Component -->
+
+		<div id="main">
+			<!--Section for View Content-->
+
+			<div id="main-header">
+				<div id="company-profile">
+					<label>Select company you would like to interact with:</label>
+					<div id="selected-company">
+						<!-- Displayed company text from selected list -->
+						Company?
+						<span class="dropdown-icon">▼</span>
+					</div>
+					<div class="company-list">
+						<!-- Message to display if there is no registered company -->
+						<p class="no-companies-message">No available companies registered</p>
+						<!-- List of companies will be dynamically added here -->
+					</div>
+				</div>
+			</div>
+
+			<div id="view-branch">
+				<p>No branch information to display.</p>
+			</div>
+
+			<!--Section for Add Branch Content-->
+			<div id="add-branch">
+				<div class="branch-section-div">
+					<p class="p-instruction">Please select a company that you would like to add this branch to!</p>
+					<!-- Select field to select a company to add branch company details -->
+					<select class="company-select" id="branch-add-select"></select>
+				</div>
+				<label for="branch-name">Branch Name:</label>
+				<input type="text" class="update-field" id="branch-name"/>
+
+				<label for="country-code">Country Code:</label>
+				<input type="text" placeholder="+27" class="update-field" id="country-code"/>
+
+				<label for="add-con-det1">Contact Details 1:</label>
+				<input type="text" class="update-field" id="add-con-det1"/>
+				
+				<label for="add-con-det2">Contact Details 2:</label>
+				<input type="text" class="update-field" id="add-con-det2"/>
+
+				<label for="add-con-det3">Contact Details 3:</label>
+				<input type="text" class="update-field" id="add-con-det3"/>
+
+				<label for="country">Country: </label>
+				<input type="text" class="update-field" id="country"/>
+
+				<label for="province">Province:</label>
+				<input type="text" class="update-field" id="province"/>
+
+				<label for="city">City:</label>
+				<input type="text" class="update-field" id="city"/>
+				
+				<label for="post-code">Postal Code:</label>
+				<input type="text" class="update-field" id="post-code"/>
+
+				<label for="street">Street:</label>
+				<input type="text" class="update-field" id="street"/>
+
+				<label for="stand-unit">Stand Unit:</label>
+				<input type="text" class="update-field" id="stand-unit"/>
+				<button id="add-branch-btn">Add New Branch</button>
+			</div>
+
+            <!--Section for Update Branch Content-->
+			<div id="update-branch-det">
+                <div class="branch-section-div">
+                    <p class="p-instruction">Update existing branch details:</p>
+                </div>
+				<label>Branch Name</label><input type="text" id="u-b-n" class="update-field" />
+				<label>Contact Details</label><input type="text" id="u-b-c1" class="update-field" />
+				<label>Contact Details</label><input type="text" id="u-b-c2" class="update-field" />
+				<label for="country">Country: </label>
+				<input type="text" class="update-field" id="u-b-country"/>
+
+				<label for="u-b-province">Province:</label>
+				<input type="text" class="update-field" id="u-b-province"/>
+
+				<label for="city">City:</label>
+				<input type="text" class="update-field" id="u-b-city"/>
+				
+				<label for="postal-code">Postal Code:</label>
+				<input type="text" class="update-field" id="u-b-postCode"/>
+
+				<label for="street">Street:</label>
+				<input type="text" class="update-field" id="u-b-street"/>
+
+				<label for="stand-unit">Stand Unit:</label>
+				<input type="text" class="update-field" id="u-b-standUnit"/>
+				<button id="update-branch-btn">Update Branch Details</button>
+			</div>
+
+			<div id="content-profile-menu">
+				<ul>
+					<li class="c-p-c" id="view-branch-btn">View Branches</li>
+					<li class="c-p-c" id="menu-add-branch">Add Branch</li>
+					<li class="c-p-c">Update Branch Details</li>
+				</ul>
+			</div>
+		</div>
+
+		<footer></footer>
+	</div>
+</body>
+<script type="text/javascript" src="../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
+<script type="text/javascript" src="../static/js/modals.js" th:src="@{/js/modals.js}"></script>
+<script type="text/javascript" src="../static/js/admin/branch-company/main.js" th:src="@{/js/admin/branch-company/main.js}"></script>
+</html>

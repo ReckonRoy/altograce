@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Company_name: Dashboard</title>
+	<link type="text/css" rel="stylesheet" href="../static/css/admin/dashboard/dashboard.css" th:href="@{/css/admin/dashboard/dashboard.css}">
+</head>
+<body>
+	<div id="wrapper">
+		<!-- Nav Compenent-->		
+		<admin-header id="nav-wrapper">
+		</admin-header>
+		<!-- End Nav Component -->
+
+		<div id="main">
+			<!-- statistics on business performance-->
+			<div id="stats-div">
+				<div class="stats-card">
+					<div class="stats-card-quantity">20</div>
+					<div class="stats-card-footer">New clients</div>
+				</div>
+				<div class="stats-card">
+					<div class="stats-card-quantity">20</div>
+					<div class="stats-card-footer">Active Clients</div>
+				</div>
+				<div class="stats-card">
+					<div class="stats-card-quantity">60 000</div>
+					<div class="stats-card-footer">Total Monthly Revenue</div>
+				</div>
+				<div class="stats-card">
+					<div class="stats-card-quantity">80 000 000</div>
+					<div class="stats-card-footer">Total Annualy Revenue</div>
+				</div>
+			</div>
+		</div>
+
+		<footer></footer>
+	</div>
+
+<script type="text/javascript" src="../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
+<script type="text/javascript" src="../static/js/admin/dashboard/dashboard.js" th:src="@{/js/admin/dashboard/dashboard.js}"></script>
+</body>
+</html>

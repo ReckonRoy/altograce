@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Registration</title>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/client/clientIndex.css}" href="../../static/css/client/clientIndex.css"/>
+    <style>
+        #overlay{
+            display: none;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: black;
+            z-index: 100;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body> 
+    <div id="wrapper">
+        <admin-header id="nav-wrapper">
+	    </admin-header>
+
+        <div id="overlay"></div>
+        <div id="deceased-records-component">
+        </div>
+        <div id="controls-wrapper"></div>
+        <div id="member-registration">
+            <form id="form-container">
+                <fieldset class="personal-form">
+                    <legend>Personal</legend>
+                    <label for="title-field">Title:</label>
+                    <select id="title-field">
+                        <option value="Mr">Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Miss">Miss</option>
+                    </select>
+                    <label for="name-field">Name:</label><input type="text" id="name-field" required/>
+                    <label for="surname-field">Surname:</label><input type="text" id="surname-field" required/>
+                    <label for="fi-field">First Initials:</label><input type="text" id="fi-field"/>
+                    <label for="id-passport-field">Id/Passport:</label><input type="text" id="id-passport-field" required />
+                    
+                    <label for="gender-field">Gender:</label>
+                    <div id="gender-div">
+                        <label>Male:</label>
+                        <input type="radio" name="gender" value="male" class="gender-field"/>
+                        <label>Female:</label>
+                        <input type="radio" name="gender" value="female" class="gender-field"/>
+                    </div>
+                    <label for="dob-field">D.O.B:</label><input type="date" id="dob-field">
+                    <label for="marital-field">Marital Status:</label>
+                    <select id="marital-field">
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Widow">Widow</option>
+                    </select>
+                </fieldset>
+                
+                <fieldset class="personal-form">
+                    <legend>Contacts</legend>
+                    <label for="email-field">Email Address:</label><input type="text" id="email-field"/>
+                    <label for="countryCode-field">Country Code:</label><input type="text" id="countryCode-field"/>
+                    <label for="cellPhone-field">Cell:</label><input type="text" id="cellPhone-field"/>
+                    <label for="homePhone-field">Home:</label><input type="text" id="homePhone-field"/>
+                    <label for="telePhone-field">Telephone:</label><input type="text" id="telePhone-field"/>
+                </fieldset>
+                <fieldset class="personal-form">
+                    <legend>Address</legend>
+                    <label for="country-field">Country:</label><input type="text" id="country-field"/>
+                    <label for="province-field">Province:</label><input type="text" id="province-field"/>
+                    <label for="city-field">City:</label><input type="text" id="city-field"/>
+                    <label for="postCode-field">Postal Code:</label><input type="text" id="postCode-field"/>
+                    <label for="street-field">Street:</label><input type="text" id="street-field"/> 
+                    <label for="stand-unit">Stand Unit</label><input type="text" id="stand-unit"/>
+                </fieldset>
+                
+            </form>
+
+            <form id="cover-container">
+                <fieldset class="personal-form">
+                    <legend>Cover</legend>
+                    <label for="group-field">Group Name:</label><input type="text" id="group-field"/>
+                    <label for="joiningDate-field">Joining Date of Cover:</label><input type="date" id="joiningDate-field" required>
+                    <label for="joiningFee-field">Joining Fee</label><input type="text" id="joiningFee-field" required>
+                </fieldset>
+            </form>
+
+            <add-package id="add-package">
+            </add-package>
+
+            <button id="reg-client-btn">Register Client</button>
+        </div>
+
+        <footer>
+            
+        </footer>
+    </div>
+    <script type="text/javascript" src="../../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
+    <script type="text/javascript" src="../../static/js/client/client-registration.js" th:src="@{/js/client/client-registration.js}"></script>
+    <script type="text/javascript" src="../../static/js/client/billing-history-component.js" th:src="@{/js/client/billing-history-component.js}"></script>
+    <script type="text/javascript" src="../../static/js/client/billing-component.js" th:src="@{/js/client/billing-component.js}"></script>
+    <script type="text/javascript" src="../../static/js/client/displayclient-component.js" th:src="@{/js/client/displayclient-component.js}"></script>
+    <script type="text/javascript" src="../../static/js/client/deceased-component.js" th:src="@{/js/client/deceased-component.js}"></script>
+    <script type="text/javascript" src="../../static/js/client/notification-component.js" th:src="@{/js/client/notification-component.js}"></script>
+    <script type="text/javascript" defer src="../../static/js/users/client-package-component.js" th:src="@{/js/users/client-package-component.js}"></script>
+    <script type="text/javascript" src="../../static/js/client/client-controls.js" th:src="@{/js/client/client-controls.js}"></script>
+</body>
+</html>

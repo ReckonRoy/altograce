@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>AltoGraceSystemSolutions: Login</title>
+
+	<link rel="stylesheet" type="text/css" href="../static/css/public/header.css" th:href="@{/css/public/header.css}"/>
+	<link rel="stylesheet" type="text/css" href="../static/css/public/login/main.css" th:href="@{/css/public/login/main.css}"/>
+</head>
+<body>
+	<div id="wrapper">
+		<nav>
+			<div>Alto Grace System Solutions</div>
+			<ul>
+				<li><a href="#">Home</a></li>	
+				<li><a href="#">About us</a></li>
+				<li><a href="#">Contact us</a></li>
+				
+			</ul>
+			<div>
+				<ul>
+					<li><a th:href="@{/login}">Log In</a></li>/<li><a th:href="@{/register}">Register</a></li>
+				</ul>
+			</div>
+		</nav>
+		<header>
+			<h1>Alto Grace System Solutions</h1>
+			<h2>Login</h2>
+		</header>
+		<hr class="hr-line"/>
+		<main>
+			<div id="login-div">
+				<form id="login-form" action="login" th:action="@{/login}" method="post">
+					<div th:if="${param.error}" id="error">
+						<span>Invalid Email and password</span>
+					</div>
+					<label	for="email-field">Email:</label>
+					<input type="text" name="username" class="login-field" id="email-field">
+					<label for="password-field">Password:</label>
+					<input type="password" class="login-field" name="password" id="password-field">
+					<div id="controls">
+						<input type="submit" value="Log In" id="login-btn"/>
+						<div id="remember-div">
+							<label for="remember-checkbox" id="rem-me">Remember Me</label>
+							<input type="checkbox" id="remember-checkbox" value="Remember me">
+						</div>
+						<button id="forgot-pwd-btn">Forgot password</button>
+					</div>
+				</form>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

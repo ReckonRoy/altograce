@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Packages Management</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        #button-menu{
+            display: flex;
+            flex-direction: row;
+            margin-top: 50px;
+            gap: 2rem;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .delete-btn{
+            background-color: red;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin-top: 20px;
+            width: 40%;
+            margin: 0 auto;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        form input,
+        form textarea,
+        form select {
+            width: calc(100% - 16px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        form button {
+            width: 48%;
+            margin-right: 2%;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:last-child {
+            margin-right: 0;
+        }
+
+        form button.cancel {
+            background-color: #bbb;
+        }
+
+        form button.cancel:hover {
+            background-color: #999;
+        }
+
+        .itemTable,
+        .serviceTable {
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        #itemTable{
+            display: none;
+        }
+
+        #serviceTable{
+            display: none;
+        }
+
+        table {
+            width: fit-content;
+            border-collapse: collapse;
+            margin-top: 50px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #optionForm{
+            display: none;
+        }
+
+        #packageTable{
+            display: none;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #packageForm {
+            display: none;
+        }
+
+        #optionalForm {
+            display: none;
+        }
+
+        #itemForm {
+            display: none;
+        }
+
+        #serviceForm {
+            display: none;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        /*-----------------------------------------------------------------------------------------------------*/
+#main-header {
+    margin-top: 60px;
+    box-sizing: border-box;
+    grid-column: 1/3;
+    display: flex;
+    padding: 20px 0;
+    /* Add your main header styles here */
+}
+
+#selected-company {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px solid #000;
+    cursor: pointer;
+}
+
+#selected-company .dropdown-icon {
+    margin-left: 5px;
+}
+
+.company-list {
+    position: absolute;
+    display: none;
+    border: 1px solid #333;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    border-radius: 4px;
+    z-index: 1;
+    /* Additional styling for the company list */
+}
+
+.company-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.company-list li {
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 8px;
+}
+
+.company-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.no-companies-message {
+    padding: 5px 0;
+}
+
+h1{
+    margin-top: 50px;
+}
+/*---------------------------------------------------------------------------------------------------*/
+        
+    </style>
+</head>
+
+<body>
+    <admin-header id="nav-wrapper">
+		</admin-header>
+    <div class="container">
+
+        <h1>Product Packages Management</h1>
+
+        <div id="main-header">
+            <div id="company-profile">
+                <label>Select company you would like to interact with:</label>
+                <div id="selected-company">
+                    <!-- Displayed company text from selected list -->
+                    Company?
+                    <span class="dropdown-icon">▼</span>
+                </div>
+                <div class="company-list">
+                    <!-- Message to display if there is no registered company -->
+                    <p class="no-companies-message">No available companies registered</p>
+                    <!-- List of companies will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+        <div id="button-menu">
+            <button id="addPackageButton">Add New Package</button>
+            <button id="addOptionalButton">Add Optional Package</button>
+        </div>
+
+    <div id="packageForm">
+        <h2 id="formTitle">Add Package</h2>
+        <form id="addPackageForm">
+            <label for="packageName">Package Name:</label>
+            <input type="text" id="packageName" name="packageName" required>
+
+            <label for="numMembers">Number of Members Covered:</label>
+            <input type="number" id="numMembers" name="numMembers" required>
+
+            <label for="packagePrice">Price for Package:</label>
+            <input type="number" id="packagePrice" name="packagePrice" required>
+
+            <input type="hidden" id="editIndex" name="editIndex" value="-1">
+
+            <button type="button" id="savePackageButton">Save</button>
+            <button type="button" id="cancelPackageButton">Cancel</button>
+        </form>
+    </div>
+
+    <div id="optionForm">
+        <h2 id="optionTitle">Add Optional Package</h2>
+        <form id="addOptionalPackageForm">
+            <label for="optionaPackageName">Package Name:</label>
+            <input type="text" id="optionalPackageName" name="optionalName" required>
+
+            <label for="optionalMembersCount">Members Count:</label>
+            <input type="text" id="optionalMembersCount" name="membersCount" required>
+
+            <label for="optionalPackagePrice">Price for Package:</label>
+            <input type="number" id="optionalPrice" name="optionalPrice" required>
+
+            <button type="button" id="saveOptionalPackageButton">Save</button>
+            <button type="button" id="cancelOptionalPackageButton">Cancel</button>
+        </form>
+    </div>
+
+    <div id="itemForm">
+        <h2 id="itemFormTitle">Add Item to Package</h2>
+        <form id="addItemForm">
+            <label for="itemName">Item Name:</label>
+            <input type="text" id="itemName" name="itemName" required>
+
+            <label for="itemQuantity">Item Quantity:</label>
+            <input type="number" id="itemQuantity" name="itemQuantity" required>
+
+            <button type="button" id="saveItemButton">Save</button>
+            <button type="button" id="cancelItemButton">Cancel</button>
+        </form>
+    </div>
+
+    <div id="serviceForm">
+        <h2 id="serviceFormTitle">Add Service to Package</h2>
+        <form id="addServiceForm">
+            <label for="serviceName">Service Name:</label>
+            <input type="text" id="serviceName" name="serviceName" required>
+
+            <label for="serviceDescription">Service Description:</label>
+            <textarea id="serviceDescription" name="serviceDescription" required></textarea>
+
+            <button type="button" id="saveServiceButton">Save</button>
+            <button type="button" id="cancelServiceButton">Cancel</button>
+        </form>
+    </div>
+
+    <table id="packageTable">
+        <tr>
+            <th>Package Name</th>
+            <th>Members Covered</th>
+            <th>Package Price</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+    <table id="optionalPackageTable">
+        <tr>
+            <th>Package Name</th>
+            <th>Members Covered</th>
+            <th>Package Price</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+    <table id="itemTable">
+        <tr>
+            <th>Item Name</th>
+            <th>Item Quantity</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+    <table id="serviceTable">
+        <tr>
+            <th>Service Name</th>
+            <th>Service Description</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+    </div>
+    <script type="text/javascript" src="../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
+    <script>
+        document.getElementById("optionalPackageTable").style.display = "none";
+
+        // JSON object to hold package data
+        var packageData = {};
+        // JSON object to hold item data
+        var itemData = {};
+        // JSON object to hold service data
+        var serviceData = {};
+        let packageId;
+        let packageValue;
+
+/*--------------------------------------------PACKAGE--------------------------------------------------*/
+        document.getElementById("addPackageButton").addEventListener('click', openPackageForm);
+        document.getElementById("savePackageButton").addEventListener('click', savePackage);
+        document.getElementById("cancelPackageButton").addEventListener('click', closePackageForm);
+
+        function openPackageForm() {
+            document.getElementById("packageForm").style.display = "block";
+            // Clear form fields
+            document.getElementById("addPackageForm").reset();
+            // Reset the form title
+            document.getElementById("formTitle").innerText = "Add Package";
+            // Reset the edit index
+            document.getElementById("editIndex").value = "-1";
+            // Close item form
+            closeItemForm();
+            // Close service form
+            closeServiceForm();
+            //Close option package form
+            closeOptionForm();
+        }
+
+        function closePackageForm() {
+            document.getElementById("packageForm").style.display = "none";
+            // Clear form fields
+            document.getElementById("addPackageForm").reset();
+            // Reset the form title
+            document.getElementById("formTitle").innerText = "Add Package";
+            // Reset the edit index
+            document.getElementById("editIndex").value = "-1";
+            // Close item form
+            closeItemForm();
+            // Close service form
+            closeServiceForm();
+        }
+
+        function savePackage() {
+            // Get form values
+            var packageNameVal = document.getElementById("packageName").value;
+            var numMembers = document.getElementById("numMembers").value;
+            var packagePrice = document.getElementById("packagePrice").value;
+
+            var packageData = {
+                packageName: packageNameVal,
+                membersCount: numMembers,
+                price: packagePrice,
+            };
+            
+    /******************Validate Company Id********************************/
+        if(companyProfile.selectedId >= 1)
+        {    
+            //fetch api sending data to backend for update
+            fetch(`/package/add-package/${companyProfile.selectedId}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(packageData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} - ${response.body}`);
+                }
+                response.json()
+            })
+            .then(data => {
+                //pass message to modal box
+                let title = "Save Message: ";
+                let message = `Package has been successfuly updated`;
+                // Update the table with the new data
+                updatePackageTable(companyProfile.selectedId);
+                // Close item form
+                closeItemForm();
+                // Close service form
+                closeServiceForm();
+            })
+            .catch(error => {
+                alert("Error: " + "Company Not Found");
+            });
+            // Close the form
+        }else{
+            alert("Please select a valid company!");
+        }
+            closePackageForm();
+        }
+/*__________________________________________________________________________________________________________________________*/
+
+/*------------------------------------------OPTIONAL PACKAGE--------------------------------------------------*/
+        document.getElementById("addOptionalButton").addEventListener('click', openOptionForm);
+        document.getElementById("saveOptionalPackageButton").addEventListener('click', saveOptionalPackage);
+        document.getElementById("cancelOptionalPackageButton").addEventListener('click', closeOptionForm);
+
+        function openOptionForm() {
+            document.getElementById("optionForm").style.display = "block";
+            // Clear form fields
+            document.getElementById("addOptionalPackageForm").reset();
+            // Reset the form title
+            document.getElementById("optionTitle").innerText = "Add Optional Package";
+            // Close item form
+            closeItemForm();
+            // Close service form
+            closeServiceForm();
+            // Close package form
+            closePackageForm();
+        }
+
+        function closeOptionForm() {
+            document.getElementById("optionForm").style.display = "none";
+            // Clear form fields
+            document.getElementById("addOptionalPackageForm").reset();
+            // Reset the form title
+            document.getElementById("optTitle").innerText = "Add Package";
+            // Close item form
+            closeItemForm();
+            // Close service form
+            closeServiceForm();
+        }
+
+    /***********************Save Optional Packages**************************/
+        function saveOptionalPackage() {
+            // Get form values
+            var packageName = document.getElementById("optionalPackageName").value;
+            var membersCount = document.getElementById("optionalMembersCount").value;
+            var packagePrice = document.getElementById("optionalPrice").value;
+
+            var packageData = {
+                packageName: packageName,
+                membersCount: membersCount,
+                price: packagePrice,
+            };
+            
+    //Validate Company Id
+        if(companyProfile.selectedId >= 1)
+        {    
+            //fetch api sending data to backend for update
+            fetch(`/package/add-optional-package/${companyProfile.selectedId}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(packageData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} - ${response.body}`);
+                }
+                response.json()
+            })
+            .then(data => {
+                //pass message to modal box
+                let title = "Save Message: ";
+                let message = `Optional Package has been successfuly updated`;
+                // Update the table with the new data
+                optionalPackageTable(companyProfile.selectedId);
+                // Close item form
+                closeItemForm();
+                // Close service form
+                closeServiceForm();
+            })
+            .catch(error => {
+                alert("Error: " + "Company Not Found");
+            });
+            // Close the form
+        }else{
+            alert("Please select a valid company!");
+        }
+            //close form
+            closeOptionForm();
+        }
+/*________________________________________________________________________________________________________________*/
+
+
+        document.getElementById("cancelItemButton").addEventListener('click', closeItemForm);
+        document.getElementById("cancelServiceButton").addEventListener('click', closeServiceForm);
+
+        function openItemForm(package) {
+            document.getElementById("itemForm").style.display = "block";
+            // Clear form fields
+            document.getElementById("addItemForm").reset();
+            // Reset the form title
+            document.getElementById("itemFormTitle").innerText = "Add Item to Package";
+            packageId = package.id;
+            packageValue = package.packageValue;
+               alert("From openItermForm" + packageId); 
+            // Close service form
+            closeServiceForm();
+        }
+
+        document.getElementById("saveItemButton").addEventListener('click', function(){
+                saveItem();
+            });
+
+        function closeItemForm() {
+            document.getElementById("itemForm").style.display = "none";
+            // Clear form fields
+            document.getElementById("addItemForm").reset();
+            // Reset the form title
+            document.getElementById("itemFormTitle").innerText = "Add Item to Package";
+        }
+/*---------------------------SAVE ITEM-----------------------------*/
+        function saveItem() {
+            // Get form values
+            var itemName = document.getElementById("itemName").value;
+            var itemQuantity = document.getElementById("itemQuantity").value;
+            var package_id = packageId;
+            alert("from saveItem" + package_id);
+            // Create a new item object
+            let itemData = {
+                itemName: itemName,
+                itemQuantity: itemQuantity,
+                packageType: packageValue
+            };
+
+            // Add the new item to the corresponding package's items array
+            fetch(`/package/add-item/${package_id}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(itemData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} - ${response.body}`);
+                }
+                response.json()
+            })
+            .then(data => {
+                // Update the table with the new data
+                updateItemTable(packageId, packageValue);
+            })
+            .catch(error => {
+                alert("Error: " + "Item Not Saved");
+            });
+
+                // Close the form
+                closeItemForm();
+            }
+
+        function openServiceForm(package) {
+            document.getElementById("serviceForm").style.display = "block";
+            // Clear form fields
+            document.getElementById("addServiceForm").reset();
+            // Reset the form title
+            document.getElementById("serviceFormTitle").innerText = "Add Service to Package";
+            packageId = package.id;
+            packageValue = package.packageValue;
+            
+            // Close item form
+            closeItemForm();
+        }
+
+        document.getElementById("saveServiceButton").addEventListener('click', ()=>{
+                saveService();
+            });
+
+        function closeServiceForm() {
+            document.getElementById("serviceForm").style.display = "none";
+            // Clear form fields
+            document.getElementById("addServiceForm").reset();
+            // Reset the form title
+            document.getElementById("serviceFormTitle").innerText = "Add Service to Package";
+        }
+
+        function saveService() {
+            // Get form values
+            var serviceName = document.getElementById("serviceName").value;
+            var serviceDescription = document.getElementById("serviceDescription").value;
+
+            // Create a new service object
+            var serviceData = {
+                serviceName: serviceName,
+                description: serviceDescription,
+                packageType: packageValue
+            };
+
+            // Add the new service to database
+            fetch(`/package/add-service/${packageId}`,{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(serviceData),
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`Error: ${response.status} - ${response.body}`);
+			}
+			response.json()
+		})
+		.then(data => {
+            // Update the table with the new data
+            updateServiceTable(packageId, packageValue);
+		})
+		.catch(error => {
+			alert("Error: " + "Item Not Saved");
+		});
+
+            // Close the form
+            closeServiceForm();
+        }
+
+        let updatePackageTable = (selectedId) => {
+            fetch(`/package/packages/${selectedId}`)
+            .then(response => response.json())
+            .then(data => {
+                var table = document.getElementById("packageTable");
+                table.style.display = "block";
+                // Clear existing rows
+                while (table.rows.length > 1) {
+                    table.deleteRow(1);
+                }
+                
+                //store returned object into companies
+                data.forEach(package => {
+                    packageData[package.id] = {
+                        packageName: package.packageName,
+                        membersCount: package.membersCount,
+                        price: package.price,
+                        packageType: "standard",
+                    };
+
+                    // Add rows with package data
+                    var row = table.insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+
+                    cell1.innerHTML = package.packageName;
+                    cell2.innerHTML = package.membersCount;
+                    cell3.innerHTML = package.price;
+                    cell4.innerHTML = `<button onclick="editPackage(${package.id})">edit</button> <button class="delete-btn" onclick="deletePackage(${package.id})">delete</button> <button class="add-items" id="${package.id}">add items</button> <button class="add-service" id="${package.id}">add vervice</button>`; 
+                });
+
+                /**
+                * Open Item form
+                * Set required params 
+                */
+                let addItem_btn = document.querySelectorAll(".add-items");
+                addItem_btn.forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        let btn_id = btn.id;
+                        openItemForm({id: btn_id, packageValue: packageData[btn_id].packageType});
+                    });
+                });
+
+                /**
+                * Open Item form
+                * Set required params 
+                */
+                let addService_btn = document.querySelectorAll(".add-service");
+                addService_btn.forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        let btn_id = btn.id;
+                        openServiceForm({id: btn_id, packageValue: packageData[btn_id].packageType});
+                    });
+                });
+
+            })
+            .catch(error => {
+                var table = document.getElementById("packageTable");
+                table.style.display = "none";
+            });    
+        }
+
+        let optionalPackageTable = (selectedId) => {
+            fetch(`/package/optional-packages/${selectedId}`)
+            .then(response => response.json())
+            .then(data => {
+                var table = document.getElementById("optionalPackageTable");
+                table.style.display = "block";
+                // Clear existing rows
+                while (table.rows.length > 1) {
+                    table.deleteRow(1);
+                }
+                
+                //store returned object into companies
+                data.forEach(package => {
+                    packageData[package.id] = {
+                        packageName: package.packageName,
+                        membersCount: package.membersCount,
+                        price: package.price,
+                        packageType: 'optional',
+                    };
+                    
+                    // Add rows with package data
+                    var row = table.insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+
+                    cell1.innerHTML = package.packageName;
+                    cell2.innerHTML = package.membersCount;
+                    cell3.innerHTML = package.price;
+                    cell4.innerHTML = `<button onclick="editPackage(${package.id})">edit</button> <button class="delete-btn" onclick="deleteOptionalPackage(${package.id})">delete</button> <button class="add-items" id="${package.id}">add item</button> <button class="add-service" id="${package.id}">add service</button>`; 
+                });
+                /**
+                * Open Item form
+                * Set required params 
+                */
+                let addItem_btn = document.querySelectorAll(".add-items");
+                addItem_btn.forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        let btn_id = btn.id;
+                        openItemForm({id: btn_id, packageValue: packageData[btn_id].packageType});
+                    });
+                });
+
+                /**
+                * Open Item form
+                * Set required params 
+                */
+                let addService_btn = document.querySelectorAll(".add-service");
+                addService_btn.forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        let btn_id = btn.id;
+                        openServiceForm({id: btn_id, packageValue: packageData[btn_id].packageType});
+                    });
+                });
+
+            })
+            .catch(error => {
+                var table = document.getElementById("packageTable");
+                table.style.display = "none";
+            });    
+        }
+        function updateItemTable(packageId, packageType) {
+            let packageForm = {packageType: packageType};
+            fetch(`/package/items/${packageId}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(packageForm),
+            })
+            .then(response => response.json())
+            .then(data => {
+                var table = document.getElementById("itemTable");
+                table.style.display = "block";
+
+                // Clear existing rows
+                while (table.rows.length > 1) {
+                    table.deleteRow(1);
+                }
+
+                data.forEach(item => {
+                    itemData[item.id] = {
+                        itemName: item.itemName,
+                        itemQuantity: item.itemQuantity
+                    }
+
+                // Add rows with item data for the selected package
+                var row = table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+
+                cell1.innerHTML = item.itemName;
+                cell2.innerHTML = item.itemQuantity;
+                cell3.innerHTML = `<button class="delete-btn" onclick="deleteItem(${packageId}, ${item.id})">delete</button>`;
+                });
+            }).catch(error => {
+                var table = document.getElementById("itemTable");
+                table.style.display = "none";
+            });    
+        }
+
+        function updateServiceTable(packageId, packageType) {
+            let packageForm = {packageType: packageType};
+            fetch(`/package/services/${packageId}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(packageForm),
+            })
+            .then(response => response.json())
+            .then(data => {
+                var table = document.getElementById("serviceTable");
+                table.style.display = "block";
+
+                // Clear existing rows
+                while (table.rows.length > 1) {
+                    table.deleteRow(1);
+                }
+
+                data.forEach(service => {
+                    serviceData[service.id] = {
+                        serviceName: service.serviceName,
+                        serviceDescription: service.description
+                    }
+
+                // Add rows with item data for the selected package
+                var row = table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+
+                cell1.innerHTML = service.serviceName;
+                cell2.innerHTML = service.description;
+                cell3.innerHTML = `<button class="delete-btn" onclick="deleteService(${packageId}, ${service.id})">Delete</button>`;
+                });
+            }).catch(error => {
+                var table = document.getElementById("serviceTable");
+                table.style.display = "none";
+            });
+        }
+
+        function viewItems(packageId) {
+            // Update the item table for the selected package
+            updateItemTable(packageId);
+        }
+
+        function viewServices(packageId) {
+            // Update the service table for the selected package
+            updateServiceTable(packageId);
+        }
+
+        function deletePackage(packageId) {
+            fetch(`/package/delete-package/${packageId}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+		    })
+            .then(response => response.text())
+            .then(data => {
+                // Update the table with the modified data
+                updatePackageTable(companyProfile.selectedId);
+            }).catch(error => {
+                
+            });
+        }
+        /*DELETE OPTIONAL PACKAGE*/
+        function deleteOptionalPackage(packageId) {
+            fetch(`/package/delete-optional-package/${packageId}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+		    })
+            .then(response => response.text())
+            .then(data => {
+                // Update the table with the modified data
+                optionalPackageTable(companyProfile.selectedId);
+            }).catch(error => {
+
+            });
+        }
+
+        function deleteItem(package_id, itemId) {
+            // Remove the selected service from the package's services
+            fetch(`/package/delete-item/${itemId}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+		    })
+            .then(response => response.text())
+            .then(data => {
+                // Update the item table for the selected item
+                updateItemTable(package_id, packageValue);
+            }).catch(error => {
+                
+            });
+        }
+
+        function deleteService(packageId, serviceId) {
+            // Remove the selected service from the package's services
+            fetch(`/package/delete-service/${serviceId}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+		    })
+            .then(response => response.text())
+            .then(data => {
+                // Update the service table for the selected package
+                updateServiceTable(packageId, packageValue);
+            }).catch(error => {
+                
+            });
+        }
+        // Uncomment the following line if you want the form to be open by default
+        // openPackageForm();
+
+/*---------------------------------------------------------------------------------------------------*/
+let companyProfile = {
+    // Map to store company details
+    companies: {},
+    selectedId: "",
+    selectedCompany: document.getElementById("selected-company"),
+    companyList: document.querySelector(".company-list"),
+
+    fetchData: () => {
+
+        companyProfile.selectedCompany.addEventListener("click", function () {
+            // Toggle company list visibility
+            if (companyProfile.companyList.style.display == "") {
+                companyProfile.companyList.style.display = "block";
+            } else {
+                companyProfile.companyList.style.display = "none";
+            }
+        });
+
+        fetch("/company/profile/data")
+        .then(response => response.json())
+        .then(data => {
+            //store returned object into companies
+            data.forEach(company => {
+                companyProfile.companies[company.id] = {
+                    name: company.name
+                };
+            });
+
+            // Clear existing content
+            companyProfile.companyList.innerHTML = "";
+
+            // Create ul element dynamically
+            var ulElement = document.createElement("ul");
+            ulElement.style.listStyle = "none";
+            ulElement.style.padding = "0";
+            ulElement.style.margin = "0";
+
+            // Populate company list
+            for (var companyId in companyProfile.companies) {
+                var companyItem = document.createElement("li");
+                companyItem.textContent = companyProfile.companies[companyId].name;
+                companyItem.setAttribute("data-id", companyId); // Set data-id attribute with the company ID
+                companyItem.style.cursor = "pointer";
+                companyItem.style.transition = "background-color 0.3s";
+                companyItem.style.padding = "8px";
+
+                companyItem.addEventListener("click", function () {
+                    var selectedText = this.textContent;
+                    companyProfile.selectedId = this.getAttribute("data-id"); // Get the company ID
+                    console.log("Selected Company ID:", companyProfile.selectedId + "from company profile");
+
+                    // Update the selected company text
+                    companyProfile.selectedCompany.innerHTML = selectedText + '<span class="dropdown-icon">▼</span>';
+                    updatePackageTable(companyProfile.selectedId);
+                    optionalPackageTable(companyProfile.selectedId);
+                    // Hide the company list
+                    companyProfile.companyList.style.display = "none";
+                });
+
+                ulElement.appendChild(companyItem);
+            }
+
+            // Append ul to the company list
+            companyProfile.companyList.appendChild(ulElement);
+        })
+        .catch(error => {
+            console.log(error);
+            // Clear existing content
+            companyProfile.companyList.innerHTML = "";
+
+            // If companies is empty, display the no-companies message
+            companyProfile.companyList.innerHTML = '<p class="no-companies-message">No available companies registered</p>';
+        });
+    },
+}
+/*------------------------------------------------------------------------------------------------------------*/
+companyProfile.fetchData();
+    </script>
+
+</body>
+
+</html>

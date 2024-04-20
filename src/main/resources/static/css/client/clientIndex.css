@@ -1,0 +1,113 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+#wrapper{
+    width: 100%;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 50px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5); 
+}
+#member-registration{
+    display: none;
+    flex: 1;
+    flex-direction: column;
+}
+
+#form-container {
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*------Form Style By Class----*/
+.personal-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 2fr;
+    gap: 15px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#gender-div{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 30%;
+    grid-row-gap: 10px;
+}
+
+#cover-container
+{
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*---------Fields---------*/
+
+input[type="text"],
+input[type="date"],
+select {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+#title-field{
+    width: 50%;
+}
+
+#marital-field{
+    width: 50%;
+}
+
+#fi-field{
+    width: 30%;
+}
+
+#countryCode-field{
+    width: 40%;
+}
+
+button {
+    padding: 15px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/*Add Package*/
+#add-package{
+    margin: 20px auto;
+    width: 80%;
+}
+
+#nav-wrapper{
+    width: 100%;
+}

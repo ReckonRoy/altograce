@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waiting Period Calculator</title>
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+  }
+</style>
+</head>
+<body>
+
+  <admin-header id="nav-wrapper">
+  </admin-header>
+  <!-- End Side Nav -->
+
+  <div class="container">
+    <comselect-component></comselect-component>
+
+    <waitingperiod-component></waitingperiod-component>
+  </div>
+
+  <script type="text/javascript" src="../../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
+  <script type="text/javascript" src="../../static/js/admin/com-select-comp.js" th:src="@{/js/admin/com-select-comp.js}"></script>
+  <script type="text/javascript" src="../../static/js/admin/waiting-period-comp.js" th:src="@{/js/admin/waiting-period-comp.js}"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Company_name: Settings</title>
+	<link rel="stylesheet" type="text/css" href="../static/css/admin/settings/main.css" th:href="@{/css/admin/settings/main.css}"/>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="nav-wrapper">
+		<admin-header id="nav-wrapper">
+		</admin-header>
+		<!-- End Nav Component -->
+
+		<div id="main">
+			<!-- Settings menu links -->
+			<div id="settings-div">
+				<div class="link-card">
+					<div class="menu-icon" id="user-profile-img"><center><img src="../static/img/icons/person-icon.png" th:src="@{/img/icons/person-icon.png}" class="profile-icon"></center></div>
+					<button class="menu-link-btn" id="user-profile-btn">Profile</button>
+				</div>
+				<div class="link-card">
+					<div class="menu-icon" id="client-settings-img"><center><img src="../static/img/icons/client-icon.png" th:src="@{/img/icons/client-icon.png}" class="profile-icon"></center></div>
+					<button class="menu-link-btn" id="client-settings-btn">Client Settings</button>
+				</div>
+				<div class="link-card">
+					<div class="menu-icon" id="company-profile-img"><center><img src="../static/img/icons/companyhq-icon.png" th:src="@{/img/icons/companyhq-icon.png}" class="profile-icon"></center></div>
+					<button class="menu-link-btn" id="company-profile-btn">Company Profile</button>
+				</div>
+				<div class="link-card">
+					<div class="menu-icon" id="branch-profile-img"><center><img src="../static/img/icons/branch-company.png" th:src="@{/img/icons/branch-company.png}" class="profile-icon"></center></div>
+					<button class="menu-link-btn" id="branch-profile-btn">Branches</button>
+				</div>
+				<div class="link-card">
+					<div class="menu-icon" id="invoice-img"><center><img src="../static/img/icons/invoice-icon.png" th:src="@{/img/icons/invoice-icon.png}" class="profile-icon"></center></div>
+					<button class="menu-link-btn" id="invoice-btn">Invoice Settings</button>
+				</div>
+			</div>
+		</div>
+
+		<footer></footer>
+	</div>
+</body>
+<script type="text/javascript" src="../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
+<script type="text/javascript" src="../static/js/admin/settings/main.js" th:src="@{/js/admin/settings/main.js}"></script>
+</html>

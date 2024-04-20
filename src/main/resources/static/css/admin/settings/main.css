@@ -1,0 +1,58 @@
+#main{
+    margin-top: 50px;
+    border:1px solid red;
+    width: 80%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-left: 10%;
+    border: 1px solid gray;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: ghostwhite;
+}
+
+#settings-div{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-column-gap: 25px;
+}
+
+.link-card{
+    position: relative;
+    height: 250px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.link-card:hover{
+    cursor: pointer;
+    border: 1px solid green;
+    color: white;
+}
+
+.menu-link-btn{
+    position: absolute;
+    width: 100%;
+    height: 25%;
+    background-color: black;
+    bottom: 0;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    border: 1px solid black;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.menu-link-btn:hover{
+    color: green;
+    border: 1px solid white;
+    outline: 1px solid green;
+}
+
+.profile-icon{
+    margin-top: 15px;
+    width: 150px;
+}
