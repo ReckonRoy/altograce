@@ -62,15 +62,20 @@ public class UserAuthenticationService{
         }
     }
 
-    //Activate account
-    public void activateAccount(String email, String password) {
+/*-----------------------------------------------------------Activate Account----------------------------------------------*/
+    public UserAuthentication activateAccount(String email, String password) {
         // Find user credentials by email
         UserAuthentication userCredentials = userAuthenticationRepository.findByEmail(email).orElse(null);
 
-        // Update password and set activated=true
-        userCredentials.setPassword(passwordEncoder.encode(password));
-        userCredentials.setEnabled(true);
-        userAuthenticationRepository.save(userCredentials);
+        if(userCredentials != null)
+        {
+            // Update password and set activated=true
+            userCredentials.setPassword(passwordEncoder.encode(password));
+            userCredentials.setEnabled(true);
+            return userAuthenticationRepository.save(userCredentials);
+        }else{
+            return null;
+        }
     }
 
     private void sendActivationEmail(String email) {
@@ -127,6 +132,9 @@ public class UserAuthenticationService{
         }
     }
 
+/*---------------------------------------------------------Update Password------------------------------------------------------/
+*Update password when user identification is valid
+*/    
     public UserAuthentication updatePassword(String username, PasswordForm userData)
     {
         UserAuthentication userAuthentication = userAuthenticationRepository.findByUsername(username).orElse(null);
@@ -144,14 +152,19 @@ public class UserAuthenticationService{
             return null;
         }
     }
-
+    
+/*---------------------------------------------------------Actvate Account------------------------------------------------------/
+*Password match checks wheather passord matches the provided username in the database 
+*/
     public boolean passwordMatch(String username, String password)
     {
         UserAuthentication userAuthentication = userAuthenticationRepository.findByUsername(username).orElse(null);
         return passwordEncoder.matches(password, userAuthentication.getPassword());
-       
     }
 
+/*---------------------------------------------------------Find By Username------------------------------------------------------/
+*checks if user exists by username
+*/
     public Optional<UserAuthentication> findByUsername(String username)
     {
         return userAuthenticationRepository.findByUsername(username);

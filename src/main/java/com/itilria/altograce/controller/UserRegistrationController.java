@@ -27,6 +27,7 @@ import java.util.Map;
 import com.itilria.altograce.service.UserAuthenticationService;
 import com.itilria.altograce.service.UserService;
 import com.itilria.altograce.domain.User;
+import com.itilria.altograce.domain.UserAuthentication;
 import com.itilria.altograce.dto.UserForm;
 import com.itilria.altograce.dto.AuthForm;
 
@@ -104,16 +105,22 @@ public class UserRegistrationController
 
     
     @PostMapping("/activate/account")
-    public ResponseEntity<Map<String, String>> activateAccount(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> activateAccount(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String password = request.get("password");
-        userAuthService.activateAccount(email, password);
+        
+        UserAuthentication result = userAuthService.activateAccount(email, password);
+        if(result != null)
+        {
+            // Create a response map
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Welcome aboard! Your account has been successfuly activated.");
 
-        // Create a response map
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Account activated successfully.");
-
-        // Return the JSON response
-        return ResponseEntity.ok(response);
+            // Return the JSON response
+            return ResponseEntity.ok(response);
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("The provided email address does not exist");
+        }
     }
 }
