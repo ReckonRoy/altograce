@@ -57,7 +57,7 @@ public class FuneralManagementController
         return "/client-template/funeral-management";
     }
 
-/*--------------------------------------Logic related routes-----------------------------------------*/
+/*--------------------------------------------------------------Logic related routes-----------------------------------------*/
     @PostMapping("/add/{fileId}")
     public ResponseEntity<?> addDeceased(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String fileId, @RequestBody Funeral request)
     {
@@ -70,5 +70,12 @@ public class FuneralManagementController
         }else{
             return new ResponseEntity<>("Failed to add data", HttpStatus.BAD_REQUEST);
         }
+    }
+    
+/*---------------------------------------------------Dashbord Upcoming Fuenrals Route------------------------------------------*/ 
+    @GetMapping("")
+    public ResponseEntity<?> gerUpComingFunerals(@AuthenticationPrincipal UserDetails userDetails)
+    {
+        
     }
 }

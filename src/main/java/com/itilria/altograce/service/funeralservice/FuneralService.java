@@ -20,7 +20,8 @@ public class FuneralService{
 
     @Autowired
     private FuneralManagementRepository funeralRepository;
-
+    @Autowired 
+    private CompanyRepository companyRepository;
     @Autowired
     private ClientRepository clientRepository;
 
@@ -28,9 +29,12 @@ public class FuneralService{
     public Funeral addFuneral(String fileId, Funeral funeralData)
     {
         PrimaryClient primaryClient = clientRepository.findByClientid(fileId).orElse(null);
+        Company company = primaryClient.getCompany();
+        
         if(primaryClient != null)
         {
             funeralData.setPrimaryClient(primaryClient);
+            funeralData.setCompany(company);
             funeralData.setRecordEntryDate(LocalDate.now());
             return funeralRepository.save(funeralData);
         }else{
