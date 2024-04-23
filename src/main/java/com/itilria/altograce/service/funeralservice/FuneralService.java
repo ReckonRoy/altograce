@@ -37,5 +37,24 @@ public class FuneralService{
             return null;
         }
     }
+/*__________________________________________________________________________________________________________________________*/    
+ 
+/*------------------------------------------------------Get Upcoming Funerals-----------------------------------------------*/    
+    
+    public List<Funeral> getUpcomingFuneralsWithinTwoWeeks() {
+        // Calculate the date two weeks from today
+        LocalDate today = LocalDate.now();
+        LocalDate twoWeeksFromNow = today.plusWeeks(2);
+
+        // Retrieve upcoming funerals within the specified range
+        List<Funeral> upcomingFunerals = funeralRepository.findByDateOfBurialBetween(today, twoWeeksFromNow);
+        
+        // Check if there are any upcoming funerals
+        if (upcomingFunerals.isEmpty()) {
+            return null; // Or you can throw an exception or handle it differently based on your requirements
+        }
+
+        return upcomingFunerals;
+    }
 
 }

@@ -213,7 +213,7 @@ let handleRegistration = {
         }
 
         if(handleRegistration.validateEmail(formData.email)){
-			if(document.getElementById("email-error").style.display == "block"){
+			if(document.getElementById("email-error").style.display === "block"){
                 document.getElementById("email-error").style.display = "";
                 handleRegistration.isValid = true;
             }
@@ -221,7 +221,7 @@ let handleRegistration = {
 			let emailMessage = "Please provide a valid email address!";
 			document.getElementById("email-error").style.display = "block";
 			document.getElementById("email-error").textContent = emailMessage;
-            handleRegistration.isValid = false;
+                        handleRegistration.isValid = false;
 		}
 
         // Fields to be excluded from validation
