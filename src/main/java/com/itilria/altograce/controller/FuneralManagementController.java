@@ -73,9 +73,16 @@ public class FuneralManagementController
     }
     
 /*---------------------------------------------------Dashbord Upcoming Fuenrals Route------------------------------------------*/ 
-    @GetMapping("")
+    @GetMapping("/upcoming/funerals")
     public ResponseEntity<?> gerUpComingFunerals(@AuthenticationPrincipal UserDetails userDetails)
     {
         
+        List<Funeral> funeralResult  = funeralService.getUpcomingFuneralsWithinTwoWeeks(userDetails.getUsername());
+        if(funeralResult != null)
+        {
+            return ResponseEntity.ok(funeralResult);
+        }else{
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No up coming funerals");
+        }
     }
 }

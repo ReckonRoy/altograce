@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.itilria.altograce.domain.Company;
 import java.math.BigDecimal;
 
 import com.itilria.altograce.domain.client.PrimaryClient;
@@ -78,4 +79,10 @@ public class Funeral{
     @ManyToOne
     @JoinColumn(name = "primaryClient", referencedColumnName = "id")
     private PrimaryClient primaryClient;
+    
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company", referencedColumnName = "id")
+    private Company company;
+    private int companyid;
 }

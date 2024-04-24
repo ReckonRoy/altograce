@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.itilria.altograce.domain.funeral.Funeral;
 import com.itilria.altograce.domain.client.PrimaryClient;
 import com.itilria.altograce.domain.Company;
+import com.itilria.altograce.domain.UserAuthentication;
 import com.itilria.altograce.repository.funeralrepository.FuneralManagementRepository;
+import com.itilria.altograce.repository.UserAuthenticationRepository;
 import com.itilria.altograce.repository.CompanyRepository;
 import com.itilria.altograce.repository.clientrepository.ClientRepository;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,34 +27,49 @@ public class FuneralService{
     private CompanyRepository companyRepository;
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private UserAuthenticationRepository userAuthRepo;
+    
 
 /*-----------------------------------Manage Funeral Data Entry-------------------------------------------*/
     public Funeral addFuneral(String fileId, Funeral funeralData)
     {
-        PrimaryClient primaryClient = clientRepository.findByClientid(fileId).orElse(null);
-        Company company = primaryClient.getCompany();
-        
-        if(primaryClient != null)
+        Optional<PrimaryClient> primaryClient = clientRepository.findByClientid(fileId);
+        if(!primaryClient.isPresent())
         {
-            funeralData.setPrimaryClient(primaryClient);
-            funeralData.setCompany(company);
-            funeralData.setRecordEntryDate(LocalDate.now());
-            return funeralRepository.save(funeralData);
-        }else{
-            return null;
+            throw new IllegalArgumentException("No File found for client");
         }
+        
+        PrimaryClient client = clientRepository.findByClientid(fileId).get();
+        Company company = client.getCompany();
+        
+        
+        funeralData.setPrimaryClient(client);
+        funeralData.setCompany(company);
+        funeralData.setCompanyid(company.getId());
+        funeralData.setRecordEntryDate(LocalDate.now());
+        return funeralRepository.save(funeralData);
     }
 /*__________________________________________________________________________________________________________________________*/    
  
 /*------------------------------------------------------Get Upcoming Funerals-----------------------------------------------*/    
     
-    public List<Funeral> getUpcomingFuneralsWithinTwoWeeks() {
+    public List<Funeral> getUpcomingFuneralsWithinTwoWeeks(String username) {
+        
+        UserAuthentication userAuth = userAuthRepo.findByUsername(username).get();
+        // Retrieve the company entity by ID
+        Company company = companyRepository.findById(userAuth.getCompanyId()).orElse(null);
+        
+        if (company == null) {
+            // Handle the case where the company with the given ID does not exist
+            return null; 
+        }
         // Calculate the date two weeks from today
         LocalDate today = LocalDate.now();
         LocalDate twoWeeksFromNow = today.plusWeeks(2);
 
-        // Retrieve upcoming funerals within the specified range
-        List<Funeral> upcomingFunerals = funeralRepository.findByDateOfBurialBetween(today, twoWeeksFromNow);
+        // Retrieve upcoming funerals associated with the company within the specified range
+        List<Funeral> upcomingFunerals = funeralRepository.findByCompanyidAndDateOfBurialBetween(company.getId(), today, twoWeeksFromNow);
         
         // Check if there are any upcoming funerals
         if (upcomingFunerals.isEmpty()) {

@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface FuneralManagementRepository extends JpaRepository<Funeral, Integer> {
-    List<Funeral> findByDateOfBurialBetween(LocalDate startDate, LocalDate endDate);
+    List<Funeral> findByCompanyidAndDateOfBurialBetween(int id, LocalDate today, LocalDate twoWeeksFromNow);
 }

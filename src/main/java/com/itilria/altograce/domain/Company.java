@@ -14,6 +14,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.itilria.altograce.domain.funeral.Funeral;
 
 @Entity
 @Setter
@@ -80,6 +81,10 @@ public class Company
     @JsonIgnore
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrimaryClient> primaryClient;
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Funeral> funeral;
 
     @JsonIgnore
     @OneToOne(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
