@@ -251,6 +251,7 @@ let registerCompany = function()
 			regNumber: document.getElementById("reg-number").value,	
 			taxNumber: document.getElementById("tax-number").value,
 			fspNumber: document.getElementById("fsp-number").value,
+            initials: document.getElementById("initials-field").value,
 			email: document.getElementById("cemail-field").value,
             countryCode: document.getElementById("country-code").value,
 			contact1: document.getElementById("comp-contact-details").value,

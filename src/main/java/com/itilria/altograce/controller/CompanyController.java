@@ -89,6 +89,7 @@ public class CompanyController
         company.setTaxNumber(request.getTaxNumber());
         company.setFspNumber(request.getFspNumber());
         company.setEmail(request.getEmail());
+        compnay.setInitials(request.getInitials());
         company.setCountryCode(request.getCountryCode());
         company.setContact1(request.getContact1());
         company.setContact2(request.getContact2());

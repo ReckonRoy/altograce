@@ -43,6 +43,9 @@ public class Company
     @Column(name="CO_EMAIL")
     private String email;
 
+    @Column(name = "CO_INITIALS");
+    private String initials;
+
     @Column(name="CO_COUNTRY_CODE")
     private String countryCode;
 
