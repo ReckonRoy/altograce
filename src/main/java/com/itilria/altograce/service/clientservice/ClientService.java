@@ -1,37 +1,39 @@
 package com.itilria.altograce.service.clientservice;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import com.itilria.altograce.domain.client.PrimaryClient;
-import com.itilria.altograce.domain.client.ClientBilling;
-import com.itilria.altograce.domain.client.Deceased;
-import com.itilria.altograce.domain.client.ClientSettings;
-import com.itilria.altograce.domain.client.ClientDependency;
-import com.itilria.altograce.domain.client.PrimaryPackageSubscription;
-import com.itilria.altograce.domain.client.SecondaryPackageSubscription;
-import java.time.temporal.ChronoUnit;
-import com.itilria.altograce.domain.ServicePackage;
-import com.itilria.altograce.domain.Company;
-import com.itilria.altograce.domain.StaffAuditing;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import com.itilria.altograce.repository.ServicePackageRepository;
-import com.itilria.altograce.repository.CompanyRepository;
-import com.itilria.altograce.repository.clientrepository.ClientRepository;
-import com.itilria.altograce.repository.clientrepository.DeceasedRepository;
-import com.itilria.altograce.repository.clientrepository.ClientBillingRepository;
-import com.itilria.altograce.repository.clientrepository.ClientSettingsRepository;
-import com.itilria.altograce.repository.clientrepository.ClientDependencyRepository;
-import com.itilria.altograce.repository.StaffAuditingRepository;
-import com.itilria.altograce.repository.clientrepository.PrimaryPackageSubscriptionRepository;
-import org.springframework.stereotype.Service;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.itilria.altograce.domain.Company;
+import com.itilria.altograce.domain.ServicePackage;
+import com.itilria.altograce.domain.StaffAuditing;
+import com.itilria.altograce.domain.client.ClientBilling;
+import com.itilria.altograce.domain.client.ClientDependency;
+import com.itilria.altograce.domain.client.ClientSettings;
+import com.itilria.altograce.domain.client.Deceased;
+import com.itilria.altograce.domain.client.PrimaryClient;
+import com.itilria.altograce.domain.client.PrimaryPackageSubscription;
+import com.itilria.altograce.repository.CompanyRepository;
+import com.itilria.altograce.repository.ServicePackageRepository;
+import com.itilria.altograce.repository.StaffAuditingRepository;
+import com.itilria.altograce.repository.clientrepository.ClientBillingRepository;
+import com.itilria.altograce.repository.clientrepository.ClientDependencyRepository;
+import com.itilria.altograce.repository.clientrepository.ClientRepository;
+import com.itilria.altograce.repository.clientrepository.ClientSettingsRepository;
+import com.itilria.altograce.repository.clientrepository.DeceasedRepository;
+import com.itilria.altograce.repository.clientrepository.PrimaryPackageSubscriptionRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +62,7 @@ public class ClientService{
 
 /*--------------------------------Primary Client Section----------------------------------------------*/
     //Register Client
-    public PrimaryClient registerClient(int companyId, PrimaryClient clientData){
+    public PrimaryClient registerClient(int companyId, PrimaryClient clientData) throws Exception{
         Company company = companyRepository.findById(companyId).orElse(null);
         
         System.out.println(companyId);
@@ -88,12 +90,10 @@ public class ClientService{
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
                 String formattedDateOfCover = clientData.getDateOfCover().format(formatter);
                 clientData.setDateOfCover(LocalDate.parse(formattedDateOfCover, formatter));
+                
             }else{
                 clientData.setDateOfCover(LocalDate.now());
             }
-
-           
-
             clientData.setActivationStatus(this.handleAccountActivation(clientData.getDateOfCover(), clientSettings.getWaitingPeriod()));
 
             //save and return saved object
@@ -152,6 +152,8 @@ public class ClientService{
             subscriptionMap.put("dateOfCover", subscriptionResult.getDateOfCover().toString());
             subscriptionMap.put("groupName", subscriptionResult.getGroupName());
             subscriptionMap.put("joiningFee", subscriptionResult.getJoiningFee().toString());
+            String packageId = Integer.toString(subscriptionResult.getId()) ;
+            subscriptionMap.put("packageId", packageId);
             return subscriptionMap;
         }else{
             return null;
@@ -176,6 +178,10 @@ public class ClientService{
         Optional<ClientSettings> optionalClientSettings = clientSettingsRepository.findByCompany_Id(company.getId());
         if (!optionalClientSettings.isPresent()) {
             throw new IllegalArgumentException("No client settings found for provided companyId");
+        }
+        
+        if(dependencyRepository.findByPassport(depForm.getId_passport()).isPresent()){
+            throw new IllegalArgumentException("This dependent already exists");
         }
 
         ClientSettings clientSettings = optionalClientSettings.get();

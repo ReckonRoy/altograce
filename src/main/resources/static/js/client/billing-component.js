@@ -9,16 +9,19 @@ customElements.define("billing-component", class extends HTMLElement {
       this.attachShadow({ mode: 'open' });
       this.shadowRoot.innerHTML =`<style>
             button {
-                background-color: #333;
-                color: #fff;
+                background-color: blue;
+                color: white;
                 padding: 10px 20px;
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
+                margin: 0 auto;
+                font-weight: bold;
             }
 
             input[type="text"],
             input[type="date"],
+            input[type="number"],
             select {
                 width: 100%;
                 padding: 10px;
@@ -28,19 +31,8 @@ customElements.define("billing-component", class extends HTMLElement {
             }
 
             button:hover {
-                background-color: #555;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-            }
-    
-            th, td {
-                padding: 8px;
-                text-align: left;
-                border-bottom: 1px solid #ddd;
+                background-color: #5dff00;
+                color: black;
             }
 
             h1, h2 {
@@ -75,6 +67,33 @@ customElements.define("billing-component", class extends HTMLElement {
                 border-radius: 5px;
             }
 
+            #billing-form{
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+
+            #amount-div{
+                grid-column-start: 1;
+                grid-row-start: 2;
+            }
+
+            #date-div{
+                grid-column-start: 2;
+                grid-row-start: 2;
+            }
+
+            #pmethod-div{
+                grid-column: 1/3;
+                background-color: lightgray;
+                grid-row-start: 3;
+                padding: 20px 0; 
+            }
+
+            #submit-billing{
+                grid-column: span 2;
+            }
+
             .close {
                 color: #aaa;
                 float: right;
@@ -94,20 +113,20 @@ customElements.define("billing-component", class extends HTMLElement {
           <div class="modal-content">
               <span class="close">&times;</span>
               <h2>Billing</h2>
-              <form id="billing-form">
+                <div id="billing-form">
                   <div class="form-group">
                       <label for="billing-client-id">Client ID:</label>
                       <slot name="clientid" id="billing-client-id"></slot>
                   </div>
-                  <div class="form-group">
-                      <label for="amount-to-pay">Amount to Pay:</label>
+                  <div id="amount-div" class="form-group">
+                      <label for="amount-to-pay">Amount to Pay:</label><br/>
                       <input type="number" id="amount-to-pay" name="amount-to-pay" required>
                   </div>
-                  <div class="form-group">
+                  <div id="date-div" class="form-group">
                       <label for="payment-date">Payment Date:</label>
                       <input type="date" id="payment-date" name="payment-date" value="" required>
                   </div>
-                  <div class="form-group">
+                  <div id="pmethod-div" class="form-group">
                       <label for="payment-method">Payment Method:</label>
                       <select id="payment-method" name="payment-method">
                           <option value="Cash">Cash</option>
@@ -115,8 +134,8 @@ customElements.define("billing-component", class extends HTMLElement {
                           <option value="POS Machine">POS Machine</option>
                       </select>
                   </div>
-                  <button type="button" id="submit-billing">Submit</button>
-              </form>
+                  <button type="button" id="submit-billing">Proceed with payment</button>
+              </div>
           </div>
       </div>
       `;

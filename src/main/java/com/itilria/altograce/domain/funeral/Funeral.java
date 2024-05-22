@@ -5,16 +5,30 @@ package com.itilria.altograce.domain.funeral;
  * @Date 28 February 2024
  * @Description Entity class for main client member details.
  */
-import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import lombok.*;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.itilria.altograce.domain.Company;
-import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.itilria.altograce.domain.Company;
 import com.itilria.altograce.domain.client.PrimaryClient;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Setter
@@ -80,9 +94,12 @@ public class Funeral{
     @JoinColumn(name = "primaryClient", referencedColumnName = "id")
     private PrimaryClient primaryClient;
     
-    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company", referencedColumnName = "id")
     private Company company;
     private int companyid;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "funeral", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Invoice invoice;
 }

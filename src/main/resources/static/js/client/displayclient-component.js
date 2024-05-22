@@ -5,20 +5,21 @@
  */
 
 customElements.define("display-client", class extends HTMLElement {
+
+    gender = "";
+
+    getGender(){
+        return this.gender;
+    }
     connectedCallback() {
       this.attachShadow({ mode: 'open' });
       this.shadowRoot.innerHTML =`<style>
-
-        :host{
-            width: 90%;
-        }
         .container {
-            max-width: 90%;
+            width: 90%;
             margin: 0 auto;
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         h2 {
             color: #333;
@@ -88,6 +89,24 @@ customElements.define("display-client", class extends HTMLElement {
             width: 80%;
             border-radius: 8px;
             position: relative;
+        }
+
+        #dependencyForm{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        #rel-div{
+            grid-column: span 2;
+        }
+
+        #dependencyForm button{
+            grid-column: span 2;
+            width: 50%;
+            padding: 10px 0;
+            margin: 0 auto;
+            font-weight: bolder;
         }
         .close {
             color: #aaa;
@@ -179,6 +198,71 @@ customElements.define("display-client", class extends HTMLElement {
             color: red;
             border: 1px solid red;
         }
+        
+        .action-parent{
+            position: relative;
+        }
+        
+        .actions-container{
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            border: 1px solid gray;
+            background: white;
+            padding: 10px;
+            gap: 1rem;
+            box-sizing: border-box;
+            border-radius: 5px;
+            width: 100%;
+            z-index: 10;
+        }
+        
+        .actions-ul{
+            list-style: none;
+            padding: 0;
+        }
+        
+        .actions-ul li{
+            flex: 1;
+        }
+        
+        .actions-ul li > button{
+            width: 100%;
+            padding: 5px; 
+            font-weight: bold;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .select-action{
+            cursor: pointer;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid gray;
+            border-radius: 5px;
+        }
+
+        .select-action:hover{
+            border: 1px solid blue;
+        }
+
+        .actions-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: red;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .actions-close:hover,
+        .actions-close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
     </style>
 
@@ -195,6 +279,7 @@ customElements.define("display-client", class extends HTMLElement {
                     <th class="columnSort" id="1">Name</th>
                     <th class="columnSort" id="2">Last Name</th>
                     <th class="columnSort" id="3">Email</th>
+                    <th>Account Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -215,30 +300,51 @@ customElements.define("display-client", class extends HTMLElement {
             <span class="close">&times;</span>
             <h2>Add Dependency</h2>
             <form id="dependencyForm">
-                <input type="text" id="depName" placeholder="Name" required><br>
-                <input type="text" id="depSurname" placeholder="Surname" required><br>
-                <select id="relationship" required>
-                    <option value="">Select Relationship</option>
-                    <option value="spouse">Spouse</option>
-                    <option value="son">Son</option>
-                    <option value="daughter">Daughter</option>
-                    <option value="brother">Brother</option>
-                    <option value="sister">Sister</option>
-                    <option value="father">Father</option>
-                    <option value="mother">Mother</option>
-                    <option value="uncle">Uncle</option>
-                    <option value="auntie">Auntie</option>
-                    <option value="grandfather">Grandfather</option>
-                    <option value="grandmother">Grandmother</option>
-                </select><br>
-                <label for="male">Male:</label>
-                <input type="radio" id="male" name="gender" value="male">
-                <label for="female">Female:</label>
-                <input type="radio" id="female" name="gender" value="female"><br>
-                <input type="text" id="id_passport" placeholder="ID/Passport" required><br>
-                <input type="date" id="dob" placeholder="Date of Birth" required><br>
-                <input type="date" id="dateOfCover" placeholder="Date of Cover"><br>
-                <button type="button" id="save-dep-btn">Save</button>
+                <div>
+                    <label>Name:</label>
+                    <input type="text" id="depName" placeholder="Name" required><br>
+                </div>
+                <div>
+                    <label>Surname:</labe>
+                    <input type="text" id="depSurname" placeholder="Surname" required><br>
+                </div>
+                <div id="rel-div">
+                    <label>Relationship:</label>
+                    <select id="relationship" required>
+                        <option value="">Select Relationship</option>
+                        <option value="spouse">Spouse</option>
+                        <option value="son">Son</option>
+                        <option value="daughter">Daughter</option>
+                        <option value="brother">Brother</option>
+                        <option value="sister">Sister</option>
+                        <option value="father">Father</option>
+                        <option value="mother">Mother</option>
+                        <option value="uncle">Uncle</option>
+                        <option value="auntie">Auntie</option>
+                        <option value="grandfather">Grandfather</option>
+                        <option value="grandmother">Grandmother</option>
+                    </select>
+                </div>
+                <div>
+                    <label><Strong>Gender:</strong></label>
+                    <label for="male">Male:</label>
+                    <input type="radio" id="male" class="dep-gender-radButton" name="gender" value="male">
+                    <label for="female">Female:</label>
+                    <input type="radio" id="female" class="dep-gender-radButton" name="gender" value="female"><br>
+                </div>
+                <div>
+                    <label>Id/Passport:</label>
+                    <input type="text" id="id_passport" placeholder="ID/Passport" required><br>
+                </div>
+                <div>
+                    <label>D.O.B:</label>
+                    <input type="date" id="dob" placeholder="Date of Birth" required><br>
+                </div>
+                <div>
+                    <label>Date Of Cover:</label>
+                    <input type="date" id="dateOfCover" placeholder="Date of Cover"><br>
+                </div>
+                    <button type="button" id="save-dep-btn">Save</button>
             </form>
         </div>
     </div>
@@ -275,12 +381,15 @@ customElements.define("display-client", class extends HTMLElement {
         let primaryLastName = "";
         let clientsToShow = [];
         let dependencies = [];
+        let genderValue = "";
         /**
          * this will keep track some fields of the deceased 
          */
         let deceased = {};
         let pageNumber = 0;
         let pageSize = 10; // Change this according to your requirement
+
+        this.getDepGender();
         // Function to populate the table with clients
         let populateTable = (pageNumber, pageSize) => {
             fetch(`/client/management/clients/${userData.companyId}?page=${parseInt(pageNumber)}&size=${parseInt(pageSize)}`)
@@ -324,14 +433,47 @@ customElements.define("display-client", class extends HTMLElement {
                     <td>${client.email}</td>
                     <td class="client.activationStatus">${client.activationStatus}</td>
                     <td>
-                        <button class="billing-btn" id="${client.clientid}">Pay</button>
-                        <button class="payment-history-btn" id="${client.clientid}">Payment history</button>
-                        <button class="add-dep-btn" id="${client.clientid}">Add Dep</button>
-                        <button class="moreinfo-btn" id="${client.clientid}">More Info</button>
+                        <div class="action-parent">
+                            <div class="select-action">Select an action</div>
+                            <div class="actions-container"> 
+                            <span class="actions-close">&times;</span>
+                                <ul class="actions-ul">
+                                    <li><button class="billing-btn" id="${client.clientid}">Pay</button></li>
+                                    <li><button class="payment-history-btn" id="${client.clientid}">Payment history</button></li>
+                                    <li><button class="add-dep-btn" id="${client.clientid}">Add Dep</button></li>
+                                    <li><button class="moreinfo-btn" id="${client.clientid}">More Info</button></li>
+                                </ul>
+                            </div>
+                        </div>
                     </td>
                     </tr>`;
                     table.innerHTML += row;
                 });
+                
+                /**
+                * Actions container - manage visibility of actions container
+                */
+                let actionContainer = this.shadowRoot.querySelectorAll(".actions-container");
+                let actionDiv = this.shadowRoot.querySelectorAll(".select-action");
+                actionDiv.forEach((actionEvent) => {
+                    actionEvent.addEventListener("click", (event)=>{
+                        if(event.target.nextElementSibling.style.display == ""){
+                            event.target.nextElementSibling.style.display = "flex";
+                        }else{
+                            event.target.nextElementSibling.style.display = "";
+                        }
+                    });
+                })
+
+                let closeActions = this.shadowRoot.querySelectorAll(".actions-close");
+                closeActions.forEach((closeButton)=>{
+                    closeButton.addEventListener("click", () => {
+                        for(let actions of actionContainer)
+                        {
+                            actions.style.display = "";
+                        }
+                    });
+                })
 
                 // Update pagination controls based on totalPages
                 let totalPages = data.totalPages;
@@ -340,6 +482,11 @@ customElements.define("display-client", class extends HTMLElement {
                 let addDep_btn = this.shadowRoot.querySelectorAll(".add-dep-btn");
                 addDep_btn.forEach((add_btn) => {
                     add_btn.addEventListener("click", () => {
+                        for(let actions of actionContainer)
+                        {
+                            actions.style.display = "";
+                        }
+                        
                         openModal(add_btn.id);
                     })
                 });
@@ -347,6 +494,10 @@ customElements.define("display-client", class extends HTMLElement {
                 let billing_btn = this.shadowRoot.querySelectorAll(".billing-btn");
                 billing_btn.forEach((billing) => {
                     billing.addEventListener("click", () => {
+                        for(let actions of actionContainer)
+                        {
+                            actions.style.display = "";
+                        }
                         let idValue = billing.id;
                         displayBillingModal(idValue.toString());
                     })
@@ -355,6 +506,10 @@ customElements.define("display-client", class extends HTMLElement {
                 let paymentHistory_btn = this.shadowRoot.querySelectorAll(".payment-history-btn");
                 paymentHistory_btn.forEach((history) => {
                     history.addEventListener("click", () => {
+                        for(let actions of actionContainer)
+                        {
+                            actions.style.display = "";
+                        }
                         let idValue = history.id;
                         displayPaymentHistoryModal(idValue.toString());
                     })
@@ -363,6 +518,10 @@ customElements.define("display-client", class extends HTMLElement {
                 let moreinfo_btn = this.shadowRoot.querySelectorAll(".moreinfo-btn");
                 moreinfo_btn.forEach((viewinfo_btn) => {
                     viewinfo_btn.addEventListener("click", () => {
+                        for(let actions of actionContainer)
+                        {
+                            actions.style.display = "";
+                        }
                         showMoreInfo(viewinfo_btn.id);
                     })
                 });
@@ -470,43 +629,56 @@ customElements.define("display-client", class extends HTMLElement {
         // Function to save dependency
         let saveDependency = (clientId) => {
             // Add your logic to save dependency
-            var depName = this.shadowRoot.getElementById('depName').value;
-            var depSurname = this.shadowRoot.getElementById('depSurname').value;
-            var relationship = this.shadowRoot.getElementById('relationship').value;
-            var gender = this.shadowRoot.querySelector('input[name="gender"]:checked').value;
-            var id_passport = this.shadowRoot.getElementById('id_passport').value;
-            var dob = this.shadowRoot.getElementById('dob').value;
+            let depName = this.shadowRoot.getElementById('depName').value;
+            let depSurname = this.shadowRoot.getElementById('depSurname').value;
+            let relationship = this.shadowRoot.getElementById('relationship').value;
+            let id_passport = this.shadowRoot.getElementById('id_passport').value;
+            let dob = this.shadowRoot.getElementById('dob').value;
             let doc = this.shadowRoot.getElementById("dateOfCover").value;
-            
-            // Creating dependency object
-           let dependency = {
-                name: depName,
-                relationship: relationship,
-                gender: gender,
-                id_passport: id_passport,
-                dob: dob,
-                dateOfCover: doc,
-            };
 
-            // Send data to the server using Fetch API
-            fetch(`/client/management/add/dependency/${clientId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add any additional headers if required
-                },
-                body: JSON.stringify(dependency)
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Dependency saved successfully.');
-                } else {
-                    console.error('Failed to save dependency.');
-                }
-            })
-            .catch(error => {
-                console.error('Error saving dependency:', error);
-            });
+            if(depName == "" || depSurname == "" || relationship == ""|| this.gender == "" || id_passport == "" || dob == "" || doc == "")
+            {
+                alert("Please fill in all fields");
+            }else{
+                // Creating dependency object
+                let dependency = {
+                    name: depName,
+                    lastName: depSurname,
+                    relationship: relationship,
+                    gender: this.gender,
+                    id_passport: id_passport,
+                    dob: dob,
+                    dateOfCover: doc,
+                };
+
+                // Send data to the server using Fetch API
+                fetch(`/client/management/add/dependency/${clientId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any additional headers if required
+                    },
+                    body: JSON.stringify(dependency)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        if(response.status === 400)
+                        {
+                            alert("This dependent has already been registered");
+                        }else{
+                            alert('Error saving dependency:', response);
+                        }
+                    }
+                
+                    return response.json();
+                }).then((data) => {
+                    alert(`Dependent: ${data.name} ${data.lastName} has been successfuly added.`);
+                    this.shadowRoot.getElementById('myModal').style.display = "";
+                })
+                .catch(error => {
+                    
+                });
+            }
         }
 
         this.shadowRoot.querySelector(".close").addEventListener("click", ()=>{
@@ -730,19 +902,6 @@ customElements.define("display-client", class extends HTMLElement {
         this.shadowRoot.querySelector(".client-info-close").addEventListener("click", ()=>{
             closeClientInfoModal();
         });
-
-        // Example functions for the client info controls
-        let billing = () => {
-            console.log('Billing button clicked');
-        }
-
-        let deleteClient = () => {
-            console.log('Delete button clicked');
-        }
-
-        let viewDependency = () => {
-            console.log('View Dependency button clicked');
-        }
 /*-------------------------------Deacesed Information Processing-------------------------------------*/
         let processDeaceased = (id_val) => {
             deceased = dependencies.find(dependency => dependency.id === id_val);
@@ -867,6 +1026,15 @@ customElements.define("display-client", class extends HTMLElement {
             } else {
                 console.error("Error: deceased-records-component not found");
             }
+        });
+    }
+
+    getDepGender(){
+        let gender = this.shadowRoot.querySelectorAll(".dep-gender-radButton");
+        gender.forEach((gen) => {
+            gen.addEventListener("click", () => {
+                this.gender = gen.value;
+            });
         })
     }
 })

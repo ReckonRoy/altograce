@@ -5,16 +5,31 @@ package com.itilria.altograce.domain.client;
  * @Date 28 February 2024
  * @Description Entity class for main client member details.
  */
-import jakarta.persistence.*;
 import java.time.LocalDate;
-import lombok.*;
-import com.itilria.altograce.domain.Company;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.itilria.altograce.domain.Company;
 import com.itilria.altograce.domain.funeral.Funeral;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Setter
@@ -27,6 +42,7 @@ public class PrimaryClient{
     @Id
     private int id;
 
+    @Column(nullable = false, unique = true)
     private String clientid;
 
     @Transient

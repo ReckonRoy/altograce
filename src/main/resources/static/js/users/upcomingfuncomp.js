@@ -9,7 +9,7 @@ customElements.define("upcoming-funeral", class extends HTMLElement {
     render(){
         if (!this.shadowRoot) return; // Check if shadowRoot exists
         this.shadowRoot.innerHTML =`<style>
-                #funeralTableGrid {
+                .funeralTableGrid {
                     display: grid;
                     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
                     gap: 20px;
@@ -53,8 +53,7 @@ customElements.define("upcoming-funeral", class extends HTMLElement {
             this.render();
             this.rendered = true;
 
-            this.populateFuneralTable();
-            
+            this.createFuneralTable();
         }
     }
 
@@ -128,10 +127,10 @@ customElements.define("upcoming-funeral", class extends HTMLElement {
     
 
      // Function to create a table from JSON data
-     createFuneralTable(data) {
-        const table = document.createElement('table');
-        table.classList.add('funeral-table');
-        const tbody = document.createElement('tbody');
+     createFuneralTable() {
+        let grid = this.shadowRoot.querySelector('.grid');
+        grid.className = "funeralTableGrid";
+        
 
         fetch(`/funeral/upcoming/funerals`)
         .then((response) => {
@@ -141,33 +140,46 @@ customElements.define("upcoming-funeral", class extends HTMLElement {
             return response.json();
         })
         .then((data) => {
-            data.forEach((funeral) => {
-                const tr = document.createElement('tr');
-                const th = document.createElement('th');
-                th.textContent = key.replace(/_/g, ' ');
-                const td = document.createElement('td');
-                td.textContent = data[key];
-                tr.appendChild(th);
-                tr.appendChild(td);
-                tbody.appendChild(tr);
-            });
-            table.appendChild(tbody);
-            return table;
+            if(data == null)
+            {
+                data.forEach((funeral) => {
+                let cell = document.createElement('div'); 
+                    cell.innerHTML = `
+                        <table class="funeral-table">
+                            <tbody class="funeral-table">
+                                <tr><th>Name:</th><td>${funeral.nameOfDeceased}</td></tr>
+                                <tr><th>Date:</th><td>${funeral.dateOfBurial}</td></tr>
+                                <tr><th>Time:</th><td>${funeral.timeOfBurial}</td></tr>
+                                <tr><th>Cemetery:</th><td>${funeral.cemetery}</td></tr>
+                            </tbody>
+                        <table>
+                    `;
+                    // Create a new row for each payment
+                    /*let row = tableBody.insertRow();
+                    let funeralDateCell = row.insertCell(0);
+                    let funeralTimeCell = row.insertCell(1);
+                    let cemetryCell = row.insertCell(2);
+                    let deceasedCell = row.insertCell(3);
+                    
+                    // Populate cells with payment data
+                    funeralDateCell.textContent = funeral.dateOfBurial;
+                    funeralTimeCell.textContent = funeral.timeOfBurial;
+                    cemetryCell.textContent = funeral.cemetry;
+                    deceasedCell.textContent = funeral.nameOfDeceased;
+                    * */
+                    grid.appendChild(cell);
+                });
+            }else{
+                let cell = document.createElement('div'); 
+                cell.innerHTML = `<strong>${data.message}</strong>`;
+                grid.appendChild(cell);
+            }
+            
+            
+            
         })
         .catch((error) => {
-            
-        });
-    }
-
-    populateFuneralTable(){
-        // Populate the grid with funeral tables
-        const grid = this.shadowRoot.querySelector('.grid');
-        grid.id = "funeralTableGrid";
-        this.upcomingFunerals.forEach(funeral => {
-            const table = this.createFuneralTable(funeral);
-            const cell = document.createElement('div');
-            cell.appendChild(table);
-            grid.appendChild(cell);
+            alert(error);
         });
     }
 })

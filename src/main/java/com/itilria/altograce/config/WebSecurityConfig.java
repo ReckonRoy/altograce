@@ -72,7 +72,7 @@ public class WebSecurityConfig{
                     return "/admin/dashboard";
                 }else if(authorities.stream().anyMatch( a -> a.getAuthority().equals("RECEPTIONIST")))
                 {
-                    return "/receptionist/dashboard";
+                    return "/reception/dashboard";
                 }else{
                    return ""; 
                 }

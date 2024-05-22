@@ -20,6 +20,14 @@ body {
     align-items: center;
     background-color: rgba(255, 255, 255, 0.5); 
 }
+#display-client{
+    width: 90%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 #member-registration{
     display: none;
     flex: 1;

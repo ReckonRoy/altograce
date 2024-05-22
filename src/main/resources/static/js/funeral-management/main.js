@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     
     let fileId = getQueryParam("fileId");
-    console.log(fileId);
     let deceasedName = getQueryParam("name");
     let surname = getQueryParam("surname");
     let primaryClient = getQueryParam("clientName");
@@ -30,4 +29,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
     let formContainer = document.getElementById("form-container");
     formContainer.appendChild(funeralFormComponent);
+
+    
 });

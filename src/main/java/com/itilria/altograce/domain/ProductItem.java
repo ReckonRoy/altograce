@@ -9,6 +9,7 @@ package com.itilria.altograce.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.math.BigDecimal;
 
 @Entity
 @Setter
@@ -25,6 +26,13 @@ public class ProductItem{
 
     @Column(name="QUANTITY")
     private int itemQuantity;
+
+    @Column(name="PRICE", nullable=false)
+    private BigDecimal price;
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
     @Transient
     private String packageType;

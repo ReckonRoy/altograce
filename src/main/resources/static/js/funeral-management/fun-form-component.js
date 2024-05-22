@@ -112,8 +112,30 @@ customElements.define("funeral-form-component", class extends HTMLElement {
             button:hover {
                 background-color: #555;
             }
+            /*close button*/
+            #close-btn{
+                display: none;
+                position: fixed;
+                background-color: white;
+                color: lightgray;
+                font-weight:bold;
+                top: 0;
+                right: 0;
+                z-index: 20;
+                border: 1px solid red;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                padding: 0;
+                text-align: center;
+            }
+            
+            #close-btn:hover{
+                color: red;
+            } 
         </style>
         <div class="container">
+                <button id="close-btn">X</button>
                 <h2>Generate Invoice</h2>
                 <form id="invoice-generation-form">
                     <div class="form-group">
@@ -183,7 +205,7 @@ customElements.define("funeral-form-component", class extends HTMLElement {
                         <!-- Item inputs will be added here dynamically -->
                     </div>
                 </form>
-                <button type="button" onclick="addItem()">Add Item</button>
+                <button type="button" id="get-items">View Items</button>
                 <button type="button" id="processFormButton">Submit</button>
             </div>
       `;
@@ -202,6 +224,9 @@ customElements.define("funeral-form-component", class extends HTMLElement {
             processFormButton.addEventListener('click', () => {
                 this.processForm();
             });
+
+            // invoke handle events for all buttons
+            this.handleEvents();
         }
     }
 
@@ -226,19 +251,17 @@ customElements.define("funeral-form-component", class extends HTMLElement {
 
         // If form is valid, collect data
         const formData = new FormData(form);
-        const data = {};
+        let form_data = {};
         formData.forEach((value, key) => {
-            data[key] = value;
+            form_data[key] = value;
         });
-
-        console.log(data);
         // Send data to backend
         fetch(`/funeral/add/${this.fileId}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(form_data),
         })
         .then(response => {
             if (!response.ok) {
@@ -255,6 +278,55 @@ customElements.define("funeral-form-component", class extends HTMLElement {
             // Handle error
             console.error('Error:', error);
         });
+    }
+/*_________________________________________________________________________________________________________________________________________*/
+
+    
+    //event handlers
+    handleEvents(){
+        const getItems = this.shadowRoot.getElementById("get-items");
+        getItems.addEventListener("click", () => {
+            this.getItems();
+        });
+
+        //close button -> close the modal window
+        let closeButton = this.shadowRoot.getElementById("close-btn");
+        closeButton.addEventListener("click", () =>{
+            let checkListComponent = this.shadowRoot.getElementById("checklist-component");
+            checkListComponent.style.display = "none";
+            let overlay = this.shadowRoot.getElementById("overlay");
+            overlay.style.display = "none";
+            closeButton.style.display = "";
+        });
+    }
+
+    //get items checklist for client subscription/
+    getItems(){
+        const overlay = document.createElement("div");
+        overlay.classList.add("overlay");
+        overlay.id = "overlay";
+        overlay.style.display = "block";
+        overlay.style.position = "fixed";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.right = "0";
+        overlay.style.bottom = "0";
+        overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        overlay.style.zIndex = "10";
+        const checkListComponent = document.createElement("checklist-component");
+        checkListComponent.id = "checklist-component";
+        const checkListContainer = document.createElement("div");
+        checkListComponent.style.position = "fixed";
+        checkListComponent.style.zIndex = "100";
+        checkListComponent.style.top = "10%";
+        checkListComponent.setAttribute("fileId", this.fileId);
+        this.shadowRoot.appendChild(checkListContainer);
+
+        checkListContainer.appendChild(overlay);
+        checkListContainer.appendChild(checkListComponent);
+        let closeButton = this.shadowRoot.getElementById("close-btn");
+        closeButton.style.display = "block";
+
     }
 
     //save deceased record
@@ -273,7 +345,7 @@ customElements.define("funeral-form-component", class extends HTMLElement {
         fetch(`/client/add/deceased/${this.fileId}`,{
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(deceased)
         })
@@ -281,7 +353,7 @@ customElements.define("funeral-form-component", class extends HTMLElement {
             if (!response.ok) {
                 throw new Error(`Error: ${response.status} - ${response.statusText}`);
             }
-            return response.json();
+            return response.text();
         }) 
         .then(data => {
             console.log("deceased has been successfully saved to deceased records.")

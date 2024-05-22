@@ -205,7 +205,6 @@ connectedCallback() {
 
     let closeVacationPopup = () => {
         let overlayModal = this.shadowRoot.getElementById('vacationOverlay');
-        alert("closing...");
         overlayModal.style.display = "none"; 
     }
 
@@ -227,7 +226,9 @@ connectedCallback() {
         console.log(vacationObj);
         
         if (vacationObj.startDate && vacationObj.endDate) {
-            fetch(`/hr/employee-management/vacation/${1}`, {
+            let comId = companyProfile.selectedId;
+            if(comId > 0){
+            fetch(`/hr/employee-management/vacation/${companyProfile.selectedId}`, {
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -245,13 +246,16 @@ connectedCallback() {
             }).catch((error) => {
                 alert(error);
             });
+            }else{
+            alert('Please select a company to interact with.');
+        }
         } else {
             alert('Please enter both start and end dates.');
         }
     }
 
 let getEmployees = () => {
-    let comId = 1;
+    let comId = companyProfile.selectedId;
     fetch(`/hr/employee-management/employees/${comId}`)
     .then((response) => {
         if (!response.ok){

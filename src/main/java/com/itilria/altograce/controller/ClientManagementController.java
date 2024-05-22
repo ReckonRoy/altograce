@@ -60,7 +60,7 @@ public class ClientManagementController{
      * -> auditing user actions
     */
     @GetMapping("/management")
-    public String clientPage(Model model)
+    public String clientPage()
     {
         return "client-template/client-management";
     }
@@ -158,12 +158,17 @@ public class ClientManagementController{
     @PostMapping("/management/add/dependency/{clientid}")
     public ResponseEntity<?> addDependency(@PathVariable String clientid, @RequestBody ClientDependency request)
     {
-        ClientDependency result = clientService.addDependency(clientid, request);
-        if(result != null)
-        {
-            return ResponseEntity.ok(result);
-        }else{
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        try{
+            ClientDependency result = clientService.addDependency(clientid, request);
+            if(result != null)
+            {
+                return ResponseEntity.ok(result);
+            }else{
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        }
+        catch(IllegalArgumentException ex){
+            return new ResponseEntity<>("Dependent already exists!", HttpStatus.BAD_REQUEST);
         }
     }
 

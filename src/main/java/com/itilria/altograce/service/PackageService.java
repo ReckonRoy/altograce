@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -147,6 +148,12 @@ public OptionalPackage addOptionalPackage(int id, OptionalPackage optionalData)
 
         item.setItemName(itemData.getItemName());
         item.setItemQuantity(itemData.getItemQuantity());
+
+        if(itemData.getPrice() != null){
+            item.setPrice(itemData.getPrice());
+        }else{
+            item.setPrice(BigDecimal.valueOf(0.00));
+        }
         return itemRepository.save(item);
     }
 

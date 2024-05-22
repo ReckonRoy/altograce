@@ -1,7 +1,7 @@
 /**
  * @author Le-Roy
  * @date 2024/03/02
- * @description get logged in user and comany they belong to
+ * @description get logged in user and company they belong to
  */
 let contentWrapper = document.getElementById("wrapper");
 let displayClient;
@@ -65,6 +65,7 @@ let clientRegistration = {
             detailsOverlay.style.display = 'block';
             
         }).catch(error => {
+            console.log(error);
         });
     },
 
