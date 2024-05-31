@@ -418,9 +418,9 @@
     <script>
         /*-------------------------------------------Flash Message----------------------------------------*/
         let flashMessage = (classValue, messageContent) => {
-            const flashMessageDiv = document.getElementById("flash-message");
+            let flashMessageDiv = document.getElementById("flash-message");
             flashMessageDiv.className = "";
-            flashMessageDiv.style.display = "block"
+            flashMessageDiv.style.display = "block";
             let message = document.getElementById("flash-message-p");
             message.textContent = messageContent;
             flashMessageDiv.className = classValue;
@@ -1240,56 +1240,6 @@ let companyProfile = {
         closeItemForm();
         // Close service form
         closeServiceForm();
-    }
-
-    function savePackage() {
-        // Get form values
-        var packageNameVal = document.getElementById("packageName").value;
-        var numMembers = document.getElementById("numMembers").value;
-        var packagePrice = document.getElementById("packagePrice").value;
-
-        var packageData = {
-            packageName: packageNameVal,
-            membersCount: numMembers,
-            price: packagePrice,
-        };
-        
-/******************Validate Company Id********************************/
-    if(companyProfile.selectedId >= 1)
-    {    
-        //fetch api sending data to backend for update
-        fetch(`/package/add-package/${companyProfile.selectedId}`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(packageData),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.body}`);
-            }
-            response.json()
-        })
-        .then(data => {
-            //pass message to modal box
-            let title = "Save Message: ";
-            let message = `Package has been successfuly updated`;
-            // Update the table with the new data
-            updatePackageTable(companyProfile.selectedId);
-            // Close item form
-            closeItemForm();
-            // Close service form
-            closeServiceForm();
-        })
-        .catch(error => {
-            alert("Error: " + "Company Not Found");
-        });
-        // Close the form
-    }else{
-        alert("Please select a valid company!");
-    }
-        closePackageForm();
     }
 /*__________________________________________________________________________________________________________________________*/
 companyProfile.fetchData();
