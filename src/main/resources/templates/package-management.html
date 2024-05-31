@@ -638,6 +638,7 @@
                 overlay.style.display = "block";
             }
         }
+        
 
         document.getElementById("saveItemButton").addEventListener('click', function(){
                 saveItem();
@@ -791,7 +792,7 @@
                     cell1.innerHTML = package.packageName;
                     cell2.innerHTML = package.membersCount;
                     cell3.innerHTML = package.price;
-                    cell4.innerHTML = `<button onclick="editSubscriptionPlan(${package.id})">edit</button> <button class="delete-btn" onclick="deletePackage(${package.id})">delete</button> <button class="add-items" id="${package.id}">add items</button> <button class="add-service" id="${package.id}">add vervice</button>`; 
+                    cell4.innerHTML = `<button onclick="editSubscriptionPlan(${package.id})">edit</button> <button class="delete-btn" onclick="deletePackage(${package.id})">delete</button> <button class="show-items" id="${package.id}">show items</button> <button class="add-items" id="${package.id}">add items</button> <button class="add-service" id="${package.id}">add vervice</button>`; 
                 });
 
                 /**
@@ -803,6 +804,14 @@
                     btn.addEventListener("click", () => {
                         let btn_id = btn.id;
                         openItemForm({id: btn_id, packageValue: packageData[btn_id].packageType});
+                    });
+                });
+
+                let showItems_btn = document.querySelectorAll(".show-items");
+                addItem_btn.forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        let btn_id = btn.id;
+                        updateItemTable({id: btn_id, packageValue: packageData[btn_id].packageType});
                     });
                 });
 
