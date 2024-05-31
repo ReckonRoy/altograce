@@ -417,12 +417,13 @@
     <script type="text/javascript" src="../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
     <script>
         /*-------------------------------------------Flash Message----------------------------------------*/
-        let flashMessage = (error, messageContent) => {
+        let flashMessage = (classValue, messageContent) => {
             const flashMessageDiv = document.getElementById("flash-message");
+            flashMessageDiv.className = "";
             flashMessageDiv.style.display = "block"
             let message = document.getElementById("flash-message-p");
             message.textContent = messageContent;
-            flashMessageDiv.className = error;
+            flashMessageDiv.className = classValue;
             setTimeout(() => {
                 flashMessageDiv.style.display = "none";
             }, 3000);
@@ -656,7 +657,6 @@
             var itemName = document.getElementById("itemName").value;
             var itemQuantity = document.getElementById("itemQuantity").value;
             var package_id = packageId;
-            alert("from saveItem" + package_id);
             // Create a new item object
             let itemData = {
                 itemName: itemName,
