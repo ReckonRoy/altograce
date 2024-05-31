@@ -506,9 +506,8 @@
                 .then(response => {
                     if (!response.ok) {
                         flashMessage("error-flash-message", "Error saving subscription plan");
-                    }else{
-                        return response.json()
                     }
+                        response.json()
                 })
                 .then(data => {
                     //pass message to modal box
@@ -592,10 +591,9 @@
             })
             .then(response => {
                 if (!response.ok) {
-                        flashMessage("error-flash-message", "Error saving optional subscription plan");
-                    }else{
-                        response.json()
-                    }
+                    flashMessage("error-flash-message", "Error saving optional subscription plan");
+                }
+                response.json();
             })
             .then(data => {
                 let message = `Optional Package has been successfuly saved!`;
@@ -674,9 +672,9 @@
             .then(response => {
                 if (!response.ok) {
                         flashMessage("error-flash-message", "Error saving item");
-                    }else{
-                        response.json()
                     }
+                response.json()
+                    
             })
             .then(data => {
                 // Update the table with the new data
@@ -744,9 +742,9 @@
 		.then(response => {
 			if (!response.ok) {
                 flashMessage("error-flash-message", "Error saving service");
-            }else{
-                response.json();
             }
+            response.json();
+            
 		})
 		.then(data => {
             // Update the table with the new data
@@ -1012,9 +1010,9 @@
             .then(response => {
                 if (!response.ok) {
                     flashMessage("error-flash-message", "Error deleting optional subscription plan");
-                }else{
-                    response.text();
                 }
+               response.text();
+                
             })
             .then(data => {
                 // Update the table with the modified data
@@ -1033,12 +1031,11 @@
                 },
 		    })
             .then(response => {
-                    if (!response.ok) {
-                        flashMessage("error-flash-message", "Error deleting optional subscription plan");
-                    }else{
-                        response.text();
-                    }
-                })
+                if (!response.ok) {
+                    flashMessage("error-flash-message", "Error deleting optional subscription plan");
+                }
+                response.text();
+            })
             .then(data => {
                 // Update the item table for the selected item
                 updateItemTable(package_id, packageValue);
@@ -1202,9 +1199,8 @@ let companyProfile = {
                     }else{
                         flashMessage("error-flash-message", "An Error occured please try again later");
                     }
-                }else{
-                    response.json();
                 }
+                response.json();
             })
             .then(data => {
                 //populate fields with data from server
