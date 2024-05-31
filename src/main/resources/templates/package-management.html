@@ -596,7 +596,7 @@
                         flashMessage("error-flash-message", "Error saving optional subscription plan");
                         throw new Error(`Error: ${response.status} - ${response.body}`);
                     }else{
-                        return response.json()
+                        response.json()
                     }
             })
             .then(data => {
@@ -678,7 +678,7 @@
                         flashMessage("error-flash-message", "Error saving item");
                         throw new Error(`Error: ${response.status} - ${response.body}`);
                     }else{
-                        return response.json()
+                        response.json()
                     }
             })
             .then(data => {
@@ -749,7 +749,7 @@
                 flashMessage("error-flash-message", "Error saving service");
                 throw new Error(`Error: ${response.status} - ${response.body}`);
             }else{
-                return response.json()
+                response.json();
             }
 		})
 		.then(data => {
@@ -1018,7 +1018,7 @@
                     flashMessage("error-flash-message", "Error deleting optional subscription plan");
                     throw new Error(`Error: ${response.status} - ${response.body}`);
                 }else{
-                    return response.text();
+                    response.text();
                 }
             })
             .then(data => {
@@ -1042,7 +1042,7 @@
                         flashMessage("error-flash-message", "Error deleting optional subscription plan");
                         throw new Error(`Error: ${response.status} - ${response.body}`);
                     }else{
-                        return response.text();
+                        response.text();
                     }
                 })
             .then(data => {
@@ -1209,7 +1209,7 @@ let companyProfile = {
                         flashMessage("error-flash-message", "An Error occured please try again later");
                     }
                 }else{
-                    return response.json();
+                    response.json();
                 }
             })
             .then(data => {
