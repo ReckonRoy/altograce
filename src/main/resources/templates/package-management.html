@@ -506,7 +506,6 @@
                 .then(response => {
                     if (!response.ok) {
                         flashMessage("error-flash-message", "Error saving subscription plan");
-                        throw new Error(`Error: ${response.status} - ${response.body}`);
                     }else{
                         return response.json()
                     }
@@ -594,7 +593,6 @@
             .then(response => {
                 if (!response.ok) {
                         flashMessage("error-flash-message", "Error saving optional subscription plan");
-                        throw new Error(`Error: ${response.status} - ${response.body}`);
                     }else{
                         response.json()
                     }
@@ -676,7 +674,6 @@
             .then(response => {
                 if (!response.ok) {
                         flashMessage("error-flash-message", "Error saving item");
-                        throw new Error(`Error: ${response.status} - ${response.body}`);
                     }else{
                         response.json()
                     }
@@ -747,7 +744,6 @@
 		.then(response => {
 			if (!response.ok) {
                 flashMessage("error-flash-message", "Error saving service");
-                throw new Error(`Error: ${response.status} - ${response.body}`);
             }else{
                 response.json();
             }
@@ -1016,7 +1012,6 @@
             .then(response => {
                 if (!response.ok) {
                     flashMessage("error-flash-message", "Error deleting optional subscription plan");
-                    throw new Error(`Error: ${response.status} - ${response.body}`);
                 }else{
                     response.text();
                 }
@@ -1040,7 +1035,6 @@
             .then(response => {
                     if (!response.ok) {
                         flashMessage("error-flash-message", "Error deleting optional subscription plan");
-                        throw new Error(`Error: ${response.status} - ${response.body}`);
                     }else{
                         response.text();
                     }
