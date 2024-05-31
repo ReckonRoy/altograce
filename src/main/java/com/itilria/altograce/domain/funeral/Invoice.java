@@ -5,6 +5,9 @@ package com.itilria.altograce.domain.funeral;
  * @Date 28 February 2024
  * @Description Entity class for main client member details.
  */
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,9 +32,9 @@ public class Invoice{
     private int id;
 
     private String invoiceNumber;
-    private String invoiceDate;
+    private LocalDate invoiceDate;
     private String clientName;
-    private String invoiceAmount;
+    private BigDecimal invoiceAmount;
     private String paymentStatus;
     private String paymentDate;
     private String paymentMethod;

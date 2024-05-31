@@ -65,7 +65,6 @@ public class ClientService{
     public PrimaryClient registerClient(int companyId, PrimaryClient clientData) throws Exception{
         Company company = companyRepository.findById(companyId).orElse(null);
         
-        System.out.println(companyId);
         Optional<ClientSettings> optionalClientSettings = clientSettingsRepository.findByCompany_Id(companyId);
         if (!optionalClientSettings.isPresent()) {
             throw new IllegalArgumentException("No client settings found for provided companyId");
@@ -172,7 +171,6 @@ public class ClientService{
     public ClientDependency addDependency(String clientId, ClientDependency depForm)
     {
         //check if PrimaryClient exists
-        
         PrimaryClient primaryClient = clientRepository.findByClientid(clientId).orElse(null);
         Company company = primaryClient.getCompany();
         Optional<ClientSettings> optionalClientSettings = clientSettingsRepository.findByCompany_Id(company.getId());

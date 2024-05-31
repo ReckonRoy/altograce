@@ -118,8 +118,10 @@ get fileId(){
                 background-color: blue;
             }
 
-            #submitBtn{
+            #add-invoice-btn{
                 background-color: green;
+                grid-column: span 2;
+                margin: 0 auto;
             }
 
             button:hover{
@@ -158,7 +160,6 @@ get fileId(){
                             <label for="casket-price-field">Price:</label><br/>
                             <input type="text" id="casket-price-field" value="0.00"/>
                         </div>
-                        <button id="save-casket-btn">Save Casket</button>
                     </div>
                     
                     <!--Section for headstone item-->
@@ -171,7 +172,6 @@ get fileId(){
                             <label for="head-stone-price-field">Cost:</label><br/>
                             <input type="text" id="head-stone-price-field" value="0.00"/>
                         </div>
-                        <button id="save-head-stone-btn">Save Head Stone</button>
                     </div>
                 </div>
                 <div>
@@ -192,14 +192,14 @@ get fileId(){
                             <label id="cost-perkm-field">Cost Per Km:</label><br/>
                             <div cost-perkm-div><input type="text" id="cost-perkm-field" value="0.00"/><label>/km</label></div>
                         </div>
-                        <button id="casket-btn">Add Travel Details</button>
                     </div>    
                 </div>
                 <div id="pref-notes-div">
                     <h2>Client's preference Notes</h2>
                     <textarea id="preference-notes"></textarea>
-                    <button id="preference-btn">Save Notes</button>
                 </div>
+
+                <button id="add-invoice-btn">Submit</button>
             </div>
         `;
     }
@@ -298,19 +298,48 @@ get fileId(){
         */
 
         // Submit button click event
-        const submitBtn = this.shadowRoot.getElementById('submitBtn');
-        submitBtn.addEventListener('click', function () {
-            const newData = [];
-            const rows = tbody.getElementsByTagName('tr');
-            for (const row of rows) {
-            const cells = row.getElementsByTagName('td');
-            const item = cells[0].innerText.trim();
-            const quantity = parseInt(cells[1].innerText.trim());
-            const price = parseFloat(cells[2].innerText.trim());
-            newData.push({ item, quantity, price });
-            }
-            // Here you can save newData to wherever you want
-            console.log(newData);
+        const submitButton = this.shadowRoot.getElementById("add-invoice-btn");
+        submitButton.addEventListener('click', () => {
+                this.addInvoiceData();
         });
+    }
+
+    //add invoice data.
+    addInvoiceData(){
+
+        let invoiceForm = {
+            casket: this.shadowRoot.getElementById('casket-field').value,
+            casketPrice: this.shadowRoot.getElementById('casket-price-field').value,
+            headStone: this.shadowRoot.getElementById('head-stone-field').value,
+            headStonePrice: this.shadowRoot.getElementById('head-stone-price-field').value,
+            location: this.shadowRoot.getElementById('location-field').value,
+            distance: this.shadowRoot.getElementById('distance-field').value,
+            distanceCost: this.shadowRoot.getElementById('cost-perkm-field').value,
+        }        
+
+        console.log(invoiceForm);
+
+
+        /*fetch(`/funeral/add/funeral-invoice/${this.fileId}`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(invoiceData),
+        })
+       .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+            }
+            return response.text();
+        }) 
+       .then(data => {
+            console.log("invoice has been successfully saved.")
+        })
+       .catch(error => {
+            // Handle error
+            console.error('Error:', error);
+        });
+        */
     }
 })

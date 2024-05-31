@@ -4,22 +4,33 @@
  */
 package com.itilria.altograce.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.itilria.altograce.service.UserService;
 /**
  *
  * @author le-roy
  */
-@Controller("/reception")
+@Controller
+@RequestMapping("/reception")
 public class ReceptionController {
     
-    /**
-     * @GetMapping("/dashboard")
-        *public String getDashboard()
+    
+    @Autowired
+    private UserService userService;
+
+    //route to user profile
+    @GetMapping("/profile")
+    public String userProfile(@AuthenticationPrincipal UserDetails userDetails, Model model)
     {
-        return "reception-template/dashboard";
+        model.addAttribute("user", userService.getUserDetails(userDetails.getUsername()));
+        return "profile";
     }
-    */
     
 }

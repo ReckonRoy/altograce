@@ -47,8 +47,10 @@ public class WebSecurityConfig{
             .successHandler(successHandler())
             .permitAll()
             .and()
+        .rememberMe().key("remember-me-key").rememberMeCookieName("altograce-remember-me")
+            .and()
         .logout()
-            .logoutUrl("/logout")
+            .logoutUrl("/logout").deleteCookies("altograce-remember-me")
             .permitAll();
     
         http.authorizeHttpRequests()

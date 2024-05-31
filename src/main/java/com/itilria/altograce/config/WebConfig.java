@@ -1,22 +1,12 @@
 package com.itilria.altograce.config;
 
-import org.springframework.context.support.ResourceBundleMessageSource;
-import java.util.Locale;
-import java.util.Properties;
-import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.validation.Validator;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.web.servlet.i18n.CookieLocaleResolver;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.MessageSource;
-import lombok.RequiredArgsConstructor;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
-import lombok.RequiredArgsConstructor;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer
@@ -30,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer
 		registry.addViewController("/admin/dashboard").setViewName("dashboard");
 		registry.addViewController("/admin/settings").setViewName("settings");
 		registry.addViewController("/admin/hr").setViewName("hr");
-                registry.addViewController("/reception/dashboard").setViewName("reception-template/dashboard");
+        registry.addViewController("/reception/dashboard").setViewName("reception-template/dashboard");
 	}
 	
 	/*----------------------------------------------------------------------------------------------*/

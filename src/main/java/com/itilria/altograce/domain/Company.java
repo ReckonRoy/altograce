@@ -6,16 +6,33 @@ package com.itilria.altograce.domain;
  * @Description Entity class that stores company details, owner etc
  */
 
-import jakarta.persistence.*;
-import lombok.*;
-import com.itilria.altograce.domain.client.PrimaryClient;
-import com.itilria.altograce.domain.client.ClientSettings;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.itilria.altograce.domain.client.ClientSettings;
+import com.itilria.altograce.domain.client.PrimaryClient;
 import com.itilria.altograce.domain.funeral.Funeral;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Data
 @Entity
 @Setter
 @Getter
@@ -24,8 +41,8 @@ import com.itilria.altograce.domain.funeral.Funeral;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Company
 {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name="CO_NAME")
@@ -43,7 +60,7 @@ public class Company
     @Column(name="CO_EMAIL")
     private String email;
 
-    @Column(name = "CO_INITIALS");
+    @Column(name = "CO_INITIALS")
     private String initials;
 
     @Column(name="CO_COUNTRY_CODE")

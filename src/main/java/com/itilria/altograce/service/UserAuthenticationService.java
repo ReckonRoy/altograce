@@ -93,7 +93,7 @@ public class UserAuthenticationService{
         helper.setSubject("Activate Your Account");
 
         // Generate the activation link (replace 'yourAppBaseUrl' with the actual base URL of your application)
-        String activationLink = "localhost:8080/register/activate?email=" + email;
+        String activationLink = "http://localhost:8080/register/activate?email=" + email;
 
         // Create a Thymeleaf context
         Context context = new Context();

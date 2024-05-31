@@ -64,6 +64,23 @@ public class PackageController{
         }
     }
 
+    //Get package
+    @PostMapping("/get-plan/{id}")
+    public ResponseEntity<?> getSubscriptionPlan(@PathVariable int id, @RequestBody ServicePackage request)
+    {
+        /*
+         * @Param subscrionPlan 
+         * @Param subscrionPlanType 
+         */
+        try
+        {
+            ServicePackage result = packageService.getSubscriptionPlan(id, request);
+            return  ResponseEntity.ok(result);
+        }catch(IllegalStateException ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }    
+    }
+
     @DeleteMapping("/delete-package/{id}")
     public ResponseEntity<?> deletePackage(@PathVariable int id) {
         // Code to delete the resource with the given ID
@@ -104,7 +121,7 @@ public class PackageController{
         // Code to delete the resource with the given ID
 
         packageService.deleteOptionalPackage(id);
-        return ResponseEntity.ok("delete successful");
+        return ResponseEntity.ok("Optional plan has been deleted successfully!");
     }
 /*********************************Handle Items*********************************************/
     @PostMapping("/items/{id}")
@@ -137,7 +154,7 @@ public class PackageController{
         // Code to delete the resource with the given ID
 
         packageService.deleteItem(id);
-        return ResponseEntity.ok("delete successful");
+        return ResponseEntity.ok("Item has been deleted successfully!");
     }
 
     
@@ -172,6 +189,6 @@ public class PackageController{
         // Code to delete the resource with the given ID
 
         packageService.deleteService(id);
-        return ResponseEntity.ok("delete successful");
+        return ResponseEntity.ok("Service has been deleted successfully");
     }
 }

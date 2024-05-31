@@ -5,25 +5,29 @@ package com.itilria.altograce.controller;
  * @Description handle http request and response
 */
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.Model;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.config.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.security.Principal;
 import com.itilria.altograce.domain.Company;
-import com.itilria.altograce.domain.UserAuthentication;
-import com.itilria.altograce.service.CompanyService;
-import com.itilria.altograce.exception.CompanyNotFoundException;
-import com.itilria.altograce.service.UserAuthenticationService;
 import com.itilria.altograce.domain.Ethics;
-import java.util.List;
+import com.itilria.altograce.exception.CompanyNotFoundException;
+import com.itilria.altograce.service.CompanyService;
+import com.itilria.altograce.service.UserAuthenticationService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
@@ -89,7 +93,7 @@ public class CompanyController
         company.setTaxNumber(request.getTaxNumber());
         company.setFspNumber(request.getFspNumber());
         company.setEmail(request.getEmail());
-        compnay.setInitials(request.getInitials());
+        company.setInitials(request.getInitials());
         company.setCountryCode(request.getCountryCode());
         company.setContact1(request.getContact1());
         company.setContact2(request.getContact2());

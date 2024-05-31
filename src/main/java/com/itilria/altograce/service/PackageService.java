@@ -1,21 +1,25 @@
 package com.itilria.altograce.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import com.itilria.altograce.domain.ServicePackage;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.itilria.altograce.domain.Company;
 import com.itilria.altograce.domain.OptionalPackage;
 import com.itilria.altograce.domain.ProductItem;
 import com.itilria.altograce.domain.ProductService;
-import com.itilria.altograce.domain.Company;
-import com.itilria.altograce.repository.ServicePackageRepository;
+import com.itilria.altograce.domain.ServicePackage;
+import com.itilria.altograce.repository.CompanyRepository;
+import com.itilria.altograce.repository.OptionalPackageRepository;
 import com.itilria.altograce.repository.ProductItemRepository;
 import com.itilria.altograce.repository.ProductServiceRepository;
-import com.itilria.altograce.repository.OptionalPackageRepository;
-import com.itilria.altograce.repository.CompanyRepository;
-import org.springframework.stereotype.Service;
+import com.itilria.altograce.repository.ServicePackageRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +68,23 @@ public class PackageService{
         }else{
             return null;
         }
+    }
+
+    //get Subscription Plan
+    public ServicePackage getSubscriptionPlan(int id, ServicePackage packData)
+    {
+        Optional<Company> company = companyRepository.findById(id);
+        if(!company.isPresent()){
+            throw new IllegalStateException("Company does not exist");
+        }
+
+        Optional<ServicePackage> subscriptionPlan = packageRepository.findById(packData.getId());
+        if(!subscriptionPlan.isPresent())
+        {
+            throw new IllegalStateException("This subscription plan does not exist");
+        }
+
+        return subscriptionPlan.get();
     }
 
     public void deletePackage(int id)

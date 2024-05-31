@@ -131,4 +131,7 @@ public class PrimaryClient{
         String id_passport = idPassport.substring(0, 4);
         this.clientid = companyId + "" + id_passport;
     }
+
+    @Transient
+    private String subscriptionPlan; 
 }

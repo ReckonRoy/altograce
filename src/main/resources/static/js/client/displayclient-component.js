@@ -377,6 +377,7 @@ customElements.define("display-client", class extends HTMLElement {
         // Sample JSON data (replace with your actual data)
         let clients = [];
         let fileId = "";
+        let idPassportNumber = "";
         let primaryClientName = "";
         let primaryLastName = "";
         let clientsToShow = [];
@@ -690,6 +691,7 @@ customElements.define("display-client", class extends HTMLElement {
             // Find the client object
             let client = clientsToShow.find(client => client.clientid === clientId);
             fileId = clientId;
+            idPassportNumber = client.id_passport;
             primaryClientName = client.name;
             primaryLastName = client.lastName;
             // Construct the Client Info Card HTML
@@ -716,24 +718,20 @@ customElements.define("display-client", class extends HTMLElement {
                         <td>${client.homeNumber}</td>
                     </tr>
                     <tr>
-                        <td>Telephone:</td>
-                        <td>${client.telephone}</td>
+                        <td>D.O.B:</td>
+                        <td>${client.dob}</td>
                     </tr>
                     <tr>
-                        <td>First Initials:</td>
-                        <td>${client.firstInitials}</td>
+                        <td>Initials:</td>
+                        <td>${client.Initials}</td>
                     </tr>
                     <tr>
                         <td>Gender:</td>
                         <td>${client.gender}</td>
                     </tr>
                     <tr>
-                        <td>Package Plan Name:</td>
-                        <td>${client.packagePlanName}</td>
-                    </tr>
-                    <tr>
                         <td>ID/Passport Number:</td>
-                        <td>${client.idPassportNumber}</td>
+                        <td>${client.id_passport}</td>
                     </tr>
                 </table>
             `;
@@ -916,8 +914,20 @@ customElements.define("display-client", class extends HTMLElement {
             let fileNumber = fileId;
             let clientName = primaryClientName;
             let surname = primaryLastName;
-            let name = deceased.name;
-            let id_pass = deceased.id_passport;
+            let name;
+            if(deceased.name === undefined){
+                name = "";
+            }else{
+                name = `${deceased.name} ${deceased.lastName}`;
+            }
+                
+            
+            let id_pass;
+            if(name !== ""){
+                id_pass = deceased.id_passport;
+            }else{
+                id_pass = idPassportNumber;
+            }
             
             location.href = "/funeral/management" + "?fileId=" + encodeURIComponent(fileNumber) + "&clientName=" + encodeURIComponent(clientName) + "&name=" + encodeURIComponent(name) + "&surname=" + encodeURIComponent(surname) + "&id_passport=" + encodeURIComponent(id_pass);
         }

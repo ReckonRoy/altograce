@@ -118,7 +118,7 @@ customElements.define("reception-header", class extends HTMLElement {
           padding: 10px 0;
           padding-left: 5px;
           font-weight: bolder;
-          color: white;
+          color: gray;
         }
 
         #profile-menu li:hover {
@@ -262,7 +262,7 @@ customElements.define("reception-header", class extends HTMLElement {
 
     let headerRoutes = () => {
       this.shadowRoot.getElementById("profile").addEventListener("click", () => {
-        location.href = "/admin/profile";
+        location.href = "/reception/profile";
       });
 
       this.shadowRoot.getElementById("dashboard-link").addEventListener("click", () => {
