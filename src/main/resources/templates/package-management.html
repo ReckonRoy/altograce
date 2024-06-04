@@ -1157,11 +1157,8 @@ let companyProfile = {
     }
 
     //Open Edit subscription plan package
-    function openEditSubscriptionPlan(packageId) {
+    let openEditSubscriptionPlan = (packageId) => {
         document.getElementById("edit-plan-div").style.display = "flex";
-        
-        // Clear form fields
-        document.getElementById("edit-plan-form").reset();
         // Reset the form title
         document.getElementById("formTitle").innerText = "Edit Subscription Plan";
         // Close item form
