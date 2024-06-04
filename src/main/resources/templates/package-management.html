@@ -890,7 +890,8 @@
                 table.style.display = "none";
             });    
         }
-        function updateItemTable(packageId, packageType) {
+
+        let updateItemTable = (packageId, packageType) => {
             let packageForm = {packageType: packageType};
             fetch(`/package/items/${packageId}`,{
                 method: 'POST',
