@@ -983,7 +983,7 @@
             updateServiceTable(packageId);
         }
 
-        function deletePackage(packageId) {
+        let deletePackage = (packageId) => {
             fetch(`/package/delete-package/${packageId}`,
             {
                 method: 'DELETE',
@@ -991,10 +991,16 @@
                     'Content-Type': 'application/json',
                 },
 		    })
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    return flashMessage("error-flash-message", "Error deleting subscription plan");
+                }
+               response.text();
+            })
             .then(data => {
                 // Update the table with the modified data
                 updatePackageTable(companyProfile.selectedId);
+                flashMessage("success-message", data);
             }).catch(error => {
                 
             });
