@@ -802,7 +802,7 @@
                 });
 
                 let showItems_btn = document.querySelectorAll(".show-items");
-                addItem_btn.forEach((btn) => {
+                showItems_btn.forEach((btn) => {
                     btn.addEventListener("click", () => {
                         let btn_id = btn.id;
                         updateItemTable({id: btn_id, packageValue: packageData[btn_id].packageType});
