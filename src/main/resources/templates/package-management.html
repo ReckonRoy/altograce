@@ -617,7 +617,7 @@
         document.getElementById("cancelItemButton").addEventListener('click', closeItemForm);
         document.getElementById("cancelServiceButton").addEventListener('click', closeServiceForm);
 
-        function openItemForm(package) {
+        let openItemForm = (package) => {
             document.getElementById("itemForm").style.display = "flex";
             // Clear form fields
             document.getElementById("addItemForm").reset();
