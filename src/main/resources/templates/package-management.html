@@ -995,7 +995,7 @@
                 if (!response.ok) {
                     return flashMessage("error-flash-message", "Error deleting subscription plan");
                 }
-               response.text();
+                return response.text();
             })
             .then(data => {
                 // Update the table with the modified data
@@ -1006,7 +1006,7 @@
             });
         }
         /*DELETE OPTIONAL PACKAGE*/
-        function deleteOptionalPackage(packageId) {
+        let deleteOptionalPackage = (packageId) => {
             fetch(`/package/delete-optional-package/${packageId}`,
             {
                 method: 'DELETE',
@@ -1018,7 +1018,7 @@
                 if (!response.ok) {
                     return flashMessage("error-flash-message", "Error deleting optional subscription plan");
                 }
-               response.text();
+                return response.text();
                 
             })
             .then(data => {
@@ -1028,7 +1028,7 @@
             })
         }
 
-        function deleteItem(package_id, itemId) {
+        let deleteItem = (package_id, itemId) => {
             // Remove the selected service from the package's services
             fetch(`/package/delete-item/${itemId}`,
             {

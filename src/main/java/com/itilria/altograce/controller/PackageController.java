@@ -86,7 +86,7 @@ public class PackageController{
         // Code to delete the resource with the given ID
 
         packageService.deletePackage(id);
-        return ResponseEntity.ok("delete successful");
+        return ResponseEntity.ok("Subscription plan has been deleted successfully");
     }
 /*_________________________________________________________________________________________________________*/
 
