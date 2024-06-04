@@ -1159,8 +1159,6 @@ let companyProfile = {
         document.getElementById("edit-plan-form").reset();
         // Reset the form title
         document.getElementById("formTitle").innerText = "Edit Subscription Plan";
-        // Reset the edit index
-        document.getElementById("editIndex").value = "-1";
         // Close item form
         closeItemForm();
         // Close service form
@@ -1226,10 +1224,6 @@ let companyProfile = {
         document.getElementById("overlay").style.display = "none";
         // Clear form fields
         document.getElementById("edit-plan-Form").reset();
-        // Close item form
-        closeItemForm();
-        // Close service form
-        closeServiceForm();
     }
 /*__________________________________________________________________________________________________________________________*/
 companyProfile.fetchData();
