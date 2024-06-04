@@ -244,14 +244,14 @@
         .error-flash-message{
             width: 100%;
             color: white;
-            border: gray;
+            border: 1px solid gray;
             background-color: red;
         }
 
         .success-message{
             width: 100%;
             color: white;
-            border: gray;
+            border: 1px solid gray;
             background-color: green;
         }
 
@@ -505,9 +505,9 @@
                 })
                 .then(response => {
                     if (!response.ok) {
-                        flashMessage("error-flash-message", "Error saving subscription plan");
+                        return flashMessage("error-flash-message", "Error saving subscription plan");
                     }
-                        response.json()
+                    return response.json()
                 })
                 .then(data => {
                     //pass message to modal box
@@ -591,7 +591,7 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    flashMessage("error-flash-message", "Error saving optional subscription plan");
+                    return flashMessage("error-flash-message", "Error saving optional subscription plan");
                 }
                 response.json();
             })
@@ -1009,7 +1009,7 @@
 		    })
             .then(response => {
                 if (!response.ok) {
-                    flashMessage("error-flash-message", "Error deleting optional subscription plan");
+                    return flashMessage("error-flash-message", "Error deleting optional subscription plan");
                 }
                response.text();
                 
@@ -1032,9 +1032,9 @@
 		    })
             .then(response => {
                 if (!response.ok) {
-                    flashMessage("error-flash-message", "Error deleting optional subscription plan");
+                    return flashMessage("error-flash-message", "Error deleting optional subscription plan");
                 }
-                response.text();
+                return response.text();
             })
             .then(data => {
                 // Update the item table for the selected item
@@ -1052,13 +1052,17 @@
                     'Content-Type': 'application/json',
                 },
 		    })
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    return flashMessage("error-flash-message", "Error deleting optional subscription plan");
+                }
+                return response.text();
+            })
             .then(data => {
                 // Update the service table for the selected package
                 updateServiceTable(packageId, packageValue);
-            }).catch(error => {
-                
-            });
+                flashMessage("success-message", data);
+            })
         }
         // Uncomment the following line if you want the form to be open by default
         // openPackageForm();
@@ -1193,12 +1197,12 @@ let companyProfile = {
             .then(response => {
                 if (!response.ok) {
                     if(response.status === 400){
-                        flashMessage("error-flash-message", "Failed to retrieve plan data!");
+                        return flashMessage("error-flash-message", "Failed to retrieve plan data!");
                     }else{
-                        flashMessage("error-flash-message", "An Error occured please try again later");
+                        return flashMessage("error-flash-message", "An Error occured please try again later");
                     }
                 }
-                response.json();
+                return response.json();
             })
             .then(data => {
                 //populate fields with data from server
@@ -1211,7 +1215,7 @@ let companyProfile = {
                 let price = document.getElementById("e-plan-price");
                 price.value = data.price; 
 
-                openEditSubscriptionPlan(packageId)
+                openEditSubscriptionPlan(package_id)
             })
         }else{
             alert("Please select a valid company!");
