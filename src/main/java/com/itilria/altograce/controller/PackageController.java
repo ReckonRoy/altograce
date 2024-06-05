@@ -116,6 +116,23 @@ public class PackageController{
         }
     }
 
+    //Get package
+    @PostMapping("/get-optional-plan/{id}")
+    public ResponseEntity<?> getOptionalSubscriptionPlan(@PathVariable int id, @RequestBody ServicePackage request)
+    {
+        /*
+         * @Param subscrionPlan 
+         * @Param subscrionPlanType 
+         */
+        try
+        {
+            ServicePackage result = packageService.getOptionalSubscriptionPlan(id, request);
+            return  ResponseEntity.ok(result);
+        }catch(IllegalStateException ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }    
+    }
+
     @DeleteMapping("/delete-optional-package/{id}")
     public ResponseEntity<?> deleteOptionalPackage(@PathVariable int id) {
         // Code to delete the resource with the given ID

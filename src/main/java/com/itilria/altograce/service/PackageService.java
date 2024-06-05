@@ -127,6 +127,23 @@ public OptionalPackage addOptionalPackage(int id, OptionalPackage optionalData)
         }
     }
 
+    //get Subscription Plan
+    public OptionalPackage getOptionalSubscriptionPlan(int id, ServicePackage packData)
+    {
+        Optional<Company> company = companyRepository.findById(id);
+        if(!company.isPresent()){
+            throw new IllegalStateException("Company does not exist");
+        }
+
+        Optional<OptionalPackage> optionalPlan = optionalPackageRepository.findById(packData.getId());
+        if(!optionalPlan.isPresent())
+        {
+            throw new IllegalStateException("This subscription plan does not exist");
+        }
+
+        return optionalPlan.get();
+    }
+
     public void deleteOptionalPackage(int id)
     {
         optionalPackageRepository.deleteById(id);

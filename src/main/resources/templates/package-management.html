@@ -306,6 +306,7 @@
             <button type="button" id="cancel-plan-button">Cancel</button>
         </form>
     </div>
+    <!-- Optional Subscription Plan Forms-->
 
     <div id="optionForm" class="package-form-div">
         <h2 id="optionTitle" class="package-title">Add New Optional Plan</h2>
@@ -321,6 +322,23 @@
 
             <button type="button" id="saveOptionalPackageButton">Save</button>
             <button type="button" id="cancelOptionalPackageButton">Cancel</button>
+        </form>
+    </div>
+
+    <div id="edit-optional-plan-div" class="package-form-div">
+        <h2 class="package-title">Edit Subscription Plan</h2>
+        <form id="edit-optional-plan-form" class="package-form">
+            <label for="e-optional-plan-name">Package Name:</label>
+            <input type="text" id="e-optional-plan-name" required>
+
+            <label for="e-optional-member-count"">Number of Members Covered:</label>
+            <input type="number" id="e-optional-member-count"required>
+
+            <label for="e-optional-plan-price">Price for Package:</label>
+            <input type="text" id="e-optional-plan-price" required>
+
+            <button type="button" id="edit-optional-plan-button">Save</button>
+            <button type="button" id="cancel-optional-plan-button">Cancel</button>
         </form>
     </div>
     <!-- ______________________________________________________________________________________________________________________ -->
@@ -1232,6 +1250,85 @@ let companyProfile = {
         document.getElementById("overlay").style.display = "none";
     }
 /*__________________________________________________________________________________________________________________________*/
+/*--------------------------------------Edit Optional Subscription Plan---------------------------------------------------*/
+    
+document.getElementById("cancel-optional-plan-button").addEventListener('click', closeEditOptionalSubscriptionPlanModal);
+
+//Open Edit Form - Subscription Plan
+let editOptionalSubscriptionPlan = (packageId) => {
+    const packageType =  "optional";
+    getOptionalSubscriptionPlan(packageId);
+}
+
+//Open Edit optional subscription plan package
+let openEditOptionalSubscriptionPlan = (packageId) => {
+    document.getElementById("edit-optional-plan-div").style.display = "flex";
+    // Reset the form title
+    document.getElementById("formTitle").innerText = "Edit Optional Subscription Plan";
+    // Close item form
+    closeItemForm();
+    // Close service form
+    closeServiceForm();
+    const overlay = document.getElementById("overlay");
+    if(overlay.style.display === "none")
+    {
+        overlay.style.display = "block";
+    }
+}
+
+let getOptionalSubscriptionPlan = (package_id) => {
+    
+    //Validate Company Id
+    if(companyProfile.selectedId >= 1)
+    {    
+        //query parameters
+        let packageQueryData = {
+            id: package_id,
+        };
+
+        //fetch api sending data to backend for update
+        fetch(`/package/get-optional-plan/${companyProfile.selectedId}`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(packageQueryData),
+        })
+        .then(response => {
+            if (!response.ok) {
+                if(response.status === 400){
+                    return flashMessage("error-flash-message", "Failed to retrieve plan data!");
+                }else{
+                    return flashMessage("error-flash-message", "An Error occured please try again later");
+                }
+            }
+            return response.json();
+        })
+        .then(data => {
+            //populate fields with data from server
+            let packageName = document.getElementById('e-optional-plan-name');
+            packageName.value = data.packageName;
+
+            let membersCount = document.getElementById("e-optional-member-count");
+            membersCount.value = data.membersCount;
+
+            let price = document.getElementById("e-optional-plan-price");
+            price.value = data.price; 
+
+            openEditSubscriptionPlan(package_id)
+        })
+    }else{
+        alert("Please select a valid company!");
+    }
+}
+/*__________________________________________________________________________________________________________________________*/
+//close edit subscription modal
+function closeEditOptionalSubscriptionPlanModal() {
+    document.getElementById("edit-optional-plan-div").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
+/*__________________________________________________________________________________________________________________________*/
+
 companyProfile.fetchData();
     </script>
 
