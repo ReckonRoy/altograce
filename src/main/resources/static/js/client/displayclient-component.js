@@ -319,10 +319,16 @@ customElements.define("display-client", class extends HTMLElement {
                         <option value="sister">Sister</option>
                         <option value="father">Father</option>
                         <option value="mother">Mother</option>
+                        <option value="naphew">Naphew</option>
+                        <option value="niece">Niece</option>
+                        <option value="cousin">Cousin</option>
+                        <option value="grandchild">Grand Child</option>
+                        <option value="auntie">Auntie</option>
                         <option value="uncle">Uncle</option>
                         <option value="auntie">Auntie</option>
                         <option value="grandfather">Grandfather</option>
                         <option value="grandmother">Grandmother</option>
+                        <option value="inlaw">Inlaw</option>
                     </select>
                 </div>
                 <div>
