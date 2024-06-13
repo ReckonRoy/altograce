@@ -1,11 +1,12 @@
 package com.itilria.altograce.repository.clientrepository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.itilria.altograce.domain.client.PrimaryClient;
-import java.util.Optional;
-import java.util.List;
 
 public interface ClientRepository extends JpaRepository<PrimaryClient, Integer>{
     Optional<PrimaryClient> findById(int id);

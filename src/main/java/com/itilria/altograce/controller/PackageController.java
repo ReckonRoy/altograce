@@ -81,6 +81,23 @@ public class PackageController{
         }    
     }
 
+    //Update package
+    @PostMapping("/update-plan/{id}")
+    public ResponseEntity<?> updateSubscriptionPlan(@PathVariable int id, @RequestBody ServicePackage request)
+    {
+        /*
+         * @Param subscrionPlan 
+         * @Param subscrionPlanType 
+         */
+        try
+        {
+            ServicePackage result = packageService.updateSubscriptionPlan(id, request);
+            return  ResponseEntity.ok(result);
+        }catch(IllegalStateException ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }    
+    }
+
     @DeleteMapping("/delete-package/{id}")
     public ResponseEntity<?> deletePackage(@PathVariable int id) {
         // Code to delete the resource with the given ID
@@ -126,7 +143,24 @@ public class PackageController{
          */
         try
         {
-            ServicePackage result = packageService.getOptionalSubscriptionPlan(id, request);
+            OptionalPackage result = packageService.getOptionalSubscriptionPlan(id, request);
+            return  ResponseEntity.ok(result);
+        }catch(IllegalStateException ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }    
+    }
+
+    //Update optional plan
+    @PostMapping("/update-optionalplan/{id}")
+    public ResponseEntity<?> updateOptionalSubscriptionPlan(@PathVariable int id, @RequestBody OptionalPackage request)
+    {
+        /*
+         * @Param subscrionPlan 
+         * @Param subscrionPlanType 
+         */
+        try
+        {
+            OptionalPackage result = packageService.updateOptionalSubscriptionPlan(id, request);
             return  ResponseEntity.ok(result);
         }catch(IllegalStateException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);

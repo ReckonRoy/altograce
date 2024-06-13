@@ -74,29 +74,54 @@ public class ClientService{
 
         if(company != null)
         {
-            clientData.setCompany(company);
-            clientData.setClientId(companyId, clientData.getId_passport());
-            clientData.setRecordEntryDate(LocalDate.now());
+            //save empty client object, inorder to get id
+            PrimaryClient client = new PrimaryClient();
+            client = clientRepository.save(client);
             
+
+            client.setCompany(company);
+            client.setClientId(company.getInitials(), client.getId());
+            client.setRecordEntryDate(LocalDate.now());
+            client.setTitle(clientData.getTitle());
+            client.setName(clientData.getName());
+            client.setLastName(clientData.getLastName());
+            client.setInitials(clientData.getInitials());
+            client.setId_passport(clientData.getId_passport());
+            client.setGender(clientData.getGender());
+            client.setMaritalStatus(clientData.getMaritalStatus());
+            client.setEmail(clientData.getEmail());
+            client.setCountryCode(clientData.getCountryCode());
+            client.setCellNumber(clientData.getCellNumber());
+            client.setHomeNumber(clientData.getHomeNumber());
+            client.setTelephone(clientData.getTelephone());
+        
+            client.setCountry(clientData.getCountry());
+            client.setProvince(clientData.getProvince());
+            client.setCity(clientData.getCity());
+            client.setPostCode(clientData.getPostCode());
+            client.setStreet(clientData.getStreet());
+            client.setStandUnit(clientData.getStandUnit());
+
+
             if(clientData.getDob() != null){
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
                 String formattedDate = clientData.getDob().format(formatter);
-                clientData.setDob(LocalDate.parse(formattedDate, formatter));
+                client.setDob(LocalDate.parse(formattedDate, formatter));
             }
 
             if(clientData.getDateOfCover() != null)
             {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
                 String formattedDateOfCover = clientData.getDateOfCover().format(formatter);
-                clientData.setDateOfCover(LocalDate.parse(formattedDateOfCover, formatter));
+                client.setDateOfCover(LocalDate.parse(formattedDateOfCover, formatter));
                 
             }else{
-                clientData.setDateOfCover(LocalDate.now());
+                client.setDateOfCover(LocalDate.now());
             }
-            clientData.setActivationStatus(this.handleAccountActivation(clientData.getDateOfCover(), clientSettings.getWaitingPeriod()));
-
+            client.setActivationStatus(this.handleAccountActivation(clientData.getDateOfCover(), clientSettings.getWaitingPeriod()));
+            
             //save and return saved object
-            return clientRepository.save(clientData);
+            return clientRepository.save(client);
         }else{
             return null;
         }

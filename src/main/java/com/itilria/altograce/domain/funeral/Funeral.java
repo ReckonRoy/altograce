@@ -39,7 +39,7 @@ import lombok.Setter;
 public class Funeral{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "client_name")
@@ -69,6 +69,9 @@ public class Funeral{
     @Column(name = "cemetery")
     private String cemetery;
 
+    private String graveNumber;
+    private String biNumber;
+
     @Column(name = "re_open_new_grave")
     private String reOpenNewGrave;
 
@@ -78,8 +81,8 @@ public class Funeral{
     @Column(name = "deposit")
     private BigDecimal deposit;
 
-    @Column(name = "balance_due_date")
-    private LocalDate balanceDueDate;
+    @Column(name = "balance_due")
+    private BigDecimal balanceDue;
 
     @Column(name = "date_of_burial")
     private LocalDate dateOfBurial;

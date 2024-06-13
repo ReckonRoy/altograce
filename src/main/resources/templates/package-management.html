@@ -302,7 +302,7 @@
             <label for="e-plan-price">Price for Package:</label>
             <input type="text" id="e-plan-price" required>
 
-            <button type="button" id="edit-plan-button">Save</button>
+            <button type="button" id="edit-plan-button">Update</button>
             <button type="button" id="cancel-plan-button">Cancel</button>
         </form>
     </div>
@@ -331,13 +331,13 @@
             <label for="e-optional-plan-name">Package Name:</label>
             <input type="text" id="e-optional-plan-name" required>
 
-            <label for="e-optional-member-count"">Number of Members Covered:</label>
+            <label for="e-optional-member-count">Number of Members Covered:</label>
             <input type="number" id="e-optional-member-count"required>
 
             <label for="e-optional-plan-price">Price for Package:</label>
             <input type="text" id="e-optional-plan-price" required>
 
-            <button type="button" id="edit-optional-plan-button">Save</button>
+            <button type="button" id="edit-optional-plan-button">Update</button>
             <button type="button" id="cancel-optional-plan-button">Cancel</button>
         </form>
     </div>
@@ -488,14 +488,6 @@
         function closePackageForm() {
             document.getElementById("packageForm").style.display = "none";
             document.getElementById("overlay").style.display = "none";
-            // Clear form fields
-            document.getElementById("addPackageForm").reset();
-            // Reset the edit index
-            document.getElementById("editIndex").value = "-1";
-            // Close item form
-            closeItemForm();
-            // Close service form
-            closeServiceForm();
         }
 
         function savePackage() {
@@ -876,7 +868,7 @@
                     cell1.innerHTML = package.packageName;
                     cell2.innerHTML = package.membersCount;
                     cell3.innerHTML = package.price;
-                    cell4.innerHTML = `<button onclick="editPackage(${package.id})">edit</button> <button class="delete-btn" onclick="deleteOptionalPackage(${package.id})">delete</button> <button class="add-opt-items" id="${package.id}">add item</button> <button class="add-service" id="${package.id}">add service</button>`; 
+                    cell4.innerHTML = `<button onclick="editOptionalSubscriptionPlan(${package.id})">edit</button> <button class="delete-btn" onclick="deleteOptionalPackage(${package.id})">delete</button> <button class="show-items" id="${package.id}">show items</button> <button class="add-opt-items" id="${package.id}">add item</button> <button class="add-service" id="${package.id}">add service</button>`; 
                 });
                 /**
                 * Open Item form
@@ -887,6 +879,14 @@
                     btn.addEventListener("click", () => {
                         let btn_id = btn.id;
                         openItemForm({id: btn_id, packageValue: packageData[btn_id].packageType});
+                    });
+                });
+
+                let showItems_btn = document.querySelectorAll(".show-items");
+                showItems_btn.forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        let btn_id = btn.id;
+                        updateItemTable(btn_id, "optional");
                     });
                 });
 
@@ -1171,8 +1171,6 @@ let companyProfile = {
 /*__________________________________________________________________________________________________________________________*/
     
 /*--------------------------------------Edit Subscription Plan---------------------------------------------------*/
-    
-    document.getElementById("cancel-plan-button").addEventListener('click', closeEditSubscriptionPlanModal);
 
     //Open Edit Form - Subscription Plan
     let editSubscriptionPlan = (packageId) => {
@@ -1181,16 +1179,10 @@ let companyProfile = {
     }
 
     //Open Edit subscription plan package
-    let openEditSubscriptionPlan = (packageId) => {
+    let openEditSubscriptionPlan = () => {
         document.getElementById("edit-plan-div").style.display = "flex";
         // Reset the form title
         document.getElementById("formTitle").innerText = "Edit Subscription Plan";
-        // Close item form
-        closeItemForm();
-        // Close service form
-        closeServiceForm();
-        //Close option package form
-        closeOptionForm();
         const overlay = document.getElementById("overlay");
         if(overlay.style.display === "none")
         {
@@ -1200,9 +1192,10 @@ let companyProfile = {
 
     let getSubscriptionPlan = (package_id) => {
         
-        /******************Validate Company Id********************************/
+        //Validate Company Id
         if(companyProfile.selectedId >= 1)
         {    
+            packageId = package_id;
             //query parameters
             let packageQueryData = {
                 id: package_id,
@@ -1237,31 +1230,76 @@ let companyProfile = {
                 let price = document.getElementById("e-plan-price");
                 price.value = data.price; 
 
-                openEditSubscriptionPlan(package_id)
+                openEditSubscriptionPlan()
             })
         }else{
             alert("Please select a valid company!");
         }
     }
-/*__________________________________________________________________________________________________________________________*/
+
+    //update subscription plan - post data to server for updating.
+    let updateSubscriptionPlanButton = document.getElementById("edit-plan-button");
+    updateSubscriptionPlanButton.addEventListener("click", () => {
+        updateSubscriptionPlan();
+    });
+    
+    let updateSubscriptionPlan = () => {
+        let formData = {
+            id: packageId,
+            packageName: document.getElementById('e-plan-name').value,
+            membersCount: document.getElementById("e-member-count-field").value,
+            price: document.getElementById("e-plan-price").value,
+        }
+
+        //Validate Company Id
+        if(companyProfile.selectedId >= 1)
+        {    
+            //fetch api sending data to backend for update
+            fetch(`/package/update-plan/${companyProfile.selectedId}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return flashMessage("error-flash-message", "Error updating subscription plan");
+                }
+                return response.json()
+            })
+            .then(data => {
+                //pass message to modal box
+                let message = `Subscription-Plan has been updated successfully`;
+                // Update the table with the new data
+                updatePackageTable(companyProfile.selectedId);
+                
+                //close modal
+                closeEditSubscriptionPlanModal();
+
+                flashMessage("success-message", message);
+            })
+        }else{
+            alert("Please select a valid company!");
+        }
+    }
     //close edit subscription modal
-    function closeEditSubscriptionPlanModal() {
+    let closeEditSubscriptionPlanModal = () => {
         document.getElementById("edit-plan-div").style.display = "none";
         document.getElementById("overlay").style.display = "none";
     }
+
+    document.getElementById("cancel-plan-button").addEventListener('click', closeEditSubscriptionPlanModal);
 /*__________________________________________________________________________________________________________________________*/
 /*--------------------------------------Edit Optional Subscription Plan---------------------------------------------------*/
-    
-document.getElementById("cancel-optional-plan-button").addEventListener('click', closeEditOptionalSubscriptionPlanModal);
 
 //Open Edit Form - Subscription Plan
 let editOptionalSubscriptionPlan = (packageId) => {
-    const packageType =  "optional";
     getOptionalSubscriptionPlan(packageId);
 }
 
 //Open Edit optional subscription plan package
-let openEditOptionalSubscriptionPlan = (packageId) => {
+let openEditOptionalSubscriptionPlan = () => {
     document.getElementById("edit-optional-plan-div").style.display = "flex";
     // Reset the form title
     document.getElementById("formTitle").innerText = "Edit Optional Subscription Plan";
@@ -1281,6 +1319,7 @@ let getOptionalSubscriptionPlan = (package_id) => {
     //Validate Company Id
     if(companyProfile.selectedId >= 1)
     {    
+        packageId = package_id;
         //query parameters
         let packageQueryData = {
             id: package_id,
@@ -1315,18 +1354,66 @@ let getOptionalSubscriptionPlan = (package_id) => {
             let price = document.getElementById("e-optional-plan-price");
             price.value = data.price; 
 
-            openEditSubscriptionPlan(package_id)
+            openEditOptionalSubscriptionPlan();
         })
     }else{
         alert("Please select a valid company!");
     }
 }
-/*__________________________________________________________________________________________________________________________*/
-//close edit subscription modal
-function closeEditOptionalSubscriptionPlanModal() {
+
+//update optional subscription plan - post data to server for updating.
+let updateOptionalSubscriptionPlanButton = document.getElementById("edit-optional-plan-button");
+    updateOptionalSubscriptionPlanButton.addEventListener("click", () => {
+        updateOptionalSubscriptionPlan();
+    });
+    
+    let updateOptionalSubscriptionPlan = () => {
+        let formData = {
+            id: packageId,
+            packageName: document.getElementById('e-optional-plan-name').value,
+            membersCount: document.getElementById("e-optional-member-count").value,
+            price: document.getElementById("e-optional-plan-price").value,
+        }
+
+        //Validate Company Id
+        if(companyProfile.selectedId >= 1)
+        {    
+            //fetch api sending data to backend for update
+            fetch(`/package/update-optionalplan/${companyProfile.selectedId}`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return flashMessage("error-flash-message", "Error updating optional subscription plan");
+                }
+                return response.json()
+            })
+            .then(data => {
+                //pass message to modal box
+                let message = `Optional-Subscription-Plan has been updated successfully`;
+                // Update the table with the new data
+                optionalPackageTable(companyProfile.selectedId);
+                
+                //close modal
+                closeEditOptionalSubscriptionPlanModal();
+
+                flashMessage("success-message", message);
+            })
+        }else{
+            alert("Please select a valid company!");
+        }
+    }
+//close edit optional subscription modal
+let closeEditOptionalSubscriptionPlanModal = () => {
     document.getElementById("edit-optional-plan-div").style.display = "none";
     document.getElementById("overlay").style.display = "none";
 }
+
+document.getElementById("cancel-optional-plan-button").addEventListener('click', closeEditOptionalSubscriptionPlanModal);
 /*__________________________________________________________________________________________________________________________*/
 
 companyProfile.fetchData();

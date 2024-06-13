@@ -487,7 +487,6 @@ customElements.define("display-client", class extends HTMLElement {
                         {
                             actions.style.display = "";
                         }
-                        
                         openModal(add_btn.id);
                     })
                 });

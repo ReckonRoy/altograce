@@ -5,15 +5,22 @@ package com.itilria.altograce.domain.client;
  * @Date 07 April 2024
  * @Description Entity class for deceased records.
  */
-import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import lombok.*;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.math.BigDecimal;
 
-import com.itilria.altograce.domain.client.PrimaryClient;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Setter
@@ -24,7 +31,7 @@ import com.itilria.altograce.domain.client.PrimaryClient;
 public class Deceased{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
@@ -41,6 +48,9 @@ public class Deceased{
 
     @Column(nullable = false, name = "cemetery")
     private String cemetery;
+
+    private String biNumber;
+    private String graveNumber;
 
     @Column(nullable = false, name = "date_of_burial")
     private LocalDate dateOfBurial;

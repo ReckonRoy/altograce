@@ -155,6 +155,11 @@ customElements.define("funeral-form-component", class extends HTMLElement {
                         <input type="text" id="name-of-deceased" name="nameOfDeceased" value="${this.deceasedName}" required>
                     </div>
                     <div class="form-group">
+                        <label for="grave-number">BI Number:</label>
+                        <input type="text" id="bi-number" name="biNumber" required>
+                    </div>
+
+                    <div class="form-group">
                         <label for="identity-number">Identity Number:</label>
                         <input type="text" id="identity-number" name="identityNumber" value="${this.idPassport}" required>
                     </div>
@@ -182,6 +187,10 @@ customElements.define("funeral-form-component", class extends HTMLElement {
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="grave-number">Grave Number:</label>
+                        <input type="text" id="grave-number" name="graveNumber" required>
+                    </div>
+                    <div class="form-group">
                         <label for="total-service-amount">Total Service Amount:</label>
                         <input type="number" id="total-service-amount" name="totalServiceAmount" required>
                     </div>
@@ -190,8 +199,8 @@ customElements.define("funeral-form-component", class extends HTMLElement {
                         <input type="number" id="deposit" name="deposit" required>
                     </div>
                     <div class="form-group">
-                        <label for="balance-due-date">Balance to be Paid in Full Two Days Before Funeral:</label>
-                        <input type="date" id="balance-due-date" name="balanceDueDate" required>
+                        <label for="balance-due">Balance to be Paid in Full Two Days Before Funeral:</label>
+                        <input type="text" id="balance-due" name="balanceDue" required>
                     </div>
                     <div class="form-group">
                         <label for="date-of-burial">Date of Burial:</label>
@@ -251,7 +260,10 @@ customElements.define("funeral-form-component", class extends HTMLElement {
 
         // If form is valid, collect data
         const formData = new FormData(form);
-        let form_data = {};
+        let form_data = {
+            graveNumber: this.shadowRoot.getElementById("grave-number").value,
+            biNumber: this.shadowRoot.getElementById("bi-number").value
+        };
         formData.forEach((value, key) => {
             form_data[key] = value;
         });
@@ -339,6 +351,8 @@ customElements.define("funeral-form-component", class extends HTMLElement {
             identityNumber: id,
             cemetery: cemetry,
             dateOfBurial: dateOfBurial,
+            graveNumber: this.shadowRoot.getElementById("grave-number").value,
+            biNumber: this.shadowRoot.getElementById("bi-number").value
         }
 
         //FetchAPI - post deceased data to back end

@@ -38,32 +38,29 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PrimaryClient{
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String clientid;
 
     @Transient
     private String residentialAddress;
 
-    @Column(name="TITLE", nullable=false)
+    @Column(name="TITLE")
     private String title;
 
-    @Column(name="NAME", nullable=false)
+    @Column(name="NAME")
     private String name;
 
-    @Column(name="SURNAME", nullable=false)
+    @Column(name="SURNAME")
     private String lastName;
     
-    @Column(nullable=true)
     private String initials;
 
-    @Column(nullable=false)
     private String id_passport;
-
-    @Column(nullable=false)
+    @Column(nullable = true)
     private String gender;
 
     private LocalDate dob;
@@ -73,9 +70,9 @@ public class PrimaryClient{
 
     private String email;
     private String countryCode;
-    private int cellNumber;
-    private int homeNumber;
-    private int telephone;
+    private long cellNumber;
+    private long homeNumber;
+    private long telephone;
 
     private String country;
     private String province;
@@ -126,10 +123,9 @@ public class PrimaryClient{
     }
 
     //clientId comprises of CompanyId, clientId_Passport, 
-    public void setClientId(int companyId, String idPassport)
+    public void setClientId(String companyInitials, int fileId)
     {
-        String id_passport = idPassport.substring(0, 4);
-        this.clientid = companyId + "" + id_passport;
+        this.clientid = companyInitials + fileId;
     }
 
     @Transient

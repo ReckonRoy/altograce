@@ -58,6 +58,25 @@ public class PackageService{
         }
     }
 
+    public ServicePackage updateSubscriptionPlan(int id, ServicePackage formData)
+    {
+        Optional<Company> company = companyRepository.findById(id);
+        if(!company.isPresent()){
+            throw new IllegalStateException("Company does not exist");
+        }
+
+        Optional<ServicePackage> subscriptionPlan = packageRepository.findById(formData.getId());
+        if(!subscriptionPlan.isPresent())
+        {
+            throw new IllegalStateException("This subscription plan does not exist");
+        }
+
+        subscriptionPlan.get().setPackageName(formData.getPackageName());
+        subscriptionPlan.get().setMembersCount(formData.getMembersCount());
+        subscriptionPlan.get().setPrice(formData.getPrice());
+        return packageRepository.save(subscriptionPlan.get());
+    }
+
     public List<ServicePackage> getPackages(int id)
     {
         long count = packageRepository.countByCompanyid_Id(id);
@@ -142,6 +161,25 @@ public OptionalPackage addOptionalPackage(int id, OptionalPackage optionalData)
         }
 
         return optionalPlan.get();
+    }
+
+    public OptionalPackage updateOptionalSubscriptionPlan(int id, OptionalPackage formData)
+    {
+        Optional<Company> company = companyRepository.findById(id);
+        if(!company.isPresent()){
+            throw new IllegalStateException("Company does not exist");
+        }
+
+        Optional<OptionalPackage> subscriptionPlan = optionalPackageRepository.findById(formData.getId());
+        if(!subscriptionPlan.isPresent())
+        {
+            throw new IllegalStateException("This subscription plan does not exist");
+        }
+
+        subscriptionPlan.get().setPackageName(formData.getPackageName());
+        subscriptionPlan.get().setMembersCount(formData.getMembersCount());
+        subscriptionPlan.get().setPrice(formData.getPrice());
+        return optionalPackageRepository.save(subscriptionPlan.get());
     }
 
     public void deleteOptionalPackage(int id)
