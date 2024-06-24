@@ -221,6 +221,7 @@ customElements.define("reception-header", class extends HTMLElement {
         <ul>
           <li id="dashboard-link">Dashboard</li>
           <li id="client-link">Client</li>
+          <li id="invoice-link">Invoice</li>
         </ul>
       </div>
     `;
@@ -268,9 +269,14 @@ customElements.define("reception-header", class extends HTMLElement {
       this.shadowRoot.getElementById("dashboard-link").addEventListener("click", () => {
         location.href = "/reception/dashboard";
       });
+
       this.shadowRoot.getElementById("client-link").addEventListener("click", () => {
         location.href = "/client/management";
       });
+      
+      this.shadowRoot.getElementById("invoice-link").addEventListener("click", () => {
+        location.href = "/client/invoice";
+      })
     };
 
     /*------------------------------------------------------------------------------------------------*/

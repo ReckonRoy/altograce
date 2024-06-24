@@ -17,21 +17,25 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itilria.altograce.domain.Company;
 import com.itilria.altograce.domain.ServicePackage;
 import com.itilria.altograce.domain.StaffAuditing;
+import com.itilria.altograce.domain.UserAuthentication;
 import com.itilria.altograce.domain.client.ClientBilling;
 import com.itilria.altograce.domain.client.ClientDependency;
 import com.itilria.altograce.domain.client.ClientSettings;
 import com.itilria.altograce.domain.client.Deceased;
 import com.itilria.altograce.domain.client.PrimaryClient;
 import com.itilria.altograce.domain.client.PrimaryPackageSubscription;
+import com.itilria.altograce.domain.funeral.Invoice;
 import com.itilria.altograce.repository.CompanyRepository;
 import com.itilria.altograce.repository.ServicePackageRepository;
 import com.itilria.altograce.repository.StaffAuditingRepository;
+import com.itilria.altograce.repository.UserAuthenticationRepository;
 import com.itilria.altograce.repository.clientrepository.ClientBillingRepository;
 import com.itilria.altograce.repository.clientrepository.ClientDependencyRepository;
 import com.itilria.altograce.repository.clientrepository.ClientRepository;
 import com.itilria.altograce.repository.clientrepository.ClientSettingsRepository;
 import com.itilria.altograce.repository.clientrepository.DeceasedRepository;
 import com.itilria.altograce.repository.clientrepository.PrimaryPackageSubscriptionRepository;
+import com.itilria.altograce.repository.funeralrepository.InvoiceRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,7 +46,10 @@ public class ClientService{
 
     @Autowired
     private CompanyRepository companyRepository;
-
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+    @Autowired 
+    private UserAuthenticationRepository userAuthRepository;
     @Autowired
     private PrimaryPackageSubscriptionRepository primaryPackSubRep;
     @Autowired
@@ -325,6 +332,33 @@ public class ClientService{
     }
 
 /*__________________________________________________________________________________________*/
+
+/*---------------------------------------Client Invoice Section----------------------------*/ 
+    //Get invoices that are in range of within two weeks
+    public List<Invoice> getInvoicesWithinTwoWeeks(String username){
+        Optional<UserAuthentication> userAuth = userAuthRepository.findByUsername(username);
+        if(!userAuth.isPresent())
+        {
+            throw new IllegalArgumentException("Invalid User");
+        }
+        // Retrieve the company entity by ID
+        Optional<Company> company = companyRepository.findById(userAuth.get().getCompanyId());
+        if(!company.isPresent()){
+            throw new IllegalArgumentException("User no an Employee of any Company");
+        }
+
+        // Calculate the date two weeks from today
+        LocalDate today = LocalDate.now();
+        LocalDate twoWeeksFromNow = today.plusWeeks(2);
+        // Retrieve upcoming funerals associated with the company within the specified range
+        List<Invoice> invoicesWithinTwoWeeks = invoiceRepository.findByCompanyIdAndInvoiceDateBetween(company.get().getId(), today, twoWeeksFromNow);
+        if(invoicesWithinTwoWeeks.isEmpty())
+        {
+            return null;
+        }
+            
+        return invoicesWithinTwoWeeks;
+    }
 
 /*---------------------------------------Deceased Section------------------------------------*/
     //Add deceased to deceased records

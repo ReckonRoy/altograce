@@ -4,40 +4,38 @@ package com.itilria.altograce.controller;
  * @Date 23/02/2024
 */
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import lombok.RequiredArgsConstructor;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.stream.Collectors;
 
-import com.itilria.altograce.dto.clientdto.ClientRegistrationDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.itilria.altograce.domain.UserAuthentication;
-import com.itilria.altograce.domain.client.PrimaryClient;
-import com.itilria.altograce.domain.client.Deceased;
 import com.itilria.altograce.domain.client.ClientBilling;
-import com.itilria.altograce.domain.client.ClientSettings;
 import com.itilria.altograce.domain.client.ClientDependency;
+import com.itilria.altograce.domain.client.ClientSettings;
+import com.itilria.altograce.domain.client.Deceased;
+import com.itilria.altograce.domain.client.PrimaryClient;
 import com.itilria.altograce.domain.client.PrimaryPackageSubscription;
+import com.itilria.altograce.domain.funeral.Invoice;
+import com.itilria.altograce.dto.clientdto.ClientRegistrationDto;
 import com.itilria.altograce.service.UserAuthenticationService;
 import com.itilria.altograce.service.clientservice.ClientService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller 
 @RequiredArgsConstructor
@@ -284,7 +282,7 @@ public class ClientManagementController{
         
     }
 
-//route - get deceased records route
+    //route - get deceased records route
     @GetMapping("/deceased/getRecords/{fileId}")
     @ResponseBody
     public ResponseEntity<?> getDeceasedRecords(@PathVariable String fileId)
@@ -299,4 +297,31 @@ public class ClientManagementController{
         }
     }
 
+    //route -  client invoice page
+    @GetMapping("/invoice")
+    public String invoicePage()
+    {
+        return "/client-template/invoice";
+    }
+
+    //route - get invoices
+    @GetMapping("/invoices")
+    @ResponseBody
+    public ResponseEntity<?> getInvoices(@AuthenticationPrincipal UserDetails userDetails)
+    {
+        try{
+            List<Invoice> result = clientService.getInvoicesWithinTwoWeeks(userDetails.getUsername());
+            if(result == null)
+            {
+                Map<String, String> message = new HashMap();
+                message.put("message", "No invoices to display");
+                return ResponseEntity.ok(message);
+            }
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }catch(IllegalArgumentException illegalArgumentException){
+            return new ResponseEntity<>(illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    } 
+    
 }
