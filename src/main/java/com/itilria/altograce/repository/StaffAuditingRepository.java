@@ -5,5 +5,5 @@ import com.itilria.altograce.domain.StaffAuditing;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StaffAuditingRepository extends JpaRepository<StaffAuditing, Integer>{
+public interface StaffAuditingRepository extends JpaRepository<StaffAuditing, Long>{
 }

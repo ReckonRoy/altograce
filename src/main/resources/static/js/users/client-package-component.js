@@ -169,31 +169,13 @@ customElements.define("add-package", class extends HTMLElement {
             </div>
         </div>
         `;
-
-        // Dummy data - Replace with your actual JSON data
         let packages = {};
-        let service = {};
-        let item = {};
-
-        /*const packages = 
-            { 
-                id
-                companyid
-                name: "Basic", 
-                price: "$10", 
-                familyMembers: 1,
-                services: { name: "Service 1", description: i"Description of Service 1" }
-            },
-            services: { name: "Service 1", description: i"Description of Service 1" }
-            items: { "packageid", "Item 1": 2, "Item 2": 1 },
-        */
         let renderPackages = () => {
             const packagesDiv = this.shadowRoot.getElementById('packages');
             //delay fetch, userData has to be initialised first
             setTimeout(() => {
-                let id = userData.companyId;
                 
-                fetch(`/package/packages/${id}`)
+                fetch(`/package/packages`)
                 .then(response => {
                     return response.json();
                 }).then(data => {
@@ -201,10 +183,9 @@ customElements.define("add-package", class extends HTMLElement {
                     data.forEach((pkg, index) => {
                         packages = {
                             id: pkg.id,
-                            packageName: pkg.packageName,
+                            packageName: pkg.policyName,
                             membersCount: pkg.membersCount,
-                            price: pkg.price,
-                            companyid: pkg.companyid,
+                            price: pkg.premiumAmount,
                         }
 
                         const card = document.createElement('div');
@@ -212,7 +193,7 @@ customElements.define("add-package", class extends HTMLElement {
                         card.innerHTML = `
                             <div>
                                 <input type="radio" class="package-radio-btn" name="package" value="${pkg.id}" id="package${pkg.id}">
-                                <label for="package${pkg.id}">${pkg.packageName} - ${pkg.price} - ${pkg.membersCount} Members</label>
+                                <label for="package${pkg.id}">${pkg.policyName} - ${pkg.premiumAmount} - ${pkg.membersCount} Members</label>
                             </div>
                             <button class="read-more-button" id="${pkg.id}">Read More</button>
                         `;
@@ -225,7 +206,7 @@ customElements.define("add-package", class extends HTMLElement {
                             clientRegistration.formData.packageId = btn.value;
                         });
                     });
-
+                    /*
                     let readMore_btn = this.shadowRoot.querySelectorAll(".read-more-button");
                     readMore_btn.forEach((btn) => {
                         btn.addEventListener("click", () => {
@@ -233,10 +214,12 @@ customElements.define("add-package", class extends HTMLElement {
                             showDetails(packageId);
                         });
                     });
+                    */
                 })
-        }, 2000);
+            }, 2000);
         }
 
+        /*
         let showDetails = (packageId) => {
             const packageDetailsDiv = this.shadowRoot.getElementById('package-details');
             packageDetailsDiv.innerHTML = '';
@@ -276,7 +259,7 @@ customElements.define("add-package", class extends HTMLElement {
             }).catch(error => {
             });    
 
-            /*services offered on package*/
+            
             const servicesTable = document.createElement('table');
             servicesTable.className = 'details-table';
             let serviceForm = {packageType: "standard"};
@@ -306,7 +289,9 @@ customElements.define("add-package", class extends HTMLElement {
                 
             });
         }
+        */
 
+        /*
         let closeDetails = () => {
             const detailsOverlay = this.shadowRoot.querySelector('.details-overlay');
             detailsOverlay.style.display = 'none';
@@ -314,14 +299,16 @@ customElements.define("add-package", class extends HTMLElement {
             const detailsModal = this.shadowRoot.getElementById('details-modal');
             detailsModal.style.display = 'none';
         }
+        */
 
+        /*
         let close_btn = this.shadowRoot.querySelectorAll(".close-button");
-            close_btn.forEach((btn) => {
-                btn.addEventListener("click", () => {
-                    closeDetails();
-                });
+        close_btn.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                closeDetails();
             });
-
+        });
+        */
         renderPackages();
     }
 });

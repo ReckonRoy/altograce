@@ -14,6 +14,8 @@ customElements.define("display-client", class extends HTMLElement {
     connectedCallback() {
       this.attachShadow({ mode: 'open' });
       this.shadowRoot.innerHTML =`<style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
         .container {
             width: 90%;
             margin: 0 auto;
@@ -30,15 +32,30 @@ customElements.define("display-client", class extends HTMLElement {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            box-shadow: 0 5px 10px #515151;
         }
+
+        thead{
+            box-shadow: 0 5px 10px #515151;
+        }
+
         th, td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 1rem 2rem;
             text-align: left;
+            
         }
         th {
             background-color: #f2f2f2;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 900;
         }
+
+        tr:nth-child(even){
+            background-color: #f1f5fa;
+        }
+
         input[type="text"],
         input[type="date"],
         select {
@@ -66,6 +83,15 @@ customElements.define("display-client", class extends HTMLElement {
             background-color: #0056b3;
         }
 
+        .delete-btn{
+            background-color: #fdc7cc;
+            color: #d0636a;
+        }
+
+        .delete-btn:hover{
+            background-color: #d0636a;
+            color: #fdc7cc;
+        }
         #show-deceased-btn{
             background-color: black;
         }
@@ -190,13 +216,21 @@ customElements.define("display-client", class extends HTMLElement {
         }
 
         .ACTIVATED{
-            color: green;
-            border: 1px solid green;
+            background-color: #c2e3c4;
+            color: #69a06a;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            border-radius: 5px; 
         }
 
         .INACTIVE{
-            color: red;
-            border: 1px solid red;
+            background-color: #fdc7cc;
+            color: #d07473;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            border-radius: 5px;
         }
         
         .action-parent{
@@ -264,9 +298,149 @@ customElements.define("display-client", class extends HTMLElement {
             cursor: pointer;
         }
 
+        #con-dialog{
+            display: none;
+            position: fixed;
+            top: 100px;
+            margin-left: 25%;
+            width: 40%;
+            background-color: #550000;
+            padding: 10px;
+            color: #525252;
+            border-radius: 10px;
+            box-sizing: border-box;
+            z-index: 11;
+        }
+
+        #overlay{
+            display: none;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: black;
+            z-index: 10;
+            opacity: 0.8;
+        }
+
+        #con-dialog-child
+        {
+            display: flex;
+            flex-direction: column;
+            background-color: #d35f5f;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        
+        #con-dialog-header{
+            display: flex;
+            margin-bottom: 5px;
+        }
+
+        #con-dialog-header p{
+            flex-basis: 90%;
+            border-radius:25%;
+        }
+
+        #con-dialog-header button{
+            border-radius: 25px;
+            background-color: #ff8080;
+            color: #d40000;
+            width: 30px;
+            height: 30px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        #con-dialog-header button:hover{
+            outline: 1px solid #ff8080;
+            background-color: #d40000;
+            color: #ff8080;
+        }
+
+        #con-dialog-content{
+            background-color: white;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 15px 10px;
+            box-sizing: border-box;
+        }
+
+        #confirm-btn{
+            background-color: #55d400;
+            color: #225500;
+        }
+
+        #confirm-btn:hover{
+            outline: 1px solid #55d400;
+            background-color: #2d7200;
+            color: #55d400;
+        }
+
+        #cancel-btn{
+            background-color: #ff8080;
+            color: #d90f0f;
+        }
+        #cancel-btn:hover{
+            outline: 1px solid #ff8080;
+            background-color: #d40000;
+            color: #ff8080;
+        }
+
+        .poppins-light {
+        font-family: "Poppins", sans-serif;
+        font-weight: 300;
+        font-style: normal;
+        }
+
+        /*---------------FLASH MESSAGE STYLES--------------------*/
+        #flash-message{
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            text-align: center;
+        }
+
+        .error-flash-message{
+            width: 100%;
+            color: white;
+            border: 1px solid gray;
+            background-color: red;
+        }
+
+        .success-message{
+            width: 100%;
+            color: white;
+            border: 1px solid gray;
+            background-color: green;
+        }
+
+        #flash-message-p{
+            font-weight: bolder;
+            padding: 20px 0;
+            box-sizing: border-box;
+        }
     </style>
+    <div id="flash-message">
+        <p id="flash-message-p"></p>    
+    </div>
+    <div id="overlay"></div>
+    <!--Confirmation Dialog Box-->
+        <div id="con-dialog">
+            <div id="con-dialog-child">
+                <div id="con-dialog-header"><p>Confirmation Dialog</p><button id="close-btn">X</button></div>
+                <div id="con-dialog-content"><p>Please confirm that you want to delete this file.
+                Kindly note this action is irreversible!!!</p></div>
+                <div><button id="confirm-btn">Confirm</button><button id="cancel-btn">Cancel</button></div>
+            </div>
+        </div>
 
     <div class="container">
+        
         <h2>Clients Information</h2>
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <input type="text" id="search" placeholder="Search by Client ID..">
@@ -278,7 +452,7 @@ customElements.define("display-client", class extends HTMLElement {
                     <th class="columnSort" id="0">Client ID</th>
                     <th class="columnSort" id="1">Name</th>
                     <th class="columnSort" id="2">Last Name</th>
-                    <th class="columnSort" id="3">Email</th>
+                    <th class="columnSort" id="3">Phone Number</th>
                     <th>Account Status</th>
                     <th>Actions</th>
                 </tr>
@@ -312,23 +486,14 @@ customElements.define("display-client", class extends HTMLElement {
                     <label>Relationship:</label>
                     <select id="relationship" required>
                         <option value="">Select Relationship</option>
-                        <option value="spouse">Spouse</option>
-                        <option value="son">Son</option>
-                        <option value="daughter">Daughter</option>
-                        <option value="brother">Brother</option>
-                        <option value="sister">Sister</option>
-                        <option value="father">Father</option>
-                        <option value="mother">Mother</option>
-                        <option value="naphew">Naphew</option>
-                        <option value="niece">Niece</option>
-                        <option value="cousin">Cousin</option>
-                        <option value="grandchild">Grand Child</option>
-                        <option value="auntie">Auntie</option>
+                        <option value="Spouse">Spouse</option>
+                        <option value="Child">Child</option>
+                        <option value="Sibling">Sibling</option>
+                        <option value="Parent">Parent</option>
+                        <option value="Extended Family">Extended Family</option>
+                        <option value="Grand Parent">Grand Parent</option>
                         <option value="uncle">Uncle</option>
                         <option value="auntie">Auntie</option>
-                        <option value="grandfather">Grandfather</option>
-                        <option value="grandmother">Grandmother</option>
-                        <option value="inlaw">Inlaw</option>
                     </select>
                 </div>
                 <div>
@@ -393,42 +558,37 @@ customElements.define("display-client", class extends HTMLElement {
          * this will keep track some fields of the deceased 
          */
         let deceased = {};
+
+        //paging properties
         let pageNumber = 0;
-        let pageSize = 10; // Change this according to your requirement
+        let pageSize = 50;
 
         this.getDepGender();
+        /*-------------------------------------------Flash Message----------------------------------------*/
+        let flashMessage = (classValue, messageContent) => {
+            let flashMessageDiv = this.shadowRoot.getElementById("flash-message");
+            flashMessageDiv.style.display = "block";
+            let message = this.shadowRoot.getElementById("flash-message-p");
+            message.textContent = messageContent;
+            flashMessageDiv.className = classValue;
+            setTimeout(() => {
+                flashMessageDiv.style.display = "none";
+            }, 3000);
+        }
+        /*________________________________________________________________________________________________*/
+
         // Function to populate the table with clients
         let populateTable = (pageNumber, pageSize) => {
             fetch(`/client/management/clients/${userData.companyId}?page=${parseInt(pageNumber)}&size=${parseInt(pageSize)}`)
             .then((response) => {
                 if(!response.ok)
                 {
-                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                    return response.text().then((error) => {
+                        throw new Error(error);
+                    });
                 }
-                
                 return response.json();
             }).then((data) => {
-                /*data.forEach((client) => {
-                    clients.push({
-                        id: client.id,
-                        clientid: client.clientid,
-                        name: client.name,
-                        lastName: client.lastName,
-                        maritalStatus: client.maritalStatus,
-                        email: client.email,
-                        country: client.country,
-                        province: client.province,
-                        residentialAddress: `Street:  ${client.street}, unit/house number: ${client.standUnit}`,
-                        postalAddress: client.postCode,
-                        cellNumber: client.cellNumber,
-                        homeNumber: client.homeNumber,
-                        telephone: client.telephone,
-                        firstInitials: client.firstInitials,
-                        gender: client.gender,
-                        idPassportNumber: client.id_passport,
-                    });
-                })*/
-
                 let table = this.shadowRoot.getElementById('clientList');
                 table.innerHTML = '';
                 clientsToShow = data.content;
@@ -437,8 +597,8 @@ customElements.define("display-client", class extends HTMLElement {
                     <td>${client.clientid}</td>
                     <td>${client.name}</td>
                     <td>${client.lastName}</td>
-                    <td>${client.email}</td>
-                    <td class="client.activationStatus">${client.activationStatus}</td>
+                    <td>${client.cellNumber}</td>
+                    <td><p class="${client.activationStatus}">${client.activationStatus}<p></td>
                     <td>
                         <div class="action-parent">
                             <div class="select-action">Select an action</div>
@@ -448,6 +608,7 @@ customElements.define("display-client", class extends HTMLElement {
                                     <li><button class="billing-btn" id="${client.clientid}">Pay</button></li>
                                     <li><button class="payment-history-btn" id="${client.clientid}">Payment history</button></li>
                                     <li><button class="add-dep-btn" id="${client.clientid}">Add Dep</button></li>
+                                    <li><button class="delete-btn" id="${client.clientid}">Delete</button></li>
                                     <li><button class="moreinfo-btn" id="${client.clientid}">More Info</button></li>
                                 </ul>
                             </div>
@@ -497,6 +658,7 @@ customElements.define("display-client", class extends HTMLElement {
                     })
                 });
 
+                //billing button action
                 let billing_btn = this.shadowRoot.querySelectorAll(".billing-btn");
                 billing_btn.forEach((billing) => {
                     billing.addEventListener("click", () => {
@@ -506,6 +668,19 @@ customElements.define("display-client", class extends HTMLElement {
                         }
                         let idValue = billing.id;
                         displayBillingModal(idValue.toString());
+                    })
+                });
+
+                //delete button action
+                let delete_btn = this.shadowRoot.querySelectorAll(".delete-btn");
+                delete_btn.forEach((deleteAction) => {
+                    deleteAction.addEventListener("click", () => {
+                        for(let actions of actionContainer)
+                        {
+                            actions.style.display = "";
+                        }
+                        let idValue = deleteAction.id;
+                        confirmDeleteModal(idValue.toString());
                     })
                 });
 
@@ -601,6 +776,73 @@ customElements.define("display-client", class extends HTMLElement {
 
             this.shadowRoot.appendChild(billingComponent);
         }
+    /*-----------------------------------------Confirm Dialog-------------------------------------*/
+        let confirmDialog = this.shadowRoot.getElementById("con-dialog");
+        let overlay = this.shadowRoot.getElementById("overlay");
+        let clientIdValue;
+        //delete - confirm delete action
+        let confirmDeleteModal = (clientId) => {
+
+            clientIdValue = clientId;
+            //make confirmation dialog visible
+            if(confirmDialog.style.display !== "block")
+            {
+                confirmDialog.style.display = "block";
+                overlay.style.display = "block"
+            }
+        }
+
+        //cancel button confirm dialog - cancel pending process
+        let cancelButton = this.shadowRoot.getElementById("cancel-btn");
+        cancelButton.addEventListener("click", ()=>{
+            confirmDialog.style.display = "none";
+                overlay.style.display = "none";
+        });
+
+        let closeButton = this.shadowRoot.getElementById("close-btn");
+        closeButton.addEventListener("click", () => {
+            confirmDialog.style.display = "none";
+            overlay.style.display = "none";
+        });
+        
+        //when confirm button is pressed delete file
+        let confirmDeleteFile = this.shadowRoot.getElementById("confirm-btn");
+        confirmDeleteFile.addEventListener("click", () => {
+            //call delete function
+            deleteFile(clientIdValue);
+        });
+
+        //delete file
+        let deleteFile = (fileId) => {
+            fetch(`/client/delete-file/${fileId}`,{
+                method: 'DELETE'
+            })
+            .then((response) => {
+                if(!response.ok){
+                    return response.text().then((error) => {
+                        throw new Error(error);
+                    }) 
+                }
+                return response.text();
+            })
+            .then((data) => {
+                confirmDialog.style.display = "none";
+            overlay.style.display = "none";
+                let message = data;
+                populateTable(pageNumber, pageSize);
+                //flashMessage("success-message", message);
+                alert(message);
+            })
+            .catch(error => {
+                confirmDialog.style.display = "none";
+                overlay.style.display = "none";
+                //flashMessage("error-flash-message", error);
+                alert(message);
+            })
+
+            
+        }
+    /*________________________________________________________________________________________*/
 
         //payment history - call create element paymenthistory component
         let displayPaymentHistoryModal = (clientId) => {
@@ -923,7 +1165,7 @@ customElements.define("display-client", class extends HTMLElement {
             if(deceased.name === undefined){
                 name = "";
             }else{
-                name = `${deceased.name} ${deceased.lastName}`;
+                name = `${deceased.name} ${deceased.surname}`;
             }
                 
             
@@ -934,7 +1176,8 @@ customElements.define("display-client", class extends HTMLElement {
                 id_pass = idPassportNumber;
             }
             
-            location.href = "/funeral/management" + "?fileId=" + encodeURIComponent(fileNumber) + "&clientName=" + encodeURIComponent(clientName) + "&name=" + encodeURIComponent(name) + "&surname=" + encodeURIComponent(surname) + "&id_passport=" + encodeURIComponent(id_pass);
+            location.href = "/funeral/management" + "?fileId=" + encodeURIComponent(fileNumber) + "&clientName=" + encodeURIComponent(clientName) + "&name=" +
+             encodeURIComponent(name) + "&surname=" + encodeURIComponent(surname) + "&id_passport=" + encodeURIComponent(id_pass) + "&dependentId=" + deceased.id;
         }
 
         // Function to display clients in the table

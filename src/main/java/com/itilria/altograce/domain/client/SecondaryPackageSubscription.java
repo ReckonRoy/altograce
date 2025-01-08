@@ -31,7 +31,7 @@ import lombok.Setter;
 public class SecondaryPackageSubscription{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
+    private long id;
 
     @Column(nullable=false)
     private int addtionaPackageId;

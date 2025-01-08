@@ -43,7 +43,7 @@ public class Company
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name="CO_NAME")
     private String name;
@@ -121,11 +121,11 @@ public class Company
 
     @JsonIgnore
     @OneToMany(mappedBy = "companyid", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ServicePackage> servicePackage;
+    private List<PremiumPolicy> servicePackage;
 
     @JsonIgnore
     @OneToMany(mappedBy = "companyid", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OptionalPackage> optionalPackage;
+    private List<AdditionalPolicy> optionalPackage;
 
     @JsonIgnore
     @OneToOne(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)

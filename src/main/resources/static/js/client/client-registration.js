@@ -1,5 +1,5 @@
 /**
- * @author Le-Roy
+ * @author Le-Roy Jongwe
  * @date 2024/03/02
  * @description get logged in user and company they belong to
  */
@@ -52,7 +52,9 @@ let clientRegistration = {
         }).then((response) => {
             if(!response.ok)
             {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                return response.text().then((error) => {
+                    throw new Error(error);
+                })
             }
 
             return response.json();
@@ -65,7 +67,7 @@ let clientRegistration = {
             detailsOverlay.style.display = 'block';
             
         }).catch(error => {
-            console.log(error);
+            alert(error);
         });
     },
 
@@ -87,7 +89,6 @@ let clientRegistration = {
             clientRegistration.formData.id_passport = document.getElementById("id-passport-field").value;
             clientRegistration.formData.gender = clientRegistration.gender;
             clientRegistration.formData.dob = document.getElementById("dob-field").value;
-            clientRegistration.formData.maritalStatus = document.getElementById("marital-field").value;
             clientRegistration.formData.email = document.getElementById("email-field").value;
             clientRegistration.formData.groupName = document.getElementById("group-field").value;
             clientRegistration.formData.dateOfCover = document.getElementById("joiningDate-field").value;
@@ -95,13 +96,8 @@ let clientRegistration = {
             clientRegistration.formData.countryCode = document.getElementById("countryCode-field").value;
             clientRegistration.formData.cellNumber = document.getElementById("cellPhone-field").value;
             clientRegistration.formData.homePhone = document.getElementById("homePhone-field").value;
-            clientRegistration.formData.telePhone = document.getElementById("telePhone-field").value;
-            clientRegistration.formData.country = document.getElementById("country-field").value;
             clientRegistration.formData.province = document.getElementById("province-field").value;
-            clientRegistration.formData.City = document.getElementById("city-field").value;
-            clientRegistration.formData.postCode = document.getElementById("postCode-field").value;
-            clientRegistration.formData.street = document.getElementById("street-field").value;
-            clientRegistration.formData.standUnit = document.getElementById("stand-unit").value; 
+            clientRegistration.formData.City = document.getElementById("address-field").value;
             clientRegistration.formData.staffId = userData.userId;
 
             clientRegistration.registerClient();

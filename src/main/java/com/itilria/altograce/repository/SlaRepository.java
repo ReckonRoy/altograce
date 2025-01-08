@@ -5,6 +5,6 @@ import com.itilria.altograce.domain.ServiceLevelAgreement;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SlaRepository extends JpaRepository<ServiceLevelAgreement, Integer>{
+public interface SlaRepository extends JpaRepository<ServiceLevelAgreement, Long>{
 
 }

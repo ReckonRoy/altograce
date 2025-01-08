@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.itilria.altograce.domain.EmployeeLeave;
 import java.util.List;
 
-public interface VacationRepository extends JpaRepository<EmployeeLeave, Integer> {
-    List<EmployeeLeave> findByEmployee_Id(int id);
+public interface VacationRepository extends JpaRepository<EmployeeLeave, Long> {
+    List<EmployeeLeave> findByEmployee_Id(long id);
 }

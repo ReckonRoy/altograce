@@ -33,59 +33,93 @@
             <form id="form-container">
                 <fieldset class="personal-form">
                     <legend>Personal</legend>
-                    <label for="title-field">Title:</label>
-                    <select id="title-field">
-                        <option value="Mr">Mr</option>
-                        <option value="Mrs">Mrs</option>
-                        <option value="Miss">Miss</option>
-                    </select>
-                    <label for="name-field">Name:</label><input type="text" id="name-field" required/>
-                    <label for="surname-field">Surname:</label><input type="text" id="surname-field" required/>
-                    <label for="fi-field">First Initials:</label><input type="text" id="fi-field"/>
-                    <label for="id-passport-field">Id/Passport:</label><input type="text" id="id-passport-field" required />
-                    
-                    <label for="gender-field">Gender:</label>
-                    <div id="gender-div">
-                        <label>Male:</label>
-                        <input type="radio" name="gender" value="male" class="gender-field"/>
-                        <label>Female:</label>
-                        <input type="radio" name="gender" value="female" class="gender-field"/>
+                    <div class="span-c2">
+                        <label for="title-field">Title:</label><br/>
+                        <select id="title-field" class="span-field">
+                            <option value="Mr">Mr</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Miss">Miss</option>
+                        </select>
                     </div>
-                    <label for="dob-field">D.O.B:</label><input type="date" id="dob-field">
-                    <label for="marital-field">Marital Status:</label>
-                    <select id="marital-field">
-                        <option value="Single">Single</option>
-                        <option value="Married">Married</option>
-                        <option value="Widow">Widow</option>
-                    </select>
+                    <div>
+                        <label for="name-field">Name:</label><br/>
+                        <input type="text" id="name-field" required/>
+                    </div>
+                    <div>
+                        <label for="surname-field">Surname:</label><br/>
+                        <input type="text" id="surname-field" required/>
+                    </div>
+                    <div>
+                        <label for="fi-field">First Initials:</label><br/>
+                        <input type="text" id="fi-field"/>
+                    </div>
+                    <div>
+                        <label for="id-passport-field">Id/Passport:</label><br/>
+                        <input type="text" id="id-passport-field" required />
+                    </div>
+                    <div class="span-c2">
+                        <label for="dob-field">D.O.B:</label>
+                        <br/>
+                        <input type="date" id="dob-field" class="span-field">
+                    </div>
+                    <div>
+                        <label for="gender-field">Gender:</label>
+                        <div id="gender-div">
+                            <label>Male:</label>
+                            <input type="radio" name="gender" value="male" class="gender-field"/>
+                            <label>Female:</label>
+                            <input type="radio" name="gender" value="female" class="gender-field"/>
+                        </div>
+                    </div>
                 </fieldset>
                 
                 <fieldset class="personal-form">
                     <legend>Contacts</legend>
-                    <label for="email-field">Email Address:</label><input type="text" id="email-field"/>
-                    <label for="countryCode-field">Country Code:</label><input type="text" id="countryCode-field"/>
-                    <label for="cellPhone-field">Cell:</label><input type="text" id="cellPhone-field"/>
-                    <label for="homePhone-field">Home:</label><input type="text" id="homePhone-field"/>
-                    <label for="telePhone-field">Telephone:</label><input type="text" id="telePhone-field"/>
+                    <div class="span-c2">
+                        <label for="email-field">Email Address:</label>
+                        <br/>
+                        <input type="text" class="span-field" id="email-field"/>
+                    </div>
+                    <div>
+                        <label for="countryCode-field">Country Code:</label><br/>
+                        <input type="text" id="countryCode-field"/>
+                    </div>
+                    <div>
+                        <label for="cellPhone-field">Cell:</label><br/>
+                        <input type="text" id="cellPhone-field"/>
+                    </div>
+                    <div>
+                        <label for="homePhone-field">Home Cell:</label><br/>
+                        <input type="text" id="omecellPhone-field"/>
+                    </div>
                 </fieldset>
                 <fieldset class="personal-form">
                     <legend>Address</legend>
-                    <label for="country-field">Country:</label><input type="text" id="country-field"/>
-                    <label for="province-field">Province:</label><input type="text" id="province-field"/>
-                    <label for="city-field">City:</label><input type="text" id="city-field"/>
-                    <label for="postCode-field">Postal Code:</label><input type="text" id="postCode-field"/>
-                    <label for="street-field">Street:</label><input type="text" id="street-field"/> 
-                    <label for="stand-unit">Stand Unit</label><input type="text" id="stand-unit"/>
+                    <div>
+                        <label for="province-field">Province:</label><br/>
+                        <input type="text" id="province-field"/>
+                    </div>
+                    <div class="span-c2">
+                        <label for="address-field">Address:</label><br/>
+                        <textarea id="address-field" class="span-field"></textarea>
+                    </div>
                 </fieldset>
-                
             </form>
 
             <form id="cover-container">
                 <fieldset class="personal-form">
                     <legend>Cover</legend>
-                    <label for="group-field">Group Name:</label><input type="text" id="group-field"/>
-                    <label for="joiningDate-field">Joining Date of Cover:</label><input type="date" id="joiningDate-field" required>
-                    <label for="joiningFee-field">Joining Fee</label><input type="text" id="joiningFee-field" required>
+                    <div class="span-c2">
+                        <label for="group-field">Group Name:</label>
+                        <br/>
+                        <input type="text" id="group-field" class="span-field"/>
+                    </div>
+                    <div>
+                        <label for="joiningDate-field">Joining Date of Cover:</label><input type="date" id="joiningDate-field" required>
+                    </div>
+                    <div>
+                        <label for="joiningFee-field">Joining Fee</label><input type="text" id="joiningFee-field" required>
+                    </div>
                 </fieldset>
             </form>
 

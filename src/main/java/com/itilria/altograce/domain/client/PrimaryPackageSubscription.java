@@ -30,7 +30,7 @@ import lombok.Setter;
 public class PrimaryPackageSubscription{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
+    private long id;
 
     private int packageId;
     private LocalDate dateOfCover;

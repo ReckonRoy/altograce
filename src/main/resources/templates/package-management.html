@@ -35,12 +35,15 @@
             transition: background-color 0.3s ease;
         }
 
-        button:hover {
-            background-color: #45a049;
-        }
-
         .delete-btn{
             background-color: red;
+            font-weight: bolder;
+            font-size: 0.8em;
+            color: #F8C3CC;
+        }
+
+        .delete-btn:hover{
+            background-color: #BF3F54;
         }
 
         form {
@@ -96,22 +99,8 @@
         form button.cancel:hover {
             background-color: #999;
         }
-
-        .itemTable,
-        .serviceTable {
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        #itemTable{
-            display: none;
-        }
-
-        #serviceTable{
-            display: none;
-        }
         
-        #overlay{
+        .overlay{
             position: absolute;
             display: none;
             background-color: black;
@@ -131,7 +120,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        #packageTable{
+        .policyTable{
             display: none;
         }
 
@@ -166,8 +155,47 @@
         }
 
         .package-form{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
             flex-basis: 100%;
         }
+
+        .policy-amount{
+            grid-column: 1/3;
+        }
+
+        /*policy-benefits div and text area*/
+        .premium-class-dta{
+            grid-column: 1/3;
+        }
+
+        .policy-benefits{
+            height: 250px;
+        }
+        /*END*/
+
+        /*policy form - div and button controls*/
+        .premium-class-dco{
+            margin-top: 20px;
+            border: 1px solid gray;
+            box-sizing: border-box;
+            padding: 10px 5px;
+            border-radius: 5px;
+        }
+
+        .cancelPackageButton{
+            background-color: pink;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .cancelPackageButton:hover{
+            outline: 1px solid red;
+            background-color: #FF7F93;
+        }
+        
+        /*END*/
 
         .container {
             width: 80%;
@@ -182,77 +210,34 @@
             padding: 20px 0;
             /* Add your main header styles here */
         }
-
-        #selected-company {
-            position: relative;
-            display: inline-block;
-            border-bottom: 1px solid #000;
-            cursor: pointer;
-        }
-
-        #selected-company .dropdown-icon {
-            margin-left: 5px;
-        }
-
-        .company-list {
-            position: absolute;
-            display: none;
-            border: 1px solid #333;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 5px;
-            border-radius: 4px;
-            z-index: 1;
-            /* Additional styling for the company list */
-        }
-
-        .company-list ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .company-list li {
-            cursor: pointer;
-            transition: background-color 0.3s;
-            padding: 8px;
-        }
-
-        .company-list li:hover {
-            background-color: #f0f0f0;
-        }
-
-        .no-companies-message {
-            padding: 5px 0;
-        }
-
-        h1{
-            margin-top: 50px;
-        }
 /*---------------------------------------------------------------------------------------------------*/
         /*---------------FLASH MESSAGE STYLES--------------------*/
         #flash-message{
             display: none;
             position: absolute;
-            top: 0;
+            padding: 5px 0;
             left: 0;
-            right: 0;
-            height: 5%;
+            width: 400px;
+            bottom: 10px;
             text-align: center;
+            font-weight: bolder;
+            border-radius: 5px;
+            font-size: 1em;
+            border: 1px solid white;
         }
 
         .error-flash-message{
             width: 100%;
-            color: white;
-            border: 1px solid gray;
-            background-color: red;
+            color: #FF7F7F;
+            outline: 1px solid #F50000;
+            background-color: #AD0000;
         }
 
         .success-message{
             width: 100%;
-            color: white;
-            border: 1px solid gray;
-            background-color: green;
+            color: #7FFF9C;
+            outline: 1px solid #7FFF9C;
+            background-color: #00A026;
         }
 
         #flash-message-p{
@@ -266,109 +251,198 @@
 <body>
     <admin-header id="nav-wrapper"></admin-header>
     
-    <div id="overlay"></div>
+    <div class="overlay"></div>
     <div id="flash-message">
         <p id="flash-message-p"></p>    
     </div>
-    <!-------------------------------------------------Subscription Forms-------------------------------------------------------------->
+    <!-------------------------------------------------PREMIUM FORMS-------------------------------------------------------------->
     <div id="packageForm" class="package-form-div">
-        <h2 id="formTitle" class="package-title">Add New Subscription Plan</h2>
+        <h2 id="formTitle" class="package-title"></h2>
         <form id="addPackageForm" class="package-form">
-            <label for="packageName">Package Name:</label>
-            <input type="text" id="packageName" name="packageName" required>
+            <div class="premium-class-df">
+                <label for="packageName">Policy Name:</label>
+                <input type="text" id="packageName" name="packageName" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="numMembers">Number of Members Covered:</label>
+                <input type="number" id="numMembers" name="numMembers" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="min-age">Minimum Age:</label>
+                <input type="number" id="min-age" name="min-age" placeholder="0" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="max-age">Maximum Age:</label>
+                <input type="number" id="max-age" name="max-age" placeholder="0" required>
+            </div>
 
-            <label for="numMembers">Number of Members Covered:</label>
-            <input type="number" id="numMembers" name="numMembers" required>
+            <div class="premium-class-df policy-amount">
+                <label for="premium-amount">Monthly Policy Amount:</label>
+                <input type="text" placeholder="0.00" id="premium-amount" name="premium-amount" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="lapse-period">Lapse Period:</label>
+                <input type="text" id="lapse-period" placeholder="0" required>
+            </div>
 
-            <label for="packagePrice">Price for Package:</label>
-            <input type="number" id="packagePrice" name="packagePrice" required>
+            <div class="premium-class-df">
+                <label for="wait-period">Wait Period:</label>
+                <input type="text" id="wait-period" placeholder="0" required>
+            </div>
 
-            <input type="hidden" id="editIndex" name="editIndex" value="-1">
+            <div class="premium-class-dta">
+                <label for="policy-benefits">Policy Benefits:</label>
+                <textarea class="policy-benefits" id="policy-benefits" required></textarea>
+            </div>
 
-            <button type="button" id="savePackageButton">Save</button>
-            <button type="button" id="cancelPackageButton">Cancel</button>
+            <div class="premium-class-dco">
+                <button type="button" id="savePackageButton">Save</button>
+                <button type="button" class="cancelPackageButton" id="cancelPackageButton">Cancel</button>
+            </div>
         </form>
     </div>
 
     <div id="edit-plan-div" class="package-form-div">
-        <h2 class="package-title">Edit Subscription Plan</h2>
+        <h2 class="package-title">Policy Plan</h2>
         <form id="edit-plan-form" class="package-form">
-            <label for="e-plan-name">Package Name:</label>
-            <input type="text" id="e-plan-name" required>
+            <div class="premium-class-df">
+                <label for="e-policy-name">Policy Name:</label>
+                <input type="text" id="e-policy-name" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="e-member-count-field">Number of Members Covered:</label>
+                <input type="number" id="e-member-count-field"required>
+            </div>
+            <div class="premium-class-df">
+                <label for="min-age">Minimum Age:</label>
+                <input type="number" id="e-min-age" name="min-age" placeholder="0" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="max-age">Number of Members Covered:</label>
+                <input type="number" id="e-max-age" name="max-age" placeholder="0" required>
+            </div>
 
-            <label for="e-member-count-field">Number of Members Covered:</label>
-            <input type="number" id="e-member-count-field"required>
+            <div class="premium-class-df policy-amount">
+                <label for="e-plan-price">Monthly Policy Amount:</label>
+                <input type="text" id="e-premium-amount" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="lapse-period">Lapse Period:</label>
+                <input type="text" id="e-lapse-period" placeholder="0" required>
+            </div>
 
-            <label for="e-plan-price">Price for Package:</label>
-            <input type="text" id="e-plan-price" required>
+            <div class="premium-class-df">
+                <label for="wait-period">Wait Period:</label>
+                <input type="text" id="e-wait-period" placeholder="0" required>
+            </div>
 
-            <button type="button" id="edit-plan-button">Update</button>
-            <button type="button" id="cancel-plan-button">Cancel</button>
+            <div class="premium-class-dta">
+                <label for="policy-benefits">Policy Benefits:</label>
+                <textarea class="policy-benefits" id="e-policy-benefits" required></textarea>
+            </div>
+
+            <div class="premium-class-dco">
+                <button type="button" id="edit-plan-button">Update</button>
+                <button type="button" class="cancelPackageButton" id="cancel-plan-button">Cancel</button>
+            </div>
         </form>
     </div>
+<!--------------------END PREMIUM PLAN--------------------------->
     <!-- Optional Subscription Plan Forms-->
 
     <div id="optionForm" class="package-form-div">
         <h2 id="optionTitle" class="package-title">Add New Optional Plan</h2>
         <form id="addOptionalPackageForm" class="package-form">
-            <label for="optionaPackageName">Package Name:</label>
-            <input type="text" id="optionalPackageName" name="optionalName" required>
+            <div class="premium-class-df">
+                <label for="optionaPackageName">Package Name:</label>
+                <input type="text" id="ap-name" required>
+            </div>
 
-            <label for="optionalMembersCount">Members Count:</label>
-            <input type="text" id="optionalMembersCount" name="membersCount" required>
+            <div class="premium-class-df">
+                <label for="optionalMembersCount">Members Count:</label>
+                <input type="text" id="ap-members-count" required>
+            </div>
 
-            <label for="optionalPackagePrice">Price for Package:</label>
-            <input type="number" id="optionalPrice" name="optionalPrice" required>
+            <div class="premium-class-df">
+                <label for="min-age">Minimum Age:</label>
+                <input type="number" id="ap-min-age" placeholder="0" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="max-age">Number of Members Covered:</label>
+                <input type="number" id="ap-max-age" placeholder="0" required>
+            </div>
 
-            <button type="button" id="saveOptionalPackageButton">Save</button>
-            <button type="button" id="cancelOptionalPackageButton">Cancel</button>
+            <div class="premium-class-df policy-amount">
+                <label for="add-policy-amount">Mothly Policy Amount:</label>
+                <input type="number" id="ap-amount"required>
+            </div>
+
+            <div class="premium-class-df">
+                <label for="lapse-period">Lapse Period:</label>
+                <input type="text" id="ap-lapse-period" placeholder="0" required>
+            </div>
+
+            <div class="premium-class-df">
+                <label for="wait-period">Wait Period:</label>
+                <input type="text" id="ap-wait-period" placeholder="0" required>
+            </div>
+
+            <div class="premium-class-dta">
+                <label for="ap-benefits">Policy Benefits:</label>
+                <textarea id="ap-benefits" class="policy-benefits" required></textarea>
+            </div>
+
+            <div class="premium-class-dco">
+                <button type="button" id="saveOptionalPackageButton">Save</button>
+                <button type="button" class="cancelPackageButton" id="cancelOptionalPackageButton">Cancel</button>
+            </div>
         </form>
     </div>
 
     <div id="edit-optional-plan-div" class="package-form-div">
         <h2 class="package-title">Edit Subscription Plan</h2>
         <form id="edit-optional-plan-form" class="package-form">
-            <label for="e-optional-plan-name">Package Name:</label>
-            <input type="text" id="e-optional-plan-name" required>
+            <div class="premium-class-df">
+                <label for="e-optional-plan-name">Package Name:</label>
+                <input type="text" id="eap-name" required>
+            </div>
 
-            <label for="e-optional-member-count">Number of Members Covered:</label>
-            <input type="number" id="e-optional-member-count"required>
+            <div class="premium-class-df">
+                <label for="e-optional-member-count">Number of Members Covered:</label>
+                <input type="number" id="eap-member-count"required>
+            </div>
+            <div class="premium-class-df">
+                <label for="min-age">Minimum Age:</label>
+                <input type="number" id="eap-min-age" name="min-age" placeholder="0" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="max-age">Number of Members Covered:</label>
+                <input type="number" id="eap-max-age" name="max-age" placeholder="0" required>
+            </div>
 
-            <label for="e-optional-plan-price">Price for Package:</label>
-            <input type="text" id="e-optional-plan-price" required>
+            <div class="premium-class-df policy-amount">
+                <label for="e-optional-plan-price">Monthly Policy Amount:</label>
+                <input type="text" id="eap-amount" required>
+            </div>
+            <div class="premium-class-df">
+                <label for="lapse-period">Lapse Period:</label>
+                <input type="text" id="eap-lapse-period" placeholder="0" required>
+            </div>
 
-            <button type="button" id="edit-optional-plan-button">Update</button>
-            <button type="button" id="cancel-optional-plan-button">Cancel</button>
-        </form>
-    </div>
-    <!-- ______________________________________________________________________________________________________________________ -->
+            <div class="premium-class-df">
+                <label for="wait-period">Wait Period:</label>
+                <input type="text" id="eap-wait-period" placeholder="0" required>
+            </div>
 
-    <!-------------------------------------------------Item&Service Forms-------------------------------------------------------------->
-    <div id="itemForm" class="package-form-div">
-        <h2 id="itemFormTitle" class="package-title">Add Item to Package</h2>
-        <form id="addItemForm" class="package-form">
-            <label for="itemName">Item Name:</label>
-            <input type="text" id="itemName" name="itemName" required>
+            <div class="premium-class-dta">
+                <label for="policy-benefits">Policy Benefits:</label>
+                <textarea class="policy-benefits" id="eap-benefits" required></textarea>
+            </div>
 
-            <label for="itemQuantity">Item Quantity:</label>
-            <input type="number" id="itemQuantity" name="itemQuantity" required>
-
-            <button type="button" id="saveItemButton">Save</button>
-            <button type="button" id="cancelItemButton">Cancel</button>
-        </form>
-    </div>
-
-    <div id="serviceForm" class="package-form-div">
-        <h2 id="serviceFormTitle" class="package-title">Add Service to Package</h2>
-        <form id="addServiceForm" class="package-form">
-            <label for="serviceName">Service Name:</label>
-            <input type="text" id="serviceName" name="serviceName" required>
-
-            <label for="serviceDescription">Service Description:</label>
-            <textarea id="serviceDescription" name="serviceDescription" required></textarea>
-
-            <button type="button" id="saveServiceButton">Save</button>
-            <button type="button" id="cancelServiceButton">Cancel</button>
+            <div class="premium-class-dco">
+                <button type="button" id="edit-optional-plan-button">Update</button>
+                <button type="button" class="cancelPackageButton" id="cancel-optional-plan-button">Cancel</button>
+            </div>
         </form>
     </div>
     <!-- ______________________________________________________________________________________________________________________ -->
@@ -378,55 +452,29 @@
         <h1>Product Packages Management</h1>
 
         <div id="main-header">
-            <div id="company-profile">
-                <label>Select company you would like to interact with:</label>
-                <div id="selected-company">
-                    <!-- Displayed company text from selected list -->
-                    Company?
-                    <span class="dropdown-icon">▼</span>
-                </div>
-                <div class="company-list">
-                    <!-- Message to display if there is no registered company -->
-                    <p class="no-companies-message">No available companies registered</p>
-                    <!-- List of companies will be dynamically added here -->
-                </div>
-            </div>
         </div>
+
         <div id="button-menu">
-            <button id="addPackageButton">Add New Package</button>
-            <button id="addOptionalButton">Add Optional Package</button>
+            <button id="addPackageButton">Add New Premium Plan</button>
+            <button id="addOptionalButton">Add New Additional Plan</button>
         </div>
 
-    <table id="packageTable">
+    <table id="packageTable" class="policyTable">
+        <caption><h2>Premium Policies<h2></caption>
         <tr>
-            <th>Package Name</th>
+            <th>Policy Name</th>
             <th>Members Covered</th>
-            <th>Package Price</th>
+            <th>Monthly Policy Amount</th>
             <th>Action</th>
         </tr>
     </table>
 
-    <table id="optionalPackageTable">
+    <table id="additional-policy-table" class="policyTable">
+        <caption><h2>Additional Policies</h2></caption>
         <tr>
-            <th>Package Name</th>
+            <th>Policy Name</th>
             <th>Members Covered</th>
-            <th>Package Price</th>
-            <th>Action</th>
-        </tr>
-    </table>
-
-    <table id="itemTable">
-        <tr>
-            <th>Item Name</th>
-            <th>Item Quantity</th>
-            <th>Action</th>
-        </tr>
-    </table>
-
-    <table id="serviceTable">
-        <tr>
-            <th>Service Name</th>
-            <th>Service Description</th>
+            <th>Monthly Policy Amount</th>
             <th>Action</th>
         </tr>
     </table>
@@ -435,164 +483,161 @@
     <script type="text/javascript" src="../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
     <script>
         /*-------------------------------------------Flash Message----------------------------------------*/
-        let flashMessage = (classValue, messageContent) => {
+        let errorFlashMessage = (serverMessage) => {
+            //flash message div
             let flashMessageDiv = document.getElementById("flash-message");
-            flashMessageDiv.className = "";
-            flashMessageDiv.style.display = "block";
+            flashMessageDiv.style.display = "block"
+            //class name - this will determine the type of div message > success or error
+            flashMessageDiv.className = "error-flash-message";
             let message = document.getElementById("flash-message-p");
-            message.textContent = messageContent;
-            flashMessageDiv.className = classValue;
+            message.textContent = serverMessage;
+
             setTimeout(() => {
                 flashMessageDiv.style.display = "none";
             }, 3000);
         }
-        /*________________________________________________________________________________________________*/
 
-        document.getElementById("optionalPackageTable").style.display = "none";
+        let flashMessage = (classValue, messageContent) => {
+            //flash message div
+            let flashMessageDiv = document.getElementById("flash-message");
 
-        // JSON object to hold package data
-        var packageData = {};
-        // JSON object to hold item data
-        var itemData = {};
-        // JSON object to hold service data
-        var serviceData = {};
-        let packageId;
-        let packageValue;
+            //class name - this will determine the type of div message > success or error
+            flashMessageDiv.className = "";
 
+            flashMessageDiv.style.display = "block";
+            flashMessageDiv.className = classValue;
+
+            let message = document.getElementById("flash-message-p");
+            message.textContent = "";
+
+            message.textContent = messageContent;
+
+            setTimeout(() => {
+                flashMessageDiv.style.display = "none";
+            }, 3000);
+        }
+/*_________________________________________________________________________________________________________*/
+    // JSON object to hold package data
+    var packageData = {};
+    let addtionalPoliciesData = {};
+    let packageId;
+    let packageValue;
+
+    let activateOverlay = () => {
+        let overlay = document.querySelector(".overlay");
+        if(overlay.style.display !== "block")
+        {
+            overlay.style.display = "block";
+        }
+    }
 /*--------------------------------------------PACKAGE--------------------------------------------------*/
-        document.getElementById("addPackageButton").addEventListener('click', openPackageForm);
-        document.getElementById("savePackageButton").addEventListener('click', savePackage);
-        document.getElementById("cancelPackageButton").addEventListener('click', closePackageForm);
+    document.getElementById("addPackageButton").addEventListener('click', openPackageForm);
+    document.getElementById("cancelPackageButton").addEventListener('click', closePackageForm);
 
-        //Open subscription plan package
-        function openPackageForm() {
-            document.getElementById("packageForm").style.display = "flex";
-            
-            // Clear form fields
-            document.getElementById("addPackageForm").reset();
-            // Reset the form title
-            document.getElementById("formTitle").innerText = "Add New Subscription Plan";
-            // Close item form
-            closeItemForm();
-            // Close service form
-            closeServiceForm();
-            //Close option package form
-            closeOptionForm();
-            const overlay = document.getElementById("overlay");
-            if(overlay.style.display === "none")
-            {
-                overlay.style.display = "block";
-            }
+    //Open subscription plan package
+    function openPackageForm() {
+        document.getElementById("packageForm").style.display = "flex";
+        
+        // Clear form fields
+        document.getElementById("addPackageForm").reset();
+        // Reset the form title
+        document.getElementById("formTitle").innerText = "Add New Premium Policy Plan";
+        activateOverlay();
+    }
+
+    function closePackageForm() {
+        document.getElementById("packageForm").style.display = "none";
+        document.querySelector(".overlay").style.display = "none";
+    }
+
+    //validate add premium form
+    let errorMessage = "";
+    let validatePremiumForm = (packageNameVal, numMembers, minAge, maxAge, premiumAmount, lapsePeriod, waitPeriod) => {
+        errorMessage = "";
+        let isFormValid;
+        if(packageNameVal == "")
+        {
+            errorMessage += `\n ->Please fill in \"Policy name\" field`;
+            isFormValid = false;
         }
 
-        function closePackageForm() {
-            document.getElementById("packageForm").style.display = "none";
-            document.getElementById("overlay").style.display = "none";
+        if((numMembers == "") || (numMembers == NaN))
+        {
+            errorMessage += `\n ->Please fill in "Number of member's" field with a valid digit/number`;
+            isFormValid = false;
         }
 
-        function savePackage() {
-            // Get form values
-            var packageNameVal = document.getElementById("packageName").value;
-            var numMembers = document.getElementById("numMembers").value;
-            var packagePrice = document.getElementById("packagePrice").value;
-
-            var packageData = {
-                packageName: packageNameVal,
-                membersCount: numMembers,
-                price: packagePrice,
-            };
-            
-            /******************Validate Company Id********************************/
-            if(companyProfile.selectedId >= 1)
-            {    
-                //fetch api sending data to backend for update
-                fetch(`/package/add-package/${companyProfile.selectedId}`,{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(packageData),
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return flashMessage("error-flash-message", "Error saving subscription plan");
-                    }
-                    return response.json()
-                })
-                .then(data => {
-                    //pass message to modal box
-                    let message = `Package has been successfuly saved`;
-                    // Update the table with the new data
-                    updatePackageTable(companyProfile.selectedId);
-                    // Close item form
-                    closeItemForm();
-                    // Close service form
-                    closeServiceForm();
-
-                    flashMessage("success-message", message);
-                })
-            }else{
-                alert("Please select a valid company!");
-            }
-                closePackageForm();
-            }
-/*__________________________________________________________________________________________________________________________*/
-
-/*------------------------------------------OPTIONAL PACKAGE--------------------------------------------------*/
-        document.getElementById("addOptionalButton").addEventListener('click', openOptionForm);
-        document.getElementById("saveOptionalPackageButton").addEventListener('click', saveOptionalPackage);
-        document.getElementById("cancelOptionalPackageButton").addEventListener('click', closeOptionForm);
-
-        function openOptionForm() {
-            document.getElementById("optionForm").style.display = "flex";
-            // Clear form fields
-            document.getElementById("addOptionalPackageForm").reset();
-            // Reset the form title
-            document.getElementById("optionTitle").innerText = "Add New Optional Plan";
-            // Close item form
-            closeItemForm();
-            // Close service form
-            closeServiceForm();
-            // Close package form
-            closePackageForm();
-            
-            //display overlay
-            const overlay = document.getElementById("overlay");
-            if(overlay.style.display === "none")
-            {
-                overlay.style.display = "block";
-            }
+        if((minAge == "") || (minAge == NaN))
+        {
+            errorMessage += `\n ->Please fill in "min age" field with a valid digit/number`;
+            isFormValid = false;
         }
 
-        function closeOptionForm() {
-            document.getElementById("optionForm").style.display = "none";
-            document.getElementById("overlay").style.display = "none";
-            // Clear form fields
-            document.getElementById("addOptionalPackageForm").reset();
-            // Close item form
-            closeItemForm();
-            // Close service form
-            closeServiceForm();
+        if((maxAge == "") || (maxAge == NaN))
+        {
+            errorMessage += `\n ->Please fill in "max age" field with a valid digit/number`;
+            isFormValid = false;
         }
 
-    /***********************Save Optional Packages**************************/
-        function saveOptionalPackage() {
-            // Get form values
-            var packageName = document.getElementById("optionalPackageName").value;
-            var membersCount = document.getElementById("optionalMembersCount").value;
-            var packagePrice = document.getElementById("optionalPrice").value;
+        if((premiumAmount == "") || (premiumAmount == NaN))
+        {
+            errorMessage += `\n ->Please fill in "Premium amount" field with a valid amount`;
+            isFormValid = false;
+        }else if(parseFloat(premiumAmount) == 0 || parseFloat(premiumAmount) < 0){
+            errorMessage += `\n ->"Premium amount" must not be less than or equals to zero!`;
+            isFormValid = false;
+        }
 
-            var packageData = {
-                packageName: packageName,
-                membersCount: membersCount,
-                price: packagePrice,
-            };
-            
-        //Validate Company Id
-        if(companyProfile.selectedId >= 1)
-        {    
+        if((lapsePeriod == "") || (lapsePeriod == NaN))
+        {
+            errorMessage += `\n ->Please fill in "Laspe period" field with a valid digit/number`;
+            isFormValid = false;
+        }
+
+        if((waitPeriod == "") || (waitPeriod == NaN))
+        {
+            errorMessage += `\n ->Please fill in "Wait period" field with a valid digit/number`;
+            isFormValid = false;
+        }
+
+        if(isFormValid === false)
+        {
+            return false;
+        }else{
+            return true;
+        }
+        
+    }
+
+    //Save Premium plan policy
+    let savePackage = () => {
+        // Get form values
+        let packageNameVal = document.getElementById("packageName").value;
+        let numMembers = document.getElementById("numMembers").value;
+        let minAge = document.getElementById("min-age").value;
+        let maxAge = document.getElementById("max-age").value;
+        let premiumAmount = document.getElementById("premium-amount").value;
+        let lapsePeriod = document.getElementById("lapse-period").value;
+        let waitPeriod = document.getElementById("wait-period").value;
+        let policyBenefits = document.getElementById("policy-benefits").value
+
+        var packageData = {
+            policyName: packageNameVal,
+            membersCount: numMembers,
+            premiumAmount: premiumAmount,
+            minAge: minAge,
+            maxAge: maxAge,
+            lapsePeriod: lapsePeriod,
+            waitPeriod: waitPeriod,
+            policyBenefits: policyBenefits
+        };
+        
+        //check add premium form validation
+        if(validatePremiumForm(packageNameVal, numMembers, minAge, maxAge, premiumAmount, lapsePeriod, waitPeriod) !== true){
+            alert(errorMessage);
+        }else{
             //fetch api sending data to backend for update
-            fetch(`/package/add-optional-package/${companyProfile.selectedId}`,{
+            fetch(`/package/add-package`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -600,581 +645,53 @@
                 body: JSON.stringify(packageData),
             })
             .then(response => {
-                if (!response.ok) {
-                    return flashMessage("error-flash-message", "Error saving optional subscription plan");
+                if (response.status !== 200) {
+                    flashMessage("error-flash-message", "Error saving premium policy");
+                    return;
                 }
-                response.json();
+                return response.json()
             })
             .then(data => {
-                let message = `Optional Package has been successfuly saved!`;
+                //pass message to modal box
+                let message = `Package has been successfuly saved`;
                 // Update the table with the new data
-                optionalPackageTable(companyProfile.selectedId);
-                // Close item form
-                closeItemForm();
-                // Close service form
-                closeServiceForm();
-                flashMessage("success-message", message)
+                updatePackageTable();
+
+                flashMessage("success-message", message);
             })
-        }else{
-            alert("Please select a valid company!");
+            closePackageForm();
         }
-            //close form
-            closeOptionForm();
-        }
-/*________________________________________________________________________________________________________________*/
+    }
 
+    document.getElementById("savePackageButton").addEventListener('click', savePackage);
 
-        document.getElementById("cancelItemButton").addEventListener('click', closeItemForm);
-        document.getElementById("cancelServiceButton").addEventListener('click', closeServiceForm);
-
-        let openItemForm = (package) => {
-            document.getElementById("itemForm").style.display = "flex";
-            // Clear form fields
-            document.getElementById("addItemForm").reset();
-            // Reset the form title
-            document.getElementById("itemFormTitle").innerText = "Add Item to Package";
-            packageId = package.id;
-            packageValue = package.packageValue;
-            // Close service form
-            closeServiceForm();
-            //display overlay
-            const overlay = document.getElementById("overlay");
-            if(overlay.style.display === "none")
-            {
-                overlay.style.display = "block";
-            }
-        }
-        
-
-        document.getElementById("saveItemButton").addEventListener('click', function(){
-                saveItem();
-            });
-
-        function closeItemForm() {
-            document.getElementById("itemForm").style.display = "none";
-            document.getElementById("overlay").style.display = "none";
-            // Clear form fields
-            document.getElementById("addItemForm").reset();
-            // Reset the form title
-            document.getElementById("itemFormTitle").innerText = "Add Item to Package";
-        }
-/*---------------------------SAVE ITEM-----------------------------*/
-        function saveItem() {
-            // Get form values
-            var itemName = document.getElementById("itemName").value;
-            var itemQuantity = document.getElementById("itemQuantity").value;
-            var package_id = packageId;
-            // Create a new item object
-            let itemData = {
-                itemName: itemName,
-                itemQuantity: itemQuantity,
-                packageType: packageValue
-            };
-
-            // Add the new item to the corresponding package's items array
-            fetch(`/package/add-item/${package_id}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(itemData),
-            })
-            .then(response => {
-                if (!response.ok) {
-                        flashMessage("error-flash-message", "Error saving item");
-                    }
-                response.json()
-                    
-            })
-            .then(data => {
-                // Update the table with the new data
-                updateItemTable(packageId, packageValue);
-                let message = "Item has been successfuly saved!";
-                flashMessage("success-message", message)
-            })
-
-            // Close the form
-            closeItemForm();
-        }
-
-        function openServiceForm(package) {
-            document.getElementById("serviceForm").style.display = "block";
-            // Clear form fields
-            document.getElementById("addServiceForm").reset();
-            // Reset the form title
-            document.getElementById("serviceFormTitle").innerText = "Add Service to Package";
-            packageId = package.id;
-            packageValue = package.packageValue;
-            
-            // Close item form
-            closeItemForm();
-            const overlay = document.getElementById("overlay");
-            if(overlay.style.display === "none")
-            {
-                overlay.style.display = "block";
-            }
-        }
-
-        document.getElementById("saveServiceButton").addEventListener('click', ()=>{
-                saveService();
-            });
-
-        function closeServiceForm() {
-            document.getElementById("serviceForm").style.display = "none";
-            document.getElementById("overlay").style.display = "none";
-
-            // Clear form fields
-            document.getElementById("addServiceForm").reset();
-            // Reset the form title
-            document.getElementById("serviceFormTitle").innerText = "Add Service to Package";
-        }
-
-        function saveService() {
-            // Get form values
-            var serviceName = document.getElementById("serviceName").value;
-            var serviceDescription = document.getElementById("serviceDescription").value;
-
-            // Create a new service object
-            var serviceData = {
-                serviceName: serviceName,
-                description: serviceDescription,
-                packageType: packageValue
-            };
-
-            // Add the new service to database
-            fetch(`/package/add-service/${packageId}`,{
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(serviceData),
-		})
-		.then(response => {
-			if (!response.ok) {
-                flashMessage("error-flash-message", "Error saving service");
-            }
-            response.json();
-            
-		})
-		.then(data => {
-            // Update the table with the new data
-            updateServiceTable(packageId, packageValue);
-            let message = "Service has been successfully saved"
-		})
-
-        // Close the form
-        closeServiceForm();
-        }
-
-        let updatePackageTable = (selectedId) => {
-            fetch(`/package/packages/${selectedId}`)
-            .then(response => response.json())
-            .then(data => {
-                var table = document.getElementById("packageTable");
-                table.style.display = "block";
-                // Clear existing rows
-                while (table.rows.length > 1) {
-                    table.deleteRow(1);
-                }
-                
-                //store returned object into companies
-                data.forEach(package => {
-                    packageData[package.id] = {
-                        packageName: package.packageName,
-                        membersCount: package.membersCount,
-                        price: package.price,
-                        packageType: "standard",
-                    };
-
-                    // Add rows with package data
-                    var row = table.insertRow(-1);
-                    var cell1 = row.insertCell(0);
-                    var cell2 = row.insertCell(1);
-                    var cell3 = row.insertCell(2);
-                    var cell4 = row.insertCell(3);
-
-                    cell1.innerHTML = package.packageName;
-                    cell2.innerHTML = package.membersCount;
-                    cell3.innerHTML = package.price;
-                    cell4.innerHTML = `<button onclick="editSubscriptionPlan(${package.id})">edit</button> <button class="delete-btn" onclick="deletePackage(${package.id})">delete</button> <button class="show-items" id="${package.id}">show items</button> <button class="add-items" id="${package.id}">add items</button> <button class="add-service" id="${package.id}">add vervice</button>`; 
-                });
-
-                /**
-                * Open Item form
-                * Set required params 
-                */
-                let addItem_btn = document.querySelectorAll(".add-items");
-                addItem_btn.forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        let btn_id = btn.id;
-                        openItemForm({id: btn_id, packageValue: packageData[btn_id].packageType});
-                    });
-                });
-
-                let showItems_btn = document.querySelectorAll(".show-items");
-                showItems_btn.forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        let btn_id = btn.id;
-                        updateItemTable(btn_id, "standard");
-                    });
-                });
-
-                /**
-                * Open Item form
-                * Set required params 
-                */
-                let addService_btn = document.querySelectorAll(".add-service");
-                addService_btn.forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        let btn_id = btn.id;
-                        openServiceForm({id: btn_id, packageValue: packageData[btn_id].packageType});
-                    });
-                });
-
-            })
-            .catch(error => {
-                var table = document.getElementById("packageTable");
-                table.style.display = "none";
-            });    
-        }
-
-        let optionalPackageTable = (selectedId) => {
-            fetch(`/package/optional-packages/${selectedId}`)
-            .then(response => response.json())
-            .then(data => {
-                var table = document.getElementById("optionalPackageTable");
-                table.style.display = "block";
-                // Clear existing rows
-                while (table.rows.length > 1) {
-                    table.deleteRow(1);
-                }
-                
-                //store returned object into companies
-                data.forEach(package => {
-                    packageData[package.id] = {
-                        packageName: package.packageName,
-                        membersCount: package.membersCount,
-                        price: package.price,
-                        packageType: 'optional',
-                    };
-                    
-                    // Add rows with package data
-                    var row = table.insertRow(-1);
-                    var cell1 = row.insertCell(0);
-                    var cell2 = row.insertCell(1);
-                    var cell3 = row.insertCell(2);
-                    var cell4 = row.insertCell(3);
-
-                    cell1.innerHTML = package.packageName;
-                    cell2.innerHTML = package.membersCount;
-                    cell3.innerHTML = package.price;
-                    cell4.innerHTML = `<button onclick="editOptionalSubscriptionPlan(${package.id})">edit</button> <button class="delete-btn" onclick="deleteOptionalPackage(${package.id})">delete</button> <button class="show-items" id="${package.id}">show items</button> <button class="add-opt-items" id="${package.id}">add item</button> <button class="add-service" id="${package.id}">add service</button>`; 
-                });
-                /**
-                * Open Item form
-                * Set required params 
-                */
-                let addOptionalItem_btn = document.querySelectorAll(".add-opt-items");
-                addOptionalItem_btn.forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        let btn_id = btn.id;
-                        openItemForm({id: btn_id, packageValue: packageData[btn_id].packageType});
-                    });
-                });
-
-                let showItems_btn = document.querySelectorAll(".show-items");
-                showItems_btn.forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        let btn_id = btn.id;
-                        updateItemTable(btn_id, "optional");
-                    });
-                });
-
-                /**
-                * Open Item form
-                * Set required params 
-                */
-                let addService_btn = document.querySelectorAll(".add-service");
-                addService_btn.forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        let btn_id = btn.id;
-                        openServiceForm({id: btn_id, packageValue: packageData[btn_id].packageType});
-                    });
-                });
-
-            })
-            .catch(error => {
-                var table = document.getElementById("packageTable");
-                table.style.display = "none";
-            });    
-        }
-
-        let updateItemTable = (packageId, packageType) => {
-            let packageForm = {packageType: packageType};
-            fetch(`/package/items/${packageId}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(packageForm),
-            })
-            .then(response => response.json())
-            .then(data => {
-                var table = document.getElementById("itemTable");
-                table.style.display = "block";
-
-                // Clear existing rows
-                while (table.rows.length > 1) {
-                    table.deleteRow(1);
-                }
-
-                data.forEach(item => {
-                    itemData[item.id] = {
-                        itemName: item.itemName,
-                        itemQuantity: item.itemQuantity
-                    }
-
-                // Add rows with item data for the selected package
-                var row = table.insertRow(-1);
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-
-                cell1.innerHTML = item.itemName;
-                cell2.innerHTML = item.itemQuantity;
-                cell3.innerHTML = `<button class="delete-btn" onclick="deleteItem(${packageId}, ${item.id})">delete</button>`;
-                });
-            }).catch(error => {
-                var table = document.getElementById("itemTable");
-                table.style.display = "none";
-            });    
-        }
-
-        function updateServiceTable(packageId, packageType) {
-            let packageForm = {packageType: packageType};
-            fetch(`/package/services/${packageId}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(packageForm),
-            })
-            .then(response => response.json())
-            .then(data => {
-                var table = document.getElementById("serviceTable");
-                table.style.display = "block";
-
-                // Clear existing rows
-                while (table.rows.length > 1) {
-                    table.deleteRow(1);
-                }
-
-                data.forEach(service => {
-                    serviceData[service.id] = {
-                        serviceName: service.serviceName,
-                        serviceDescription: service.description
-                    }
-
-                // Add rows with item data for the selected package
-                var row = table.insertRow(-1);
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-
-                cell1.innerHTML = service.serviceName;
-                cell2.innerHTML = service.description;
-                cell3.innerHTML = `<button class="delete-btn" onclick="deleteService(${packageId}, ${service.id})">Delete</button>`;
-                });
-            }).catch(error => {
-                var table = document.getElementById("serviceTable");
-                table.style.display = "none";
-            });
-        }
-
-        function viewItems(packageId) {
-            // Update the item table for the selected package
-            updateItemTable(packageId);
-        }
-
-        function viewServices(packageId) {
-            // Update the service table for the selected package
-            updateServiceTable(packageId);
-        }
-
-        let deletePackage = (packageId) => {
-            fetch(`/package/delete-package/${packageId}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-		    })
-            .then(response => {
-                if (!response.ok) {
-                    return flashMessage("error-flash-message", "Error deleting subscription plan");
-                }
-                return response.text();
-            })
-            .then(data => {
-                // Update the table with the modified data
-                updatePackageTable(companyProfile.selectedId);
-                flashMessage("success-message", data);
-            }).catch(error => {
-                
-            });
-        }
-        /*DELETE OPTIONAL PACKAGE*/
-        let deleteOptionalPackage = (packageId) => {
-            fetch(`/package/delete-optional-package/${packageId}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-		    })
-            .then(response => {
-                if (!response.ok) {
-                    return flashMessage("error-flash-message", "Error deleting optional subscription plan");
-                }
-                return response.text();
-                
-            })
-            .then(data => {
-                // Update the table with the modified data
-                optionalPackageTable(companyProfile.selectedId);
-                flashMessage("success-message", data);
-            })
-        }
-
-        let deleteItem = (package_id, itemId) => {
-            // Remove the selected service from the package's services
-            fetch(`/package/delete-item/${itemId}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-		    })
-            .then(response => {
-                if (!response.ok) {
-                    return flashMessage("error-flash-message", "Error deleting optional subscription plan");
-                }
-                return response.text();
-            })
-            .then(data => {
-                // Update the item table for the selected item
-                updateItemTable(package_id, packageValue);
-                flashMessage("success-message", data);
-            })
-        }
-
-        function deleteService(packageId, serviceId) {
-            // Remove the selected service from the package's services
-            fetch(`/package/delete-service/${serviceId}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-		    })
-            .then(response => {
-                if (!response.ok) {
-                    return flashMessage("error-flash-message", "Error deleting optional subscription plan");
-                }
-                return response.text();
-            })
-            .then(data => {
-                // Update the service table for the selected package
-                updateServiceTable(packageId, packageValue);
-                flashMessage("success-message", data);
-            })
-        }
-        // Uncomment the following line if you want the form to be open by default
-        // openPackageForm();
-
-/*---------------------------------------------------------------------------------------------------*/
-let companyProfile = {
-    // Map to store company details
-    companies: {},
-    selectedId: "",
-    selectedCompany: document.getElementById("selected-company"),
-    companyList: document.querySelector(".company-list"),
-
-    fetchData: () => {
-
-        companyProfile.selectedCompany.addEventListener("click", function () {
-            // Toggle company list visibility
-            if (companyProfile.companyList.style.display == "") {
-                companyProfile.companyList.style.display = "block";
-            } else {
-                companyProfile.companyList.style.display = "none";
-            }
-        });
-
-        fetch("/company/profile/data")
-        .then(response => response.json())
-        .then(data => {
-            //store returned object into companies
-            data.forEach(company => {
-                companyProfile.companies[company.id] = {
-                    name: company.name
-                };
-            });
-
-            // Clear existing content
-            companyProfile.companyList.innerHTML = "";
-
-            // Create ul element dynamically
-            var ulElement = document.createElement("ul");
-            ulElement.style.listStyle = "none";
-            ulElement.style.padding = "0";
-            ulElement.style.margin = "0";
-
-            // Populate company list
-            for (var companyId in companyProfile.companies) {
-                var companyItem = document.createElement("li");
-                companyItem.textContent = companyProfile.companies[companyId].name;
-                companyItem.setAttribute("data-id", companyId); // Set data-id attribute with the company ID
-                companyItem.style.cursor = "pointer";
-                companyItem.style.transition = "background-color 0.3s";
-                companyItem.style.padding = "8px";
-
-                companyItem.addEventListener("click", function () {
-                    var selectedText = this.textContent;
-                    companyProfile.selectedId = this.getAttribute("data-id"); // Get the company ID
-                    console.log("Selected Company ID:", companyProfile.selectedId + "from company profile");
-
-                    // Update the selected company text
-                    companyProfile.selectedCompany.innerHTML = selectedText + '<span class="dropdown-icon">▼</span>';
-                    updatePackageTable(companyProfile.selectedId);
-                    optionalPackageTable(companyProfile.selectedId);
-                    // Hide the company list
-                    companyProfile.companyList.style.display = "none";
-                });
-
-                ulElement.appendChild(companyItem);
-            }
-
-            // Append ul to the company list
-            companyProfile.companyList.appendChild(ulElement);
+    /*--------------------------- delete premium policy ---------------------------*/
+    let deletePackage = (packageId) => {
+        fetch(`/package/delete-package/${packageId}`,
+        {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
-        .catch(error => {
-            console.log(error);
-            // Clear existing content
-            companyProfile.companyList.innerHTML = "";
+        .then(response => {
+            if (response.status !== 200) {
+                errorFlashMessage("Error deleting subscription plan");
+                return; 
+            }
+            return response.text();
+        })
+        .then(data => {
+            // Update the table with the modified data
+            updatePackageTable();
+            flashMessage("success-message", data);
+        })
+    }
 
-            // If companies is empty, display the no-companies message
-            companyProfile.companyList.innerHTML = '<p class="no-companies-message">No available companies registered</p>';
-        });
-    },
-}
-/*__________________________________________________________________________________________________________________________*/
-    
-/*--------------------------------------Edit Subscription Plan---------------------------------------------------*/
+    /*--------------------------------------Edit Premium Policy---------------------------------------------------*/
 
     //Open Edit Form - Subscription Plan
-    let editSubscriptionPlan = (packageId) => {
-        const packageType =  "standard";
+    let editPremiumPolicy = (packageId) => {
         getSubscriptionPlan(packageId);
     }
 
@@ -1182,116 +699,314 @@ let companyProfile = {
     let openEditSubscriptionPlan = () => {
         document.getElementById("edit-plan-div").style.display = "flex";
         // Reset the form title
-        document.getElementById("formTitle").innerText = "Edit Subscription Plan";
-        const overlay = document.getElementById("overlay");
-        if(overlay.style.display === "none")
-        {
-            overlay.style.display = "block";
-        }
+        document.getElementById("formTitle").innerText = "Policy Plan";
+        activateOverlay();
     }
 
     let getSubscriptionPlan = (package_id) => {
-        
-        //Validate Company Id
-        if(companyProfile.selectedId >= 1)
-        {    
-            packageId = package_id;
-            //query parameters
-            let packageQueryData = {
-                id: package_id,
-            };
+           
+        packageId = package_id;
+        //query parameters
+        let packageQueryData = {
+            id: package_id,
+        };
 
-            //fetch api sending data to backend for update
-            fetch(`/package/get-plan/${companyProfile.selectedId}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(packageQueryData),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    if(response.status === 400){
-                        return flashMessage("error-flash-message", "Failed to retrieve plan data!");
-                    }else{
-                        return flashMessage("error-flash-message", "An Error occured please try again later");
-                    }
+        //fetch api sending data to backend for update
+        fetch(`/package/getpremiumpolicy`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(packageQueryData),
+        })
+        .then(response => {
+            if (response.status !== 200) {
+                if(response.status === 400){
+                    errorFlashMessage("Failed to retrieve policy data!");
+                    return; 
+                }else{
+                    errorFlashMessage("An Error occured please try again later");
+                    return; 
                 }
-                return response.json();
-            })
-            .then(data => {
-                //populate fields with data from server
-                let packageName = document.getElementById('e-plan-name');
-                packageName.value = data.packageName;
+            }
+            return response.json();
+        })
+        .then(data => {
+            //populate fields with data from server
+            let policyName = document.getElementById('e-policy-name');
+            policyName.value = data.policyName;
 
-                let membersCount = document.getElementById("e-member-count-field");
-                membersCount.value = data.membersCount;
+            let membersCount = document.getElementById("e-member-count-field");
+            membersCount.value = data.membersCount;
 
-                let price = document.getElementById("e-plan-price");
-                price.value = data.price; 
+            let premiumAmount = document.getElementById("e-premium-amount");
+            premiumAmount.value = data.premiumAmount;
+            
+            let minAge = document.getElementById("e-min-age");
+            minAge.value = data.minAge;
 
-                openEditSubscriptionPlan()
-            })
-        }else{
-            alert("Please select a valid company!");
-        }
+            let maxAge = document.getElementById("e-max-age");
+            maxAge.value = data.maxAge;
+
+            let lapsePeriod = document.getElementById("e-lapse-period");
+            lapsePeriod.value = data.lapsePeriod;
+
+            let waitPeriod = document.getElementById("e-wait-period");
+            waitPeriod.value = data.waitPeriod;
+
+            let policyBenefits = document.getElementById("e-policy-benefits");
+            policyBenefits.value = data.policyBenefits;
+
+
+            openEditSubscriptionPlan()
+        })
     }
+/*----------------------------------------- update premium policy ----------------------------*/    
 
-    //update subscription plan - post data to server for updating.
     let updateSubscriptionPlanButton = document.getElementById("edit-plan-button");
     updateSubscriptionPlanButton.addEventListener("click", () => {
-        updateSubscriptionPlan();
+        updatePremiumPlan();
     });
     
-    let updateSubscriptionPlan = () => {
+    //post update data to server
+    let updatePremiumPlan = () => {
         let formData = {
             id: packageId,
-            packageName: document.getElementById('e-plan-name').value,
+            policyName: document.getElementById('e-policy-name').value,
             membersCount: document.getElementById("e-member-count-field").value,
-            price: document.getElementById("e-plan-price").value,
+            minAge: document.getElementById("e-min-age").value,
+            maxAge: document.getElementById("e-max-age").value,
+            premiumAmount: document.getElementById("e-premium-amount").value,
+            lapsePeriod: document.getElementById("e-lapse-period").value,
+            waitPeriod: document.getElementById("e-wait-period").value,
+            policyBenefits: document.getElementById("e-policy-benefits").value,
         }
-
-        //Validate Company Id
-        if(companyProfile.selectedId >= 1)
-        {    
-            //fetch api sending data to backend for update
-            fetch(`/package/update-plan/${companyProfile.selectedId}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return flashMessage("error-flash-message", "Error updating subscription plan");
-                }
-                return response.json()
-            })
-            .then(data => {
+   
+        //fetch api sending data to backend for update
+        fetch(`/package/update-plan`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+        .then(response => {
+            if (response.status!== 200) {
+                    errorFlashMessage("This subscription plan does not exist");
+                 
+                }else if(response.status === 200){
+            
                 //pass message to modal box
-                let message = `Subscription-Plan has been updated successfully`;
-                // Update the table with the new data
-                updatePackageTable(companyProfile.selectedId);
-                
-                //close modal
-                closeEditSubscriptionPlanModal();
-
+                let message = `This policy has been updated successfully`;
                 flashMessage("success-message", message);
-            })
-        }else{
-            alert("Please select a valid company!");
-        }
+                return response.json();
+            }
+        })
+        .then(data => {
+            // Update the table with the new data
+            updatePackageTable();
+            
+            //close modal
+            closeEditSubscriptionPlanModal();
+        })
     }
+
+/*---------------------------------------- Update Display Premium Policy Table -------------------------------*/
+let updatePackageTable = () => {
+        fetch(`/package/packages`)
+        .then(response => response.json())
+        .then(data => {
+            var table = document.getElementById("packageTable");
+            table.style.display = "block";
+            // Clear existing rows
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+            
+            //store returned object into packaghes
+            data.forEach(package => {
+                packageData[package.id] = {
+                    policyName: package.policyName,
+                    membersCount: package.membersCount,
+                    premiumAmount: package.premiumAmount,
+                };
+
+                // Add rows with package data
+                var row = table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+
+                cell1.innerHTML = package.policyName;
+                cell2.innerHTML = package.membersCount;
+                cell3.innerHTML = package.premiumAmount;
+                cell4.innerHTML = `<button onclick="editPremiumPolicy(${package.id})">View</button> <button class="delete-btn" onclick="deletePackage(${package.id})">Delete</button>`; 
+            });
+
+        })
+        .catch(error => {
+            var table = document.getElementById("packageTable");
+            table.style.display = "none";
+        });    
+    }
+
     //close edit subscription modal
     let closeEditSubscriptionPlanModal = () => {
         document.getElementById("edit-plan-div").style.display = "none";
-        document.getElementById("overlay").style.display = "none";
+        document.querySelector(".overlay").style.display = "none";
     }
 
     document.getElementById("cancel-plan-button").addEventListener('click', closeEditSubscriptionPlanModal);
-/*__________________________________________________________________________________________________________________________*/
-/*--------------------------------------Edit Optional Subscription Plan---------------------------------------------------*/
+/*_______________________________________________________________________________________________________________________*/
+
+/*----------------------------------------------- ADDITIONAL POLICY -----------------------------------------------------*/
+    document.getElementById("addOptionalButton").addEventListener('click', openOptionForm);
+    document.getElementById("saveOptionalPackageButton").addEventListener('click', saveOptionalPackage);
+    document.getElementById("cancelOptionalPackageButton").addEventListener('click', closeOptionForm);
+
+    function openOptionForm() {
+        document.getElementById("optionForm").style.display = "flex";
+        // Clear form fields
+        document.getElementById("addOptionalPackageForm").reset();
+        // Reset the form title
+        document.getElementById("optionTitle").innerText = "Add New Additional Plan";
+        closePackageForm();
+        
+        //display overlay
+        activateOverlay();
+    }
+
+    function closeOptionForm() {
+        document.getElementById("optionForm").style.display = "none";
+        document.querySelector(".overlay").style.display = "none";
+        // Clear form fields
+        document.getElementById("addOptionalPackageForm").reset();
+    }
+
+/*---------------------------------------- Add additional Policy Packages -------------------------------------*/
+    function saveOptionalPackage() {
+        // Get form values
+        let policyName = document.getElementById("ap-name").value;
+        let membersCount = document.getElementById("ap-members-count").value;
+        let policyAmount = document.getElementById("ap-amount").value;
+        let minAge = document.getElementById("ap-min-age").value;
+        let maxAge = document.getElementById("ap-max-age").value;
+        let lapsePeriod = document.getElementById("ap-lapse-period").value;
+        let waitPeriod = document.getElementById("ap-wait-period").value;
+        let policyBenefits = document.getElementById("ap-benefits").value
+
+        var policyData = {
+            policyName: policyName,
+            membersCount: membersCount,
+            policyAmount: policyAmount,
+            minAge: minAge,
+            maxAge: maxAge,
+            lapsePeriod: lapsePeriod,
+            waitPeriod: waitPeriod,
+            policyBenefits: policyBenefits
+        };
+        //check add premium form validation
+        if(validatePremiumForm(policyName, membersCount, minAge, maxAge, policyAmount, lapsePeriod, waitPeriod) !== true){
+            alert(errorMessage);
+        }else{
+            //post data to server
+            fetch(`/package/add-additional-policy`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(policyData),
+            })
+            .then(response => {
+                if (response.status !== 200) {
+                    return errorFlashMessage("Error saving addtional policy");
+                    
+                }else{
+                    let message = `Addtitional policy has been successfuly saved!`;
+                    flashMessage("success-message", message);
+                    return response.json();
+                }
+                
+            })
+            .then(data => {
+                // Update the table with the new data
+                updateDisplayAdditionalPolicy();
+            })
+        }
+        
+        //close form
+        closeOptionForm();
+    }
+/*------------------------------------------------ Display Additional Polices Table ----------------------------------------------------*/
+    let updateDisplayAdditionalPolicy = () => {
+        fetch(`/package/additional-policies`)
+        .then(response => response.json())
+        .then(data => {
+            var table = document.getElementById("additional-policy-table");
+            table.style.display = "block";
+            // Clear existing rows
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+            
+            //data object to display
+            data.forEach(policy => {
+                addtionalPoliciesData[policy.id] = {
+                    policyName: policy.policyName,
+                    membersCount: policy.membersCount,
+                    policyAmount: policy.policyAmount,
+                   
+                };
+                
+                // Add rows with policy data
+                var row = table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+
+                cell1.innerHTML = policy.policyName;
+                cell2.innerHTML = policy.membersCount;
+                cell3.innerHTML = policy.policyAmount;
+                cell4.innerHTML = `<button onclick="editOptionalSubscriptionPlan(${policy.id})">View</button> <button class="delete-btn" onclick="deleteOptionalPackage(${policy.id})">Delete</button>`; 
+            });
+
+        })
+        .catch(error => {
+            var table = document.getElementById("packageTable");
+            table.style.display = "none";
+        });    
+    } 
+
+    /*DELETE OPTIONAL PACKAGE*/
+    let deleteOptionalPackage = (packageId) => {
+        fetch(`/package/delete-optional-package/${packageId}`,
+        {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                return flashMessage("error-flash-message", "Error deleting optional subscription plan");
+            }
+            return response.text();
+            
+        })
+        .then(data => {
+            // Update the table with the modified data
+            updateDisplayAdditionalPolicy();
+            flashMessage("success-message", data);
+        })
+    }
+    // Uncomment the following line if you want the form to be open by default
+    // openPackageForm();
+
+/*--------------------------------------------------------------------------------------------------------------*/    
+
+/*-------------------------------------- Edit Optional Subscription Plan ---------------------------------------*/
 
 //Open Edit Form - Subscription Plan
 let editOptionalSubscriptionPlan = (packageId) => {
@@ -1303,120 +1018,127 @@ let openEditOptionalSubscriptionPlan = () => {
     document.getElementById("edit-optional-plan-div").style.display = "flex";
     // Reset the form title
     document.getElementById("formTitle").innerText = "Edit Optional Subscription Plan";
-    // Close item form
-    closeItemForm();
-    // Close service form
-    closeServiceForm();
-    const overlay = document.getElementById("overlay");
-    if(overlay.style.display === "none")
-    {
-        overlay.style.display = "block";
-    }
+    activateOverlay();
 }
 
 let getOptionalSubscriptionPlan = (package_id) => {
-    
-    //Validate Company Id
-    if(companyProfile.selectedId >= 1)
-    {    
-        packageId = package_id;
-        //query parameters
-        let packageQueryData = {
-            id: package_id,
-        };
+    //set package id to be used
+    packageId = package_id;
+    //query parameters
+    let packageQueryData = {
+        id: package_id,
+    };
 
-        //fetch api sending data to backend for update
-        fetch(`/package/get-optional-plan/${companyProfile.selectedId}`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(packageQueryData),
-        })
-        .then(response => {
-            if (!response.ok) {
-                if(response.status === 400){
-                    return flashMessage("error-flash-message", "Failed to retrieve plan data!");
-                }else{
-                    return flashMessage("error-flash-message", "An Error occured please try again later");
-                }
+    //fetch api sending data to backend for update
+    fetch(`/package/get-optional-plan`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(packageQueryData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            if(response.status === 400){
+                return errorflashMessage("Failed to retrieve plan data!");
+            }else{
+                return flashMessage("error-flash-message", "An Error occured please try again later");
             }
-            return response.json();
-        })
-        .then(data => {
-            //populate fields with data from server
-            let packageName = document.getElementById('e-optional-plan-name');
-            packageName.value = data.packageName;
+        }
+        return response.json();
+    })
+    .then(data => {
+        //populate fields with data from server
+        let packageName = document.getElementById('eap-name');
+        packageName.value = data.policyName;
 
-            let membersCount = document.getElementById("e-optional-member-count");
-            membersCount.value = data.membersCount;
+        let membersCount = document.getElementById("eap-member-count");
+        membersCount.value = data.membersCount;
 
-            let price = document.getElementById("e-optional-plan-price");
-            price.value = data.price; 
+        let price = document.getElementById("eap-amount");
+        price.value = data.policyAmount; 
 
-            openEditOptionalSubscriptionPlan();
-        })
-    }else{
-        alert("Please select a valid company!");
-    }
+        let minAge = document.getElementById("eap-min-age");
+        minAge.value = data.minAge;
+
+        let maxAge = document.getElementById("eap-max-age");
+        maxAge.value = data.maxAge;
+
+        let lapsePeriod = document.getElementById("eap-lapse-period");
+        lapsePeriod.value = data.lapsePeriod;
+
+        let waitPeriod = document.getElementById("eap-wait-period");
+        waitPeriod.value = data.waitPeriod;
+
+        let policyBenefits = document.getElementById("eap-benefits");
+        policyBenefits.value = data.policyBenefits;
+
+        openEditOptionalSubscriptionPlan();
+    })
+    
 }
 
 //update optional subscription plan - post data to server for updating.
 let updateOptionalSubscriptionPlanButton = document.getElementById("edit-optional-plan-button");
-    updateOptionalSubscriptionPlanButton.addEventListener("click", () => {
-        updateOptionalSubscriptionPlan();
-    });
+updateOptionalSubscriptionPlanButton.addEventListener("click", () => {
+    updateOptionalSubscriptionPlan();
+});
     
-    let updateOptionalSubscriptionPlan = () => {
-        let formData = {
-            id: packageId,
-            packageName: document.getElementById('e-optional-plan-name').value,
-            membersCount: document.getElementById("e-optional-member-count").value,
-            price: document.getElementById("e-optional-plan-price").value,
-        }
-
-        //Validate Company Id
-        if(companyProfile.selectedId >= 1)
-        {    
-            //fetch api sending data to backend for update
-            fetch(`/package/update-optionalplan/${companyProfile.selectedId}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return flashMessage("error-flash-message", "Error updating optional subscription plan");
-                }
-                return response.json()
-            })
-            .then(data => {
-                //pass message to modal box
-                let message = `Optional-Subscription-Plan has been updated successfully`;
-                // Update the table with the new data
-                optionalPackageTable(companyProfile.selectedId);
-                
-                //close modal
-                closeEditOptionalSubscriptionPlanModal();
-
-                flashMessage("success-message", message);
-            })
-        }else{
-            alert("Please select a valid company!");
-        }
+let updateOptionalSubscriptionPlan = () => {
+    let formData = {
+        id: packageId,
+        policyName: document.getElementById('eap-name').value,
+        membersCount: document.getElementById("eap-member-count").value,
+        minAge: document.getElementById("eap-min-age").value,
+        maxAge: document.getElementById("eap-max-age").value,
+        policyAmount: document.getElementById("eap-amount").value,
+        lapsePeriod: document.getElementById("eap-lapse-period").value,
+        waitPeriod: document.getElementById("eap-wait-period").value,
+        policyBenefits: document.getElementById("eap-benefits").value,
     }
-//close edit optional subscription modal
-let closeEditOptionalSubscriptionPlanModal = () => {
-    document.getElementById("edit-optional-plan-div").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
+
+        
+    //fetch api sending data to backend for update
+    fetch(`/package/update-additional-policy`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
+    .then(response => {
+        if (response.status !== 200) {
+            return errorFlashMessage("Error updating optional subscription plan");
+        }
+        return response.json()
+    })
+    .then(data => {
+        //pass message to modal box
+        let message = `Additional Policy - has been updated successfully`;
+        // Update the table with the new data
+        updateDisplayAdditionalPolicy();
+        
+        //close modal
+        closeEditAdditionalPolicyModal();
+
+        flashMessage("success-message", message);
+    })
 }
 
-document.getElementById("cancel-optional-plan-button").addEventListener('click', closeEditOptionalSubscriptionPlanModal);
-/*__________________________________________________________________________________________________________________________*/
 
-companyProfile.fetchData();
+//close edit optional subscription modal
+let closeEditAdditionalPolicyModal = () => {
+    document.getElementById("edit-optional-plan-div").style.display = "none";
+    document.querySelector(".overlay").style.display = "none";
+}
+
+document.getElementById("cancel-optional-plan-button").addEventListener('click', closeEditAdditionalPolicyModal);
+
+//render data display tables
+updateDisplayAdditionalPolicy();
+updatePackageTable();
+
+/*__________________________________________________________________________________________________________________________*/
     </script>
 
 </body>

@@ -31,36 +31,38 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OptionalPackage{
+public class PremiumPolicy{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
+    private long id;
 
     @Column(nullable = true)
-    private String packageid;
-
-    private String packageName;
+    private String policyId;
+    @Column(name="PREMIUM_POLICY_NAME", nullable=false)
+    private String policyName;
 
     private int membersCount;
 
-    @Column(name="PRICE")
-    private float price;
-
+    @Column(name="PREMIUM_POLICY_AMOUNT")
+    private float premiumAmount;
+    
+    @Column(name="MINIMUM_AGE")
+    private int minAge;
+    
+    @Column(name="MAXIMUM_AGE")
+    private int maxAge;
+    
+    @Column(name="LAPSE_PERIOD")
+    private int lapsePeriod;
+    
+    @Column(name="WAIT_PERIOD")
+    private int waitPeriod;
+    
+    @Column(name="POLICY_BENEFITS")
+    private String policyBenefits;
+    
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyid", referencedColumnName = "id")
     private Company companyid;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "optionalPackage", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductItem> productItem;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "optionalPackage", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductService> productService;
-
-    public void setPackageid(String packageName, int id)
-    {
-        this.packageid = "#" + packageName.substring(0, 2) + id;
-    }
 }

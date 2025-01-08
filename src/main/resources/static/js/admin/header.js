@@ -126,10 +126,11 @@ customElements.define("admin-header", class extends HTMLElement {
           background-color: #af87d7;
         }
         /*----------------------------- end nav --------------------------------*/
+        
         /*----------------------------- side nav menu ----------------------------------*/
         #side-nav {
           display: none;
-          position: absolute;
+          position: fixed;
           top: 0;
           bottom: 0;
           width: 15%;

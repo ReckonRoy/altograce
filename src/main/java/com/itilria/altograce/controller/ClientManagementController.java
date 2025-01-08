@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,11 +65,11 @@ public class ClientManagementController{
     }
 
     @GetMapping("/management/user")
-    public ResponseEntity<Map<String, Integer>> getUserDetails(@AuthenticationPrincipal UserDetails userDetails)
+    public ResponseEntity<Map<String, Long>> getUserDetails(@AuthenticationPrincipal UserDetails userDetails)
     {
         //get user id and companyId
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
-        Map<String, Integer> userData = new HashMap<>();
+        Map<String, Long> userData = new HashMap<>();
         userData.put("userId", result.getId());
         userData.put("companyId", result.getCompanyId());
         return ResponseEntity.ok(userData);
@@ -80,7 +81,7 @@ public class ClientManagementController{
      * pass data objects to service methods
      */
     @PostMapping("/management/register/{id}")
-    public ResponseEntity<?> registerClient(@PathVariable int id, @RequestBody ClientRegistrationDto request)
+    public ResponseEntity<?> registerClient(@PathVariable long id, @RequestBody ClientRegistrationDto request)
     {
         try{
             PrimaryClient client = new PrimaryClient();
@@ -121,7 +122,7 @@ public class ClientManagementController{
             
             return ResponseEntity.ok(clientResult);
         }catch(Exception ex){
-            return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
 /*--------------------------------Clients Section------------------------------------------*/
@@ -189,7 +190,7 @@ public class ClientManagementController{
     {
         //get user id and companyId
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
-        Map<String, Integer> userData = new HashMap<>();
+        Map<String, Long> userData = new HashMap<>();
         userData.put("userId", result.getId());
         userData.put("companyId", result.getCompanyId());
 
@@ -204,7 +205,30 @@ public class ClientManagementController{
         }
         
     }
-/*---------------------------------Client Settings----------------------------------------*/
+
+    //delete file route
+    @DeleteMapping("/delete-file/{fileId}")
+    public ResponseEntity<?> deleteFile(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String fileId)
+    {
+        try{
+            //get user id and companyId
+            UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
+            Map<String, Long> userData = new HashMap<>();
+            userData.put("userId", result.getId());
+            userData.put("companyId", result.getCompanyId());
+
+            clientService.deleteFile(fileId);
+            
+            clientService.staffAudit("DELETED A FILE", result.getCompanyId(), fileId, result.getId());
+            return ResponseEntity.ok("File has been deleted successfully");
+            
+        }catch(IllegalArgumentException ex)
+        {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ex.getMessage());
+        }
+        
+    }
+/*------------------------------------Client Settings----------------------------------------*/
     //landing page
     @GetMapping("/settings")
     public String clientSettings()
@@ -264,27 +288,22 @@ public class ClientManagementController{
 /*--------------------------------------Decead Records Route--------------------------------------*/
 //route - add deceased record
     @PostMapping("/add/deceased/{fileId}")
-    @ResponseBody
     public ResponseEntity<?> addDeceased(@PathVariable String fileId, @RequestBody Deceased request)
     {
         try{
             boolean deceasedResult = clientService.addDeceased(fileId, request);
-            if(deceasedResult == true){
+            if(deceasedResult){
                 return ResponseEntity.ok("record added successfuly");
             }else{
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add deceased record!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add deseased. A deseased with these details already exists: BiNumber: " + request.getBiNumber() + "Grave Number: " + request.getGraveNumber());
             }
         }catch(IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred.");
         }
-        
     }
 
     //route - get deceased records route
     @GetMapping("/deceased/getRecords/{fileId}")
-    @ResponseBody
     public ResponseEntity<?> getDeceasedRecords(@PathVariable String fileId)
     {
         try{
@@ -297,6 +316,7 @@ public class ClientManagementController{
         }
     }
 
+/*-------------------------------------------Invoices Section------------------------------------------------*/
     //route -  client invoice page
     @GetMapping("/invoice")
     public String invoicePage()
@@ -322,6 +342,5 @@ public class ClientManagementController{
         }catch(IllegalArgumentException illegalArgumentException){
             return new ResponseEntity<>(illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
         }
-    } 
-    
+    }
 }

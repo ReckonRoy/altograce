@@ -30,7 +30,7 @@ import lombok.Setter;
 public class ClientBilling{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
+    private long id;
 
     private LocalDate paymentDate;
     private LocalDate recordEntryDate;

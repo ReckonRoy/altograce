@@ -27,7 +27,7 @@ import lombok.Setter;
 public class StaffAuditing{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
+    private long id;
 
     /**
      * staff actions:
@@ -35,8 +35,8 @@ public class StaffAuditing{
      */
     @Column(name = "ACTION")
     private String staffAction;
-    private int companyId;
-    private int staffId;
+    private long companyId;
+    private long staffId;
     private String clientId;
 
     private LocalDate recordEntryDate;

@@ -1,7 +1,8 @@
 /**
  * @author Le-Roy Jongwe
  * @Date 8 May 2024
- * @description item checklist clients
+ * @description This component handles funeral preferences for a client, 
+ *              preferences for caskets, tombstones, and distance covered for extra distances
  */
 
 customElements.define("checklist-component", class extends HTMLElement {
@@ -290,7 +291,8 @@ get fileId(){
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
             <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
+            <td contenteditable=
+            "true"></td>
             <td contenteditable="true"></td>
             `;
             tbody.appendChild(newRow);

@@ -62,54 +62,50 @@ customElements.define("upcoming-funeral", class extends HTMLElement {
      createFuneralTable() {
         let grid = this.shadowRoot.getElementById('grid');
         grid.className = "funeralTableGrid";
-        
-
         fetch(`/funeral/upcoming/funerals`)
         .then((response) => {
             if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                return response.json().then(error =>{
+                    throw new Error(`Error: ${response.statusText}`)
+                })
             }
             return response.json();
         })
         .then((data) => {
-            if(data !== null)
-            {
-                data.forEach((funeral) => {
-                let cell = document.createElement('div'); 
-                    cell.innerHTML = `
-                        <table class="funeral-table">
-                            <tbody class="funeral-table">
-                                <tr><th>Name:</th><td>${funeral.nameOfDeceased}</td></tr>
-                                <tr><th>Date:</th><td>${funeral.dateOfBurial}</td></tr>
-                                <tr><th>Time:</th><td>${funeral.timeOfBurial}</td></tr>
-                                <tr><th>Cemetery:</th><td>${funeral.cemetery}</td></tr>
-                            </tbody>
-                        <table>
-                    `;
-                    // Create a new row for each payment
-                    /*let row = tableBody.insertRow();
-                    let funeralDateCell = row.insertCell(0);
-                    let funeralTimeCell = row.insertCell(1);
-                    let cemetryCell = row.insertCell(2);
-                    let deceasedCell = row.insertCell(3);
-                    
-                    // Populate cells with payment data
-                    funeralDateCell.textContent = funeral.dateOfBurial;
-                    funeralTimeCell.textContent = funeral.timeOfBurial;
-                    cemetryCell.textContent = funeral.cemetry;
-                    deceasedCell.textContent = funeral.nameOfDeceased;
-                    * */
-                    grid.appendChild(cell);
-                });
-            }else{
-                let cell = document.createElement('div'); 
-                cell.innerHTML = `<strong>${data.message}</strong>`;
+            
+            data.forEach((funeral) => {
+            let cell = document.createElement('div'); 
+                cell.innerHTML = `
+                    <table class="funeral-table">
+                        <tbody class="funeral-table">
+                            <tr><th>Name:</th><td>${funeral.nameOfDeceased}</td></tr>
+                            <tr><th>Date:</th><td>${funeral.dateOfBurial}</td></tr>
+                            <tr><th>Time:</th><td>${funeral.timeOfBurial}</td></tr>
+                            <tr><th>Cemetery:</th><td>${funeral.cemetery}</td></tr>
+                        </tbody>
+                    <table>
+                `;
+                // Create a new row for each payment
+                /*let row = tableBody.insertRow();
+                let funeralDateCell = row.insertCell(0);
+                let funeralTimeCell = row.insertCell(1);
+                let cemetryCell = row.insertCell(2);
+                let deceasedCell = row.insertCell(3);
+                
+                // Populate cells with payment data
+                funeralDateCell.textContent = funeral.dateOfBurial;
+                funeralTimeCell.textContent = funeral.timeOfBurial;
+                cemetryCell.textContent = funeral.cemetry;
+                deceasedCell.textContent = funeral.nameOfDeceased;
+                * */
                 grid.appendChild(cell);
-            }
+            });
             
         })
         .catch((error) => {
-            alert(error);
+            let cell = document.createElement('div'); 
+            cell.innerHTML = `<p>You don't have any upcoming funerals.</p>`;
+            grid.appendChild(cell);
         });
     }
 })

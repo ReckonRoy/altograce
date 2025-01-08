@@ -35,13 +35,14 @@ public class Invoice{
     private LocalDate invoiceDate;
     private String clientName;
     private BigDecimal invoiceAmount;
-    private String paymentStatus;
+    private BigDecimal invoiceDeposit;
+    private BigDecimal invoiceBalance;
     private String paymentDate;
     private String paymentMethod;
     private String invoiceStatus;
     private String invoiceStatusDate;
     private String invoiceStatusReason;
-    private int companyId;
+    private long companyId;
 
     @OneToOne
     @JoinColumn(name = "Funeral", referencedColumnName = "id")

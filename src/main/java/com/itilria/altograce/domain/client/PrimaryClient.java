@@ -40,7 +40,7 @@ import lombok.Setter;
 public class PrimaryClient{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
+    private long id;
 
     @Column(unique = true)
     private String clientid;
@@ -123,7 +123,7 @@ public class PrimaryClient{
     }
 
     //clientId comprises of CompanyId, clientId_Passport, 
-    public void setClientId(String companyInitials, int fileId)
+    public void setClientId(String companyInitials, long fileId)
     {
         this.clientid = companyInitials + fileId;
     }

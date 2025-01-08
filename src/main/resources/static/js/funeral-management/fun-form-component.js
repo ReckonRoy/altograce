@@ -46,7 +46,7 @@ customElements.define("funeral-form-component", class extends HTMLElement {
         return this.getAttribute('surname');
     }
 
-    // Define the surnname property
+    // Deceased Id/Passport property
     set idPassport(value) {
         this.setAttribute('idPassport', value); // Update the attribute value
         this.render(); // Render the component whenever the property is set
@@ -54,6 +54,16 @@ customElements.define("funeral-form-component", class extends HTMLElement {
 
     get idPassport() {
         return this.getAttribute('idPassport');
+    }
+
+    // id
+    set dependentId(value) {
+        this.setAttribute('dependentId', value); // Update the attribute value
+        this.render(); // Render the component whenever the property is set
+    }
+
+    get dependentId() {
+        return this.getAttribute('dependentId');
     }
 
     
@@ -267,7 +277,7 @@ customElements.define("funeral-form-component", class extends HTMLElement {
         formData.forEach((value, key) => {
             form_data[key] = value;
         });
-        // Send data to backend
+        // create funeral arrangement
         fetch(`/funeral/add/${this.fileId}`, {
             method: 'POST',
             headers: {
@@ -284,7 +294,8 @@ customElements.define("funeral-form-component", class extends HTMLElement {
         .then(data => {
             // add deceased data to deceased records 
             this.addDeceasedRecord(data.nameOfDeceased, data.placeOfDeath, data.identityNumber, data.cemetery, data.dateOfBurial);
-            
+            //create invoice
+            this.createInvoice(data.identityNumber);
         })
         .catch(error => {
             // Handle error
@@ -312,7 +323,7 @@ customElements.define("funeral-form-component", class extends HTMLElement {
         });
     }
 
-    //get items checklist for client subscription/
+    //display checklist component
     getItems(){
         const overlay = document.createElement("div");
         overlay.classList.add("overlay");
@@ -341,6 +352,37 @@ customElements.define("funeral-form-component", class extends HTMLElement {
 
     }
 
+    /** 
+     * Removes dependency
+     * Remove deceased from file, when deaceased record has been saved
+     */
+    removeDeceasedDependentFromFile()
+    {
+        //fetchAPI to remove user 
+        fetch(`/client/management/dependencies/remove/${this.dependentId}`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({'clientid': this.fileId})
+        })
+        .then((response)=>{
+            if(!response.ok){
+                return response.text().then((error) => {
+                    throw new Error(error)
+                })
+            }
+            return response.text();
+        })
+        .then((data)=>{
+            console.log(`Funeral Arrangement process completed`);
+        })
+        .catch(error)
+        {
+            console.log(error);
+        }
+    }
+
     //save deceased record
     addDeceasedRecord(name, pod, id, cemetry, dateOfBurial){
         //get deceased information
@@ -363,18 +405,43 @@ customElements.define("funeral-form-component", class extends HTMLElement {
             },
             body: JSON.stringify(deceased)
         })
-        .then(response => {
+        .then((response) => {
             if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                return response.text().then(error => {
+                    throw new Error(error);
+                })
             }
             return response.text();
         }) 
         .then(data => {
-            console.log("deceased has been successfully saved to deceased records.")
+            this.removeDeceasedDependentFromFile();
         })
         .catch(error => {
             // Handle error
-            console.error('Error:', error);
+            console.log("Failed to add deceased information" + error);
         });
+    }
+
+    //create invoice
+    createInvoice(identityNumber)
+    {
+        alert(identityNumber);
+        fetch(`/invoice/add/funeral-invoice/${identityNumber}`)
+        .then(response => {
+            if(!response.ok){
+                return response.text().then(error => {
+                    throw new Error(error);
+                })
+            }
+
+            return response.text()
+        })
+        .then(data => {
+            alert(data);
+        })
+        .catch(error => {
+            alert(error);
+        })
+            
     }
 });

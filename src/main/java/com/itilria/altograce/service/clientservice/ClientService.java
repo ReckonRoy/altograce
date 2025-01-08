@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itilria.altograce.domain.Company;
-import com.itilria.altograce.domain.ServicePackage;
+import com.itilria.altograce.domain.PremiumPolicy;
 import com.itilria.altograce.domain.StaffAuditing;
 import com.itilria.altograce.domain.UserAuthentication;
 import com.itilria.altograce.domain.client.ClientBilling;
@@ -26,7 +26,7 @@ import com.itilria.altograce.domain.client.PrimaryClient;
 import com.itilria.altograce.domain.client.PrimaryPackageSubscription;
 import com.itilria.altograce.domain.funeral.Invoice;
 import com.itilria.altograce.repository.CompanyRepository;
-import com.itilria.altograce.repository.ServicePackageRepository;
+import com.itilria.altograce.repository.PremiumPolicyRepository;
 import com.itilria.altograce.repository.StaffAuditingRepository;
 import com.itilria.altograce.repository.UserAuthenticationRepository;
 import com.itilria.altograce.repository.clientrepository.ClientBillingRepository;
@@ -65,20 +65,28 @@ public class ClientService{
     @Autowired
     private DeceasedRepository deceasedRepository;
     @Autowired
-    private ServicePackageRepository servicePackageRepository;
+    private PremiumPolicyRepository servicePackageRepository;
 
 /*--------------------------------Primary Client Section----------------------------------------------*/
     //Register Client
-    public PrimaryClient registerClient(int companyId, PrimaryClient clientData) throws Exception{
-        Company company = companyRepository.findById(companyId).orElse(null);
+    public PrimaryClient registerClient(long companyId, PrimaryClient clientData) throws Exception{
+        if(!companyRepository.findById(companyId).isPresent()){
+            throw new IllegalArgumentException("Failed to save your details, Company was found in our database!");
+        }
         
         Optional<ClientSettings> optionalClientSettings = clientSettingsRepository.findByCompany_Id(companyId);
         if (!optionalClientSettings.isPresent()) {
-            throw new IllegalArgumentException("No client settings found for provided companyId");
+            throw new IllegalArgumentException("No client settings found for provided companyId. Please kindly set (\"e.g.Trial Period\")");
+        }
+
+        //check if client exists
+        if(clientRepository.findByIdPassport(clientData.getId_passport()).isPresent())
+        {
+            throw new IllegalArgumentException("Client already exists.");
         }
 
         ClientSettings clientSettings = optionalClientSettings.get();
-
+        Company company = companyRepository.findById(companyId).get();
         if(company != null)
         {
             //save empty client object, inorder to get id
@@ -146,9 +154,21 @@ public class ClientService{
         }
     }
 
+    //Delete file - Delete file
+    public boolean deleteFile(String fileId){
+        //check if file exists
+        if(!clientRepository.existsByClientid(fileId))
+        {
+            throw new IllegalArgumentException("This file no longer exists, it might have been deleted already");
+        }
+
+        clientRepository.deleteByClientid(fileId);
+        return true;
+    }
+
 /*----------------------------------Staff Auditing Section-----------------------------------------------*/
     //Audit User Actions
-    public void staffAudit(String staffAction, int companyId, String clientId, int staffId)
+    public void staffAudit(String staffAction, long companyId, String clientId, long staffId)
     {
         StaffAuditing staffAudit = new StaffAuditing();
         staffAudit.setStaffAction(staffAction);
@@ -177,13 +197,13 @@ public class ClientService{
         if(primaryClient != null)
         {
             PrimaryPackageSubscription subscriptionResult = primaryPackSubRep.findByPrimaryClient_Clientid(clientId).orElse(null);
-            ServicePackage servicePackageResult = servicePackageRepository.findById(subscriptionResult.getPackageId()).orElse(null);
+            PremiumPolicy servicePackageResult = servicePackageRepository.findById(subscriptionResult.getPackageId()).orElse(null);
             Map<String, String> subscriptionMap = new HashMap<>();
-            subscriptionMap.put("name", servicePackageResult.getPackageName());
+            subscriptionMap.put("name", servicePackageResult.getPolicyName());
             subscriptionMap.put("dateOfCover", subscriptionResult.getDateOfCover().toString());
             subscriptionMap.put("groupName", subscriptionResult.getGroupName());
             subscriptionMap.put("joiningFee", subscriptionResult.getJoiningFee().toString());
-            String packageId = Integer.toString(subscriptionResult.getId()) ;
+            String packageId = Long.toString(subscriptionResult.getId()) ;
             subscriptionMap.put("packageId", packageId);
             return subscriptionMap;
         }else{
@@ -262,7 +282,7 @@ public class ClientService{
     }
 
     //Remove dependent
-    public boolean removeDependent(int id, String clientid)
+    public boolean removeDependent(long id, String clientid)
     {
         //check if primary client exists
         PrimaryClient primaryClient = clientRepository.findByClientid(clientid).orElse(null);
@@ -273,7 +293,6 @@ public class ClientService{
                 return true; // Deletion succeeded
             } catch (Exception e) {
                 // Handle any exception that might occur during deletion
-                e.printStackTrace(); // Or log the exception
                 return false; // Deletion failed
             }
         }else{
@@ -368,21 +387,21 @@ public class ClientService{
         PrimaryClient primaryClient = clientRepository.findByClientid(fileId)
         .orElseThrow(() -> new IllegalArgumentException("No file is associated with provided FileId"));
         
-        try{
-            if(deceasedData.getDateOfBurial() != null){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-                String formattedDate = deceasedData.getDateOfBurial().format(formatter);
-                deceasedData.setDateOfBurial(LocalDate.parse(formattedDate, formatter));
-            }
-            deceasedData.setRecordEntryDate(LocalDate.now());
-            deceasedData.setPrimaryClient(primaryClient);
-
-            deceasedRepository.save(deceasedData);
-            return true;
-        }catch(RuntimeException ex){
-            System.out.println(ex);
+        if(deceasedRepository.findByBiNumberAndGraveNumber(deceasedData.getBiNumber(), deceasedData.getGraveNumber()).isPresent())
+        {
             return false;
         }
+        
+        if(deceasedData.getDateOfBurial() != null){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            String formattedDate = deceasedData.getDateOfBurial().format(formatter);
+            deceasedData.setDateOfBurial(LocalDate.parse(formattedDate, formatter));
+        }
+        deceasedData.setRecordEntryDate(LocalDate.now());
+        deceasedData.setPrimaryClient(primaryClient);
+
+        deceasedRepository.save(deceasedData);
+        return true;
     }
 
     //get deceased records
@@ -391,10 +410,8 @@ public class ClientService{
         .orElseThrow(() -> new IllegalArgumentException("No file is associated with provided FileId"));
         
         try{
-            List<Deceased> deceasedResult = deceasedRepository.findByPrimaryClient_Id(client.getId());  
-            return deceasedResult;          
+            return deceasedRepository.findByPrimaryClient_Id(client.getId());          
         }catch(RuntimeException ex){
-            System.out.println(ex);
             return null;
         }
     }
@@ -410,10 +427,8 @@ public class ClientService{
         long monthsLeft = ChronoUnit.MONTHS.between(joiningDate, currentDate);
 
         if (monthsLeft >= waitingPeriodMonths) {
-            System.out.println(monthsLeft);
             return "ACTIVATED";
         } else {
-            System.out.println(monthsLeft);
             return "INACTIVE";
         }
     }

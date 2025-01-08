@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.itilria.altograce.domain.OptionalPackage;
-import com.itilria.altograce.domain.ProductItem;
-import com.itilria.altograce.domain.ProductService;
-import com.itilria.altograce.domain.ServicePackage;
-import com.itilria.altograce.service.PackageService;
+import com.itilria.altograce.domain.AdditionalPolicy;
+import com.itilria.altograce.domain.PremiumPolicy;
+import com.itilria.altograce.service.PremiumPolicyService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Controller 
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class PackageController{
 
     @Autowired
-    private PackageService packageService;
+    private PremiumPolicyService premiumPolicyService;
 
     @GetMapping("/management")
     public String packagePage()
@@ -39,23 +39,23 @@ public class PackageController{
         return "package-management";
     }
 /**************************Handle Packages*****************************************************/
-    @PostMapping("/add-package/{id}")
-    public ResponseEntity<?> addPackage(@PathVariable int id, @RequestBody ServicePackage request)
+    @PostMapping("/add-package")
+    public ResponseEntity<?> addPremiumPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PremiumPolicy request)
     {
-        ServicePackage result = packageService.addPackage(id, request);
+        PremiumPolicy result = premiumPolicyService.addPremiumPolicy(userDetails.getUsername(), request);
         if(result != null)
         {
             return ResponseEntity.ok(result);
         }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body("Sorry package could not be saved");
+            .body("Sorry policy could not be saved");
         }
     }
 
-    @GetMapping("/packages/{id}")
-    public ResponseEntity<List<ServicePackage>> getPackages(@PathVariable int id)
+    @GetMapping("/packages")
+    public ResponseEntity<List<PremiumPolicy>> getPremiumPolicies(@AuthenticationPrincipal UserDetails userDetails)
     {
-        List<ServicePackage> result = packageService.getPackages(id);
+        List<PremiumPolicy> result = premiumPolicyService.getPackages(userDetails.getUsername());
         if(result != null)
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -65,8 +65,8 @@ public class PackageController{
     }
 
     //Get package
-    @PostMapping("/get-plan/{id}")
-    public ResponseEntity<?> getSubscriptionPlan(@PathVariable int id, @RequestBody ServicePackage request)
+    @PostMapping("/getpremiumpolicy")
+    public ResponseEntity<?> getPremiumPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PremiumPolicy request)
     {
         /*
          * @Param subscrionPlan 
@@ -74,7 +74,7 @@ public class PackageController{
          */
         try
         {
-            ServicePackage result = packageService.getSubscriptionPlan(id, request);
+            PremiumPolicy result = premiumPolicyService.getPremiumPolicy(userDetails.getUsername(), request);
             return  ResponseEntity.ok(result);
         }catch(IllegalStateException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -82,8 +82,8 @@ public class PackageController{
     }
 
     //Update package
-    @PostMapping("/update-plan/{id}")
-    public ResponseEntity<?> updateSubscriptionPlan(@PathVariable int id, @RequestBody ServicePackage request)
+    @PostMapping("/update-plan")
+    public ResponseEntity<?> updateSubscriptionPlan(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PremiumPolicy request)
     {
         /*
          * @Param subscrionPlan 
@@ -91,7 +91,7 @@ public class PackageController{
          */
         try
         {
-            ServicePackage result = packageService.updateSubscriptionPlan(id, request);
+            PremiumPolicy result = premiumPolicyService.updateSubscriptionPlan(userDetails.getUsername(), request);
             return  ResponseEntity.ok(result);
         }catch(IllegalStateException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -102,16 +102,16 @@ public class PackageController{
     public ResponseEntity<?> deletePackage(@PathVariable int id) {
         // Code to delete the resource with the given ID
 
-        packageService.deletePackage(id);
+        premiumPolicyService.deletePackage(id);
         return ResponseEntity.ok("Subscription plan has been deleted successfully");
     }
 /*_________________________________________________________________________________________________________*/
 
-/**************************Otional Packages*****************************************************/
-    @PostMapping("/add-optional-package/{id}")
-    public ResponseEntity<?> addOptionalPackage(@PathVariable int id, @RequestBody OptionalPackage request)
+/**************************AdditionalPolicy*****************************************************/
+    @PostMapping("/add-additional-policy")
+    public ResponseEntity<?> addAdditionalPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AdditionalPolicy request)
     {
-        OptionalPackage result = packageService.addOptionalPackage(id, request);
+        AdditionalPolicy result = premiumPolicyService.addAdditionalPolicy(userDetails.getUsername(), request);
         if(result != null)
         {
             return ResponseEntity.ok(result);
@@ -121,10 +121,10 @@ public class PackageController{
         }
     }
 
-    @GetMapping("/optional-packages/{id}")
-    public ResponseEntity<List<OptionalPackage>> getOptionalPackages(@PathVariable int id)
+    @GetMapping("/additional-policies")
+    public ResponseEntity<List<AdditionalPolicy>> getAllAdditionalPolicies(@AuthenticationPrincipal UserDetails userDetails)
     {
-        List<OptionalPackage> result = packageService.getOptionalPackages(id);
+        List<AdditionalPolicy> result = premiumPolicyService.getAllAdditionalPolicies(userDetails.getUsername());
         if(result != null)
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -134,8 +134,8 @@ public class PackageController{
     }
 
     //Get package
-    @PostMapping("/get-optional-plan/{id}")
-    public ResponseEntity<?> getOptionalSubscriptionPlan(@PathVariable int id, @RequestBody ServicePackage request)
+    @PostMapping("/get-optional-plan")
+    public ResponseEntity<?> getAdditionalPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AdditionalPolicy request)
     {
         /*
          * @Param subscrionPlan 
@@ -143,7 +143,7 @@ public class PackageController{
          */
         try
         {
-            OptionalPackage result = packageService.getOptionalSubscriptionPlan(id, request);
+            AdditionalPolicy result = premiumPolicyService.getAdditionalPolicy(userDetails.getUsername(), request);
             return  ResponseEntity.ok(result);
         }catch(IllegalStateException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -151,8 +151,8 @@ public class PackageController{
     }
 
     //Update optional plan
-    @PostMapping("/update-optionalplan/{id}")
-    public ResponseEntity<?> updateOptionalSubscriptionPlan(@PathVariable int id, @RequestBody OptionalPackage request)
+    @PostMapping("/update-additional-policy")
+    public ResponseEntity<?> updateAdditionalPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AdditionalPolicy request)
     {
         /*
          * @Param subscrionPlan 
@@ -160,10 +160,11 @@ public class PackageController{
          */
         try
         {
-            OptionalPackage result = packageService.updateOptionalSubscriptionPlan(id, request);
+            AdditionalPolicy result = premiumPolicyService.updateAdditionalPolicy(userDetails.getUsername(), request);
             return  ResponseEntity.ok(result);
         }catch(IllegalStateException ex){
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ex.getMessage());
         }    
     }
 
@@ -171,75 +172,7 @@ public class PackageController{
     public ResponseEntity<?> deleteOptionalPackage(@PathVariable int id) {
         // Code to delete the resource with the given ID
 
-        packageService.deleteOptionalPackage(id);
+        premiumPolicyService.deleteOptionalPackage(id);
         return ResponseEntity.ok("Optional plan has been deleted successfully!");
-    }
-/*********************************Handle Items*********************************************/
-    @PostMapping("/items/{id}")
-    public ResponseEntity<List<ProductItem>> getItems(@PathVariable int id, @RequestBody ProductItem request)
-    {
-        List<ProductItem> result = packageService.getItems(id, request);
-        if(result != null)
-        {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @PostMapping("/add-item/{id}")
-    public ResponseEntity<?> addItem(@PathVariable int id, @RequestBody ProductItem request)
-    {
-        ProductItem result = packageService.addItem(id, request);
-        if(result != null)
-        {
-            return ResponseEntity.ok(result);
-        }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body("Sorry item could not be saved");
-        }
-    }
-
-    @DeleteMapping("/delete-item/{id}")
-    public ResponseEntity<?> deleteItem(@PathVariable int id) {
-        // Code to delete the resource with the given ID
-
-        packageService.deleteItem(id);
-        return ResponseEntity.ok("Item has been deleted successfully!");
-    }
-
-    
-/************************************************Handle Services************************************************/
-    @PostMapping("/services/{id}")
-    public ResponseEntity<List<ProductService>> getServices(@PathVariable int id, @RequestBody ProductService request)
-    {
-        List<ProductService> result = packageService.getServices(id, request);
-        if(result != null)
-        {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @PostMapping("/add-service/{id}")
-    public ResponseEntity<?> addService(@PathVariable int id, @RequestBody ProductService request)
-    {
-        ProductService result = packageService.addService(id, request);
-        if(result != null)
-        {
-            return ResponseEntity.ok(result);
-        }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body("Sorry service could not be saved");
-        }
-    }
-
-    @DeleteMapping("/delete-service/{id}")
-    public ResponseEntity<?> deleteService(@PathVariable int id) {
-        // Code to delete the resource with the given ID
-
-        packageService.deleteService(id);
-        return ResponseEntity.ok("Service has been deleted successfully");
     }
 }
