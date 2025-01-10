@@ -13,7 +13,7 @@ public interface ClientRepository extends JpaRepository<PrimaryClient, Long>{
     Optional<PrimaryClient> findById(long id);
     Optional<PrimaryClient> findByClientid(String clientId);
     Page<PrimaryClient> findByCompanyId_Id(long comId, Pageable pageable);
-    Optional<PrimaryClient> findByCellNumber(long contact);
+    Optional<PrimaryClient> findByPhoneContact1(long contact);
     @Query("SELECT u FROM PrimaryClient u WHERE u.id_passport = ?1")
     Optional<PrimaryClient> findByIdPassport(String idPassport);
     boolean existsByClientid(String fileId);

@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.itilria.altograce.domain.UserAuthentication;
 import com.itilria.altograce.domain.client.ClientBilling;
 import com.itilria.altograce.domain.client.ClientDependency;
-import com.itilria.altograce.domain.client.ClientSettings;
 import com.itilria.altograce.domain.client.Deceased;
 import com.itilria.altograce.domain.client.PrimaryClient;
 import com.itilria.altograce.domain.client.PrimaryPackageSubscription;
