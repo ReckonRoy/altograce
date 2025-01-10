@@ -43,7 +43,7 @@ let clientRegistration = {
 
     //Post client data to server
     registerClient: () => {
-        fetch(`/client/management/register/${userData.companyId}`, {
+        fetch(`/client/management/register`, {
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json',
