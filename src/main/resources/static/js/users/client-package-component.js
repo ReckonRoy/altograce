@@ -181,7 +181,7 @@ customElements.define("add-package", class extends HTMLElement {
                 }).then(data => {
                     //fetch
                     data.forEach((pkg, index) => {
-                        packages = {
+                        packages[pkg.id] = {
                             id: pkg.id,
                             packageName: pkg.policyName,
                             membersCount: pkg.membersCount,
