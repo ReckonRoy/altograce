@@ -65,7 +65,7 @@ public class FuneralManagementController
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
         Funeral funeralResult = funeralService.addFuneral(fileId, request);
         if(funeralResult != null){
-            clientService.staffAudit("ADDED FUNERAL SERVICE", result.getCompanyId(), fileId, result.getId());
+            clientService.staffAudit("ADDED FUNERAL SERVICE", userDetails.getUsername(), fileId, result.getId());
             return ResponseEntity.ok(funeralResult);
         }else{
             return new ResponseEntity<>("Failed to add data", HttpStatus.BAD_REQUEST);
