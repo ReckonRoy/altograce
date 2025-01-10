@@ -65,21 +65,16 @@ public class PrimaryClient{
 
     private LocalDate dob;
 
-    private String maritalStatus;
     private String activationStatus;
 
     private String email;
     private String countryCode;
-    private long cellNumber;
-    private long homeNumber;
-    private long telephone;
+    private long phoneContact1;
+    private long phoneContact2;
 
-    private String country;
+    private int waitPeriod;
     private String province;
-    private String city;
-    private String postCode;
-    private String street;
-    private String standUnit;
+    private String address;
 
     private LocalDate recordEntryDate;
 
@@ -114,20 +109,4 @@ public class PrimaryClient{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId", referencedColumnName = "id")
     private Company company;
-
-    public void setResidentialAddress()
-    {
-        String street = this.getStreet();
-        String standUnit = this.getStandUnit();
-        this.residentialAddress = String.format("Street: %s, Stand unit/House number: %s", street, standUnit);
-    }
-
-    //clientId comprises of CompanyId, clientId_Passport, 
-    public void setClientId(String companyInitials, long fileId)
-    {
-        this.clientid = companyInitials + fileId;
-    }
-
-    @Transient
-    private String subscriptionPlan; 
 }

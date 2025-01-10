@@ -71,7 +71,6 @@ public class ClientManagementController{
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
         Map<String, Long> userData = new HashMap<>();
         userData.put("userId", result.getId());
-        userData.put("companyId", result.getCompanyId());
         return ResponseEntity.ok(userData);
     }
 
@@ -80,8 +79,8 @@ public class ClientManagementController{
      * map data into respective objects
      * pass data objects to service methods
      */
-    @PostMapping("/management/register/{id}")
-    public ResponseEntity<?> registerClient(@PathVariable long id, @RequestBody ClientRegistrationDto request)
+    @PostMapping("/management/register")
+    public ResponseEntity<?> registerClient(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ClientRegistrationDto request)
     {
         try{
             PrimaryClient client = new PrimaryClient();
@@ -92,20 +91,15 @@ public class ClientManagementController{
             client.setId_passport(request.getId_passport());
             client.setGender(request.getGender());
             client.setDob(request.getDob());
-            client.setMaritalStatus(request.getMaritalStatus());
             client.setEmail(request.getEmail());
             client.setCountryCode(request.getCountryCode());
-            client.setCellNumber(request.getCellNumber());
-            client.setHomeNumber(request.getHomeNumber());
-            client.setTelephone(request.getTelephone());
-            client.setCountry(request.getCountry());
+            client.setPhoneContact1(request.getPhoneContact1());
+            client.setPhoneContact2(request.getPhoneContact2());
+            client.setWaitPeriod(request.getWaitPeriod());
             client.setProvince(request.getProvince());
-            client.setCity(request.getCity());
-            client.setPostCode(request.getPostCode());
-            client.setStreet(request.getStreet());
-            client.setStandUnit(request.getStreet());
+            client.setAddress(request.getAddress());
             client.setDateOfCover(request.getDateOfCover());
-            PrimaryClient clientResult = clientService.registerClient(id, client);
+            PrimaryClient clientResult = clientService.registerClient(userDetails.getUsername(), client, request.getWaitPeriod());
 
             if(clientResult != null)
             {
@@ -117,7 +111,7 @@ public class ClientManagementController{
                 primarySubscription.setPrimaryClient(clientResult);
                 clientService.addPrimarySubscription(primarySubscription);
 
-                clientService.staffAudit("ADDED", id, clientResult.getClientid(), request.getStaffId());
+                clientService.staffAudit("ADDED", userDetails.getUsername(), clientResult.getClientid(), request.getStaffId());
             }
             
             return ResponseEntity.ok(clientResult);
@@ -132,9 +126,6 @@ public class ClientManagementController{
                                         @RequestParam int page,
                                         @RequestParam int size) {
         Page<PrimaryClient> clientsPage = clientService.getClients(comId, page, size);
-        clientsPage.forEach( cpage -> {
-            cpage.setResidentialAddress();
-        });
         
         return ResponseEntity.ok(clientsPage);
     }
@@ -198,7 +189,7 @@ public class ClientManagementController{
         
         if(removeResult == true)
         {
-            clientService.staffAudit("REMOVE", result.getCompanyId(), request.get("clientid"), result.getId());
+            clientService.staffAudit("REMOVE", userDetails.getUsername(), request.get("clientid"), result.getId());
             return ResponseEntity.ok("Dependency has been successfuly removed");
         }else{
             return new ResponseEntity<>("Failed to remove dependency. Primary Client does not exist", HttpStatus.NO_CONTENT);
@@ -219,7 +210,7 @@ public class ClientManagementController{
 
             clientService.deleteFile(fileId);
             
-            clientService.staffAudit("DELETED A FILE", result.getCompanyId(), fileId, result.getId());
+            clientService.staffAudit("DELETED A FILE", userDetails.getUsername(), fileId, result.getId());
             return ResponseEntity.ok("File has been deleted successfully");
             
         }catch(IllegalArgumentException ex)
@@ -236,18 +227,6 @@ public class ClientManagementController{
         return "client-template/client-settings";
     }
 
-    //post waiting period route
-    @PostMapping("/settings/setwaitingperiod/{comId}")
-    public ResponseEntity<?> setWaitingPeriod(@PathVariable int comId, @RequestBody Map<String, Integer> request)
-    {
-        ClientSettings result = clientService.addSettings(comId, request.get("months"));
-        if(result != null)
-        {
-            return ResponseEntity.ok("Waiting period has been successfully saved");
-        }else{
-            return ResponseEntity.ok("Sorry we could not save your input");
-        }
-    }
     /*
     @GetMapping("/settings/getwaitingperiod/{comId}")
     public ResponseEntity<?> getWaitingPeriod()
@@ -264,7 +243,7 @@ public class ClientManagementController{
         ClientBilling billingResult = clientService.billClient(clientId, request);
         if(billingResult != null)
         {
-            clientService.staffAudit("Billing", result.getCompanyId(), clientId, result.getId());
+            clientService.staffAudit("Billing", userDetails.getUsername(), clientId, result.getId());
             return ResponseEntity.ok("Client Has been successfully billed!");
         }else{
             return new ResponseEntity<>("Payment Transaction Failed!", HttpStatus.BAD_REQUEST);

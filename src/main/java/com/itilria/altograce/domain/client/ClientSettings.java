@@ -32,8 +32,6 @@ public class ClientSettings{
     @Id
     private long id;
 
-    private int waitingPeriod;
-
     @JsonBackReference
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company", referencedColumnName = "id")

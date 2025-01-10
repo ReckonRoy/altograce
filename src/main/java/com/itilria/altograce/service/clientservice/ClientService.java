@@ -20,7 +20,6 @@ import com.itilria.altograce.domain.StaffAuditing;
 import com.itilria.altograce.domain.UserAuthentication;
 import com.itilria.altograce.domain.client.ClientBilling;
 import com.itilria.altograce.domain.client.ClientDependency;
-import com.itilria.altograce.domain.client.ClientSettings;
 import com.itilria.altograce.domain.client.Deceased;
 import com.itilria.altograce.domain.client.PrimaryClient;
 import com.itilria.altograce.domain.client.PrimaryPackageSubscription;
@@ -61,22 +60,18 @@ public class ClientService{
     @Autowired
     private ClientBillingRepository clientBillingRepository;
     @Autowired
-    private ClientSettingsRepository clientSettingsRepository;
-    @Autowired
     private DeceasedRepository deceasedRepository;
     @Autowired
     private PremiumPolicyRepository servicePackageRepository;
 
 /*--------------------------------Primary Client Section----------------------------------------------*/
     //Register Client
-    public PrimaryClient registerClient(long companyId, PrimaryClient clientData) throws Exception{
-        if(!companyRepository.findById(companyId).isPresent()){
-            throw new IllegalArgumentException("Failed to save your details, Company was found in our database!");
-        }
+    public PrimaryClient registerClient(String username, PrimaryClient clientData, int waitPeriod) throws Exception{
+        UserAuthentication userAuth = userAuthRepository.findByUsername(username).orElse(null);
+        Optional<Company> company = companyRepository.findById(userAuth.getCompanyId());
         
-        Optional<ClientSettings> optionalClientSettings = clientSettingsRepository.findByCompany_Id(companyId);
-        if (!optionalClientSettings.isPresent()) {
-            throw new IllegalArgumentException("No client settings found for provided companyId. Please kindly set (\"e.g.Trial Period\")");
+        if(!company.isPresent()){
+            throw new IllegalArgumentException("Failed to save your details, Company was not found in our database!");
         }
 
         //check if client exists
@@ -85,17 +80,14 @@ public class ClientService{
             throw new IllegalArgumentException("Client already exists.");
         }
 
-        ClientSettings clientSettings = optionalClientSettings.get();
-        Company company = companyRepository.findById(companyId).get();
-        if(company != null)
+        if(!company.isPresent())
         {
             //save empty client object, inorder to get id
             PrimaryClient client = new PrimaryClient();
             client = clientRepository.save(client);
             
 
-            client.setCompany(company);
-            client.setClientId(company.getInitials(), client.getId());
+            client.setCompany(company.get());
             client.setRecordEntryDate(LocalDate.now());
             client.setTitle(clientData.getTitle());
             client.setName(clientData.getName());
@@ -103,20 +95,14 @@ public class ClientService{
             client.setInitials(clientData.getInitials());
             client.setId_passport(clientData.getId_passport());
             client.setGender(clientData.getGender());
-            client.setMaritalStatus(clientData.getMaritalStatus());
             client.setEmail(clientData.getEmail());
             client.setCountryCode(clientData.getCountryCode());
-            client.setCellNumber(clientData.getCellNumber());
-            client.setHomeNumber(clientData.getHomeNumber());
-            client.setTelephone(clientData.getTelephone());
+            client.setPhoneContact1(clientData.getPhoneContact1());
+            client.setPhoneContact2(clientData.getPhoneContact2());
+            client.setWaitPeriod(clientData.getWaitPeriod());
         
-            client.setCountry(clientData.getCountry());
             client.setProvince(clientData.getProvince());
-            client.setCity(clientData.getCity());
-            client.setPostCode(clientData.getPostCode());
-            client.setStreet(clientData.getStreet());
-            client.setStandUnit(clientData.getStandUnit());
-
+            client.setAddress(clientData.getAddress());
 
             if(clientData.getDob() != null){
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -133,7 +119,7 @@ public class ClientService{
             }else{
                 client.setDateOfCover(LocalDate.now());
             }
-            client.setActivationStatus(this.handleAccountActivation(clientData.getDateOfCover(), clientSettings.getWaitingPeriod()));
+            client.setActivationStatus(this.handleAccountActivation(clientData.getDateOfCover(), waitPeriod));
             
             //save and return saved object
             return clientRepository.save(client);
@@ -168,11 +154,13 @@ public class ClientService{
 
 /*----------------------------------Staff Auditing Section-----------------------------------------------*/
     //Audit User Actions
-    public void staffAudit(String staffAction, long companyId, String clientId, long staffId)
+    public void staffAudit(String staffAction, String username, String clientId, long staffId)
     {
+        UserAuthentication userAuth = userAuthRepository.findByUsername(username).orElse(null);
+        
         StaffAuditing staffAudit = new StaffAuditing();
         staffAudit.setStaffAction(staffAction);
-        staffAudit.setCompanyId(companyId);
+        staffAudit.setCompanyId(userAuth.getCompanyId());
         staffAudit.setStaffId(staffId);
         staffAudit.setClientId(clientId);
         staffAudit.setRecordEntryDate(LocalDate.now());
@@ -224,17 +212,13 @@ public class ClientService{
     {
         //check if PrimaryClient exists
         PrimaryClient primaryClient = clientRepository.findByClientid(clientId).orElse(null);
+        
         Company company = primaryClient.getCompany();
-        Optional<ClientSettings> optionalClientSettings = clientSettingsRepository.findByCompany_Id(company.getId());
-        if (!optionalClientSettings.isPresent()) {
-            throw new IllegalArgumentException("No client settings found for provided companyId");
-        }
         
         if(dependencyRepository.findByPassport(depForm.getId_passport()).isPresent()){
             throw new IllegalArgumentException("This dependent already exists");
         }
 
-        ClientSettings clientSettings = optionalClientSettings.get();
 
         if(primaryClient != null)
         {
@@ -259,7 +243,7 @@ public class ClientService{
             }
             regDep.setPrimaryClient(primaryClient);
 
-            regDep.setActivationStatus(this.handleAccountActivation(regDep.getDateOfCover(), clientSettings.getWaitingPeriod()));
+            regDep.setActivationStatus(this.handleAccountActivation(regDep.getDateOfCover(), primaryClient.getWaitPeriod()));
 
             return dependencyRepository.save(regDep);
         }else{
@@ -300,24 +284,6 @@ public class ClientService{
         }
 
     }
-
-/*----------------------------------Client Settings-------------------------------------------*/
-    public ClientSettings addSettings(int comId, int waitingPeriod)
-    {
-        //check if company is not null
-        Company company = companyRepository.findById(comId).orElse(null);
-
-        if(company != null)
-        {
-            ClientSettings clientSettings = new ClientSettings();
-            clientSettings.setWaitingPeriod(waitingPeriod);
-            clientSettings.setCompany(company);
-            return clientSettingsRepository.save(clientSettings);
-        }else{
-            return null;
-        }
-    }     
-
 /*-------------------------------Billing Section------------------------------------------*/
     //Client makes payment
     public ClientBilling billClient(String clientId, ClientBilling billingData)

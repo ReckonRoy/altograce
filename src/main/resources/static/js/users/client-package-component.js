@@ -186,6 +186,7 @@ customElements.define("add-package", class extends HTMLElement {
                             packageName: pkg.policyName,
                             membersCount: pkg.membersCount,
                             price: pkg.premiumAmount,
+                            waitPeriod: pkg.waitPeriod,
                         }
 
                         const card = document.createElement('div');
@@ -204,6 +205,7 @@ customElements.define("add-package", class extends HTMLElement {
                     radioPackage_btn.forEach((btn) => {
                         btn.addEventListener("click", () => {
                             clientRegistration.formData.packageId = btn.value;
+                            clientRegistration.formData.waitPeriod = packages[btn.value].waitPeriod;
                         });
                     });
                     /*
