@@ -94,10 +94,10 @@ let clientRegistration = {
             clientRegistration.formData.dateOfCover = document.getElementById("joiningDate-field").value;
             clientRegistration.formData.joiningFee = parseFloat(document.getElementById("joiningFee-field").value);
             clientRegistration.formData.countryCode = document.getElementById("countryCode-field").value;
-            clientRegistration.formData.cellNumber = document.getElementById("phoneContact1-field").value;
-            clientRegistration.formData.homePhone = document.getElementById("phoneContact2-field").value;
+            clientRegistration.formData.phoneContact1 = document.getElementById("phoneContact1-field").value;
+            clientRegistration.formData.phoneContact2 = document.getElementById("phoneContact2-field").value;
             clientRegistration.formData.province = document.getElementById("province-field").value;
-            clientRegistration.formData.City = document.getElementById("address-field").value;
+            clientRegistration.formData.address = document.getElementById("address-field").value;
             clientRegistration.formData.staffId = userData.userId;
 
             clientRegistration.registerClient();
