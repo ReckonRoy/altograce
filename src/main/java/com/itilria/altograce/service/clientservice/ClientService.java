@@ -129,15 +129,15 @@ public class ClientService{
     }
 
     //Get All Clients
-    public Page<PrimaryClient> getClients(int comId, int page, int size) {
-        Company company = companyRepository.findById(comId).orElse(null);
+    public Page<PrimaryClient> getClients(String username , int page, int size) {
+        UserAuthentication userAuth = userAuthRepository.findByUsername(username).orElse(null);
+        Optional<Company> company = companyRepository.findById(userAuth.getCompanyId());
 
-        if(company != null)
-        {
-            return clientRepository.findByCompanyId_Id(comId, PageRequest.of(page, size));
-        }else{
-            return null;
+        if(!company.isPresent()){
+            throw new IllegalArgumentException("Failed to save your details, Company was not found in our database!");
         }
+
+        return clientRepository.findByCompanyId_Id(company.get().getId(), PageRequest.of(page, size));
     }
 
     //Delete file - Delete file

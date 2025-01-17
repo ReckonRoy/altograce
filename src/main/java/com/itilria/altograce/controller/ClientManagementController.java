@@ -63,6 +63,12 @@ public class ClientManagementController{
         return "client-template/client-management";
     }
 
+    @GetMapping("/management/admin")
+    public String clientPageAdmin()
+    {
+        return "client-management";
+    }
+
     @GetMapping("/management/user")
     public ResponseEntity<Map<String, Long>> getUserDetails(@AuthenticationPrincipal UserDetails userDetails)
     {
@@ -120,13 +126,16 @@ public class ClientManagementController{
     }
 /*--------------------------------Clients Section------------------------------------------*/
     //Get all clients route 
-    @GetMapping("/management/clients/{comId}")
-    public ResponseEntity<?> getClients(@PathVariable int comId,
+    @GetMapping("/management/clients")
+    public ResponseEntity<?> getClients(@AuthenticationPrincipal UserDetails userDetails,
                                         @RequestParam int page,
                                         @RequestParam int size) {
-        Page<PrimaryClient> clientsPage = clientService.getClients(comId, page, size);
-        
-        return ResponseEntity.ok(clientsPage);
+        try{
+            Page<PrimaryClient> clientsPage = clientService.getClients(userDetails.getUsername(), page, size);
+            return ResponseEntity.ok(clientsPage);
+        }catch(Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 /*--------------------------------Subscription Section------------------------------------------*/
     //get subscription route

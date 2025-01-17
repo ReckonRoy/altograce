@@ -272,7 +272,7 @@ customElements.define("admin-header", class extends HTMLElement {
         location.href = "/admin/dashboard";
       });
       this.shadowRoot.getElementById("client-link").addEventListener("click", () => {
-        location.href = "/client/management";
+        location.href = "/client/management/admin";
       });
       this.shadowRoot.getElementById("settings-link").addEventListener("click", () => {
         location.href = "/admin/settings";
