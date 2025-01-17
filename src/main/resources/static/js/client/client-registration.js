@@ -50,8 +50,7 @@ let clientRegistration = {
             },
             body: JSON.stringify(clientRegistration.formData),
         }).then((response) => {
-            if(!response.ok)
-            {
+            if(!response.ok){
                 return response.text().then((error) => {
                     throw new Error(error);
                 })

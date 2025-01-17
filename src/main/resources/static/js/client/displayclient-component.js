@@ -579,7 +579,7 @@ customElements.define("display-client", class extends HTMLElement {
 
         // Function to populate the table with clients
         let populateTable = (pageNumber, pageSize) => {
-            fetch(`/client/management/clients/${userData.companyId}?page=${parseInt(pageNumber)}&size=${parseInt(pageSize)}`)
+            fetch(`/client/management/clients?page=${parseInt(pageNumber)}&size=${parseInt(pageSize)}`)
             .then((response) => {
                 if(!response.ok)
                 {
