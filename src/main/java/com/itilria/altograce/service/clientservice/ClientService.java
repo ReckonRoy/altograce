@@ -80,52 +80,48 @@ public class ClientService{
             throw new IllegalArgumentException("Client already exists.");
         }
 
-        if(!company.isPresent())
-        {
-            //save empty client object, inorder to get id
-            PrimaryClient client = new PrimaryClient();
-            client = clientRepository.save(client);
-            
+        //save empty client object, inorder to get id
+        PrimaryClient client = new PrimaryClient();
+        client = clientRepository.save(client);
 
-            client.setCompany(company.get());
-            client.setRecordEntryDate(LocalDate.now());
-            client.setTitle(clientData.getTitle());
-            client.setName(clientData.getName());
-            client.setLastName(clientData.getLastName());
-            client.setInitials(clientData.getInitials());
-            client.setId_passport(clientData.getId_passport());
-            client.setGender(clientData.getGender());
-            client.setEmail(clientData.getEmail());
-            client.setCountryCode(clientData.getCountryCode());
-            client.setPhoneContact1(clientData.getPhoneContact1());
-            client.setPhoneContact2(clientData.getPhoneContact2());
-            client.setWaitPeriod(clientData.getWaitPeriod());
-        
-            client.setProvince(clientData.getProvince());
-            client.setAddress(clientData.getAddress());
 
-            if(clientData.getDob() != null){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-                String formattedDate = clientData.getDob().format(formatter);
-                client.setDob(LocalDate.parse(formattedDate, formatter));
-            }
+        client.setCompany(company.get());
+        client.setRecordEntryDate(LocalDate.now());
+        client.setTitle(clientData.getTitle());
+        client.setName(clientData.getName());
+        client.setLastName(clientData.getLastName());
+        client.setInitials(clientData.getInitials());
+        client.setId_passport(clientData.getId_passport());
+        client.setGender(clientData.getGender());
+        client.setEmail(clientData.getEmail());
+        client.setCountryCode(clientData.getCountryCode());
+        client.setPhoneContact1(clientData.getPhoneContact1());
+        client.setPhoneContact2(clientData.getPhoneContact2());
+        client.setWaitPeriod(clientData.getWaitPeriod());
 
-            if(clientData.getDateOfCover() != null)
-            {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-                String formattedDateOfCover = clientData.getDateOfCover().format(formatter);
-                client.setDateOfCover(LocalDate.parse(formattedDateOfCover, formatter));
-                
-            }else{
-                client.setDateOfCover(LocalDate.now());
-            }
-            client.setActivationStatus(this.handleAccountActivation(clientData.getDateOfCover(), waitPeriod));
-            
-            //save and return saved object
-            return clientRepository.save(client);
-        }else{
-            return null;
+        client.setProvince(clientData.getProvince());
+        client.setAddress(clientData.getAddress());
+
+        if(clientData.getDob() != null){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            String formattedDate = clientData.getDob().format(formatter);
+            client.setDob(LocalDate.parse(formattedDate, formatter));
         }
+
+        if(clientData.getDateOfCover() != null)
+        {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            String formattedDateOfCover = clientData.getDateOfCover().format(formatter);
+            client.setDateOfCover(LocalDate.parse(formattedDateOfCover, formatter));
+
+        }else{
+            client.setDateOfCover(LocalDate.now());
+        }
+        client.setActivationStatus(this.handleAccountActivation(clientData.getDateOfCover(), waitPeriod));
+
+        //save and return saved object
+        return clientRepository.save(client);
+        
     }
 
     //Get All Clients
