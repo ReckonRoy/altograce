@@ -26,8 +26,8 @@ public class ClientRegistrationDto {
     private String maritalStatus;
     private String email;
     private String countryCode;
-    private long phoneContact1;
-    private long phoneContact2;
+    private String phoneContact1;
+    private String phoneContact2;
     private String province;
     private String address;
     private int staffId;

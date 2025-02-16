@@ -37,7 +37,7 @@ public class StaffAuditing{
     private String staffAction;
     private long companyId;
     private long staffId;
-    private String clientId;
+    private long clientId;
 
     private LocalDate recordEntryDate;
 }

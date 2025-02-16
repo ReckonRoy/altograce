@@ -59,7 +59,7 @@ public class FuneralManagementController
 
 /*--------------------------------------------------------------Logic related routes-----------------------------------------*/
     @PostMapping("/add/{fileId}")
-    public ResponseEntity<?> addDeceased(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String fileId, @RequestBody Funeral request)
+    public ResponseEntity<?> addDeceased(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long fileId, @RequestBody Funeral request)
     {
         //get user id and companyId
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();

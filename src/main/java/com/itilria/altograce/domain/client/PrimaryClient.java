@@ -42,12 +42,6 @@ public class PrimaryClient{
     @Id
     private long id;
 
-    @Column(unique = true)
-    private String clientid;
-
-    @Transient
-    private String residentialAddress;
-
     @Column(name="TITLE")
     private String title;
 
@@ -68,9 +62,8 @@ public class PrimaryClient{
     private String activationStatus;
 
     private String email;
-    private String countryCode;
-    private long phoneContact1;
-    private long phoneContact2;
+    private String phoneContact1;
+    private String phoneContact2;
 
     private int waitPeriod;
     private String province;
@@ -87,8 +80,8 @@ public class PrimaryClient{
     private List<Funeral> funeralManagement;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "primaryClient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private PrimaryPackageSubscription primaryPackSub;
+    @OneToMany(mappedBy = "primaryClient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PrimaryPackageSubscription> primaryPackSub;
 
     @JsonIgnore
     @OneToMany(mappedBy = "primaryClient", cascade = CascadeType.ALL, orphanRemoval = true)

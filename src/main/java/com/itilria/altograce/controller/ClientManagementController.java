@@ -97,7 +97,6 @@ public class ClientManagementController{
             client.setGender(request.getGender());
             client.setDob(request.getDob());
             client.setEmail(request.getEmail());
-            client.setCountryCode(request.getCountryCode());
             client.setPhoneContact1(request.getPhoneContact1());
             client.setPhoneContact2(request.getPhoneContact2());
             client.setWaitPeriod(request.getWaitPeriod());
@@ -116,7 +115,7 @@ public class ClientManagementController{
                 primarySubscription.setPrimaryClient(clientResult);
                 clientService.addPrimarySubscription(primarySubscription);
 
-                clientService.staffAudit("ADDED", userDetails.getUsername(), clientResult.getClientid(), request.getStaffId());
+                clientService.staffAudit("ADDED", userDetails.getUsername(), clientResult.getId(), request.getStaffId());
             }
             
             return ResponseEntity.ok(clientResult);
@@ -140,7 +139,7 @@ public class ClientManagementController{
 /*--------------------------------Subscription Section------------------------------------------*/
     //get subscription route
     @GetMapping("/management/subscription/{clientid}")
-    public ResponseEntity<?> getSubscriptionPlan(@PathVariable String clientid)
+    public ResponseEntity<?> getSubscriptionPlan(@PathVariable int clientid)
     {
         Map<String, String> result = clientService.getSubscriptionPlan(clientid);
         if(result != null)
@@ -154,7 +153,7 @@ public class ClientManagementController{
 /*-------------------------------------Dependency Section------------------------------------*/
     //Add dependency route
     @PostMapping("/management/add/dependency/{clientid}")
-    public ResponseEntity<?> addDependency(@PathVariable String clientid, @RequestBody ClientDependency request)
+    public ResponseEntity<?> addDependency(@PathVariable long clientid, @RequestBody ClientDependency request)
     {
         try{
             ClientDependency result = clientService.addDependency(clientid, request);
@@ -172,7 +171,7 @@ public class ClientManagementController{
 
     //get dependencies route
     @GetMapping("/management/dependencies/{clientid}")
-    public ResponseEntity<?> getDependencies(@PathVariable String clientid)
+    public ResponseEntity<?> getDependencies(@PathVariable long clientid)
     {
         List<ClientDependency> result = clientService.getDependencies(clientid);
         if(result != null)
@@ -193,11 +192,11 @@ public class ClientManagementController{
         userData.put("userId", result.getId());
         userData.put("companyId", result.getCompanyId());
 
-        boolean removeResult = clientService.removeDependent(id, request.get("clientid"));
+        boolean removeResult = clientService.removeDependent(id, Long.parseLong(request.get("clientid")));
         
         if(removeResult == true)
         {
-            clientService.staffAudit("REMOVE", userDetails.getUsername(), request.get("clientid"), result.getId());
+            clientService.staffAudit("REMOVE", userDetails.getUsername(), Long.parseLong(request.get("clientid")), result.getId());
             return ResponseEntity.ok("Dependency has been successfuly removed");
         }else{
             return new ResponseEntity<>("Failed to remove dependency. Primary Client does not exist", HttpStatus.NO_CONTENT);
@@ -207,7 +206,7 @@ public class ClientManagementController{
 
     //delete file route
     @DeleteMapping("/delete-file/{fileId}")
-    public ResponseEntity<?> deleteFile(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String fileId)
+    public ResponseEntity<?> deleteFile(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long fileId)
     {
         try{
             //get user id and companyId
@@ -245,7 +244,7 @@ public class ClientManagementController{
 /*----------------------------------Client Billing Route-----------------------------------------*/
     //add billing route
     @PostMapping("/billing/{clientId}")
-    public ResponseEntity<?> billClient(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String clientId, @RequestBody ClientBilling request){
+    public ResponseEntity<?> billClient(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long clientId, @RequestBody ClientBilling request){
         //get user id and companyId
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
         ClientBilling billingResult = clientService.billClient(clientId, request);
@@ -260,7 +259,7 @@ public class ClientManagementController{
 
     //payment history route
     @GetMapping("/payment-history/{clientId}")
-    public ResponseEntity<?> paymentHistory(@PathVariable String clientId){
+    public ResponseEntity<?> paymentHistory(@PathVariable long clientId){
         List<ClientBilling> billingResult = clientService.getPaymentHistory(clientId);
         if(billingResult != null)
         {
@@ -275,7 +274,7 @@ public class ClientManagementController{
 /*--------------------------------------Decead Records Route--------------------------------------*/
 //route - add deceased record
     @PostMapping("/add/deceased/{fileId}")
-    public ResponseEntity<?> addDeceased(@PathVariable String fileId, @RequestBody Deceased request)
+    public ResponseEntity<?> addDeceased(@PathVariable long fileId, @RequestBody Deceased request)
     {
         try{
             boolean deceasedResult = clientService.addDeceased(fileId, request);
@@ -291,7 +290,7 @@ public class ClientManagementController{
 
     //route - get deceased records route
     @GetMapping("/deceased/getRecords/{fileId}")
-    public ResponseEntity<?> getDeceasedRecords(@PathVariable String fileId)
+    public ResponseEntity<?> getDeceasedRecords(@PathVariable long fileId)
     {
         try{
             List<Deceased> deceasedResult = clientService.getDeceasedRecords(fileId);

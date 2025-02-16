@@ -94,7 +94,6 @@ public class ClientService{
         client.setId_passport(clientData.getId_passport());
         client.setGender(clientData.getGender());
         client.setEmail(clientData.getEmail());
-        client.setCountryCode(clientData.getCountryCode());
         client.setPhoneContact1(clientData.getPhoneContact1());
         client.setPhoneContact2(clientData.getPhoneContact2());
         client.setWaitPeriod(clientData.getWaitPeriod());
@@ -137,20 +136,20 @@ public class ClientService{
     }
 
     //Delete file - Delete file
-    public boolean deleteFile(String fileId){
+    public boolean deleteFile(long fileId){
         //check if file exists
-        if(!clientRepository.existsByClientid(fileId))
+        if(!clientRepository.existsById(fileId))
         {
             throw new IllegalArgumentException("This file no longer exists, it might have been deleted already");
         }
 
-        clientRepository.deleteByClientid(fileId);
+        clientRepository.deleteById(fileId);
         return true;
     }
 
 /*----------------------------------Staff Auditing Section-----------------------------------------------*/
     //Audit User Actions
-    public void staffAudit(String staffAction, String username, String clientId, long staffId)
+    public void staffAudit(String staffAction, String username, long id, long staffId)
     {
         UserAuthentication userAuth = userAuthRepository.findByUsername(username).orElse(null);
         
@@ -158,7 +157,7 @@ public class ClientService{
         staffAudit.setStaffAction(staffAction);
         staffAudit.setCompanyId(userAuth.getCompanyId());
         staffAudit.setStaffId(staffId);
-        staffAudit.setClientId(clientId);
+        staffAudit.setClientId(id);
         staffAudit.setRecordEntryDate(LocalDate.now());
         staffAuditRepository.save(staffAudit);
     }
@@ -174,13 +173,13 @@ public class ClientService{
         return primaryPackSubRep.save(primarySubscription);
     }
 
-    //Get Primary subscription
-    public Map<String, String> getSubscriptionPlan(String clientId)
+    //Get Client's Premium Policy Plan
+    public Map<String, String> getSubscriptionPlan(long id)
     {
-        PrimaryClient primaryClient = clientRepository.findByClientid(clientId).orElse(null);
+        PrimaryClient primaryClient = clientRepository.findById(id).orElse(null);
         if(primaryClient != null)
         {
-            PrimaryPackageSubscription subscriptionResult = primaryPackSubRep.findByPrimaryClient_Clientid(clientId).orElse(null);
+            PrimaryPackageSubscription subscriptionResult = primaryPackSubRep.findByPrimaryClient_Id(id).orElse(null);
             PremiumPolicy servicePackageResult = servicePackageRepository.findById(subscriptionResult.getPackageId()).orElse(null);
             Map<String, String> subscriptionMap = new HashMap<>();
             subscriptionMap.put("name", servicePackageResult.getPolicyName());
@@ -204,10 +203,10 @@ public class ClientService{
 */
 /*-------------------------------Dependency Section------------------------------------------*/
     //Add Dependency
-    public ClientDependency addDependency(String clientId, ClientDependency depForm)
+    public ClientDependency addDependency(Long clientId, ClientDependency depForm)
     {
         //check if PrimaryClient exists
-        PrimaryClient primaryClient = clientRepository.findByClientid(clientId).orElse(null);
+        PrimaryClient primaryClient = clientRepository.findById(clientId).orElse(null);
         
         Company company = primaryClient.getCompany();
         
@@ -248,9 +247,9 @@ public class ClientService{
     }
 
     //Get Dependencies
-    public List<ClientDependency> getDependencies(String clientId)
+    public List<ClientDependency> getDependencies(long clientId)
     {
-        PrimaryClient primaryClient = clientRepository.findByClientid(clientId).orElse(null);
+        PrimaryClient primaryClient = clientRepository.findById(clientId).orElse(null);
 
         if(primaryClient != null)
         {
@@ -262,10 +261,10 @@ public class ClientService{
     }
 
     //Remove dependent
-    public boolean removeDependent(long id, String clientid)
+    public boolean removeDependent(long id, long clientid)
     {
         //check if primary client exists
-        PrimaryClient primaryClient = clientRepository.findByClientid(clientid).orElse(null);
+        PrimaryClient primaryClient = clientRepository.findById(clientid).orElse(null);
         if(primaryClient != null)
         {
             try {
@@ -282,10 +281,10 @@ public class ClientService{
     }
 /*-------------------------------Billing Section------------------------------------------*/
     //Client makes payment
-    public ClientBilling billClient(String clientId, ClientBilling billingData)
+    public ClientBilling billClient(long clientId, ClientBilling billingData)
     {
         //check if PrimaryClient exists
-        PrimaryClient primaryClient = clientRepository.findByClientid(clientId).orElse(null);
+        PrimaryClient primaryClient = clientRepository.findById(clientId).orElse(null);
         if(primaryClient != null)
         {
             if(billingData.getPaymentDate() != null){
@@ -302,8 +301,8 @@ public class ClientService{
         }
     }
 
-    public List<ClientBilling> getPaymentHistory(String clientId) {
-        PrimaryClient client = clientRepository.findByClientid(clientId).orElse(null);
+    public List<ClientBilling> getPaymentHistory(long clientId) {
+        PrimaryClient client = clientRepository.findById(clientId).orElse(null);
         if(client != null)
         {
             return clientBillingRepository.findByPrimaryClient_Id(client.getId());            
@@ -343,10 +342,10 @@ public class ClientService{
 
 /*---------------------------------------Deceased Section------------------------------------*/
     //Add deceased to deceased records
-    public boolean addDeceased(String fileId, Deceased deceasedData)
+    public boolean addDeceased(long fileId, Deceased deceasedData)
     {
         //check if PrimaryClient exists
-        PrimaryClient primaryClient = clientRepository.findByClientid(fileId)
+        PrimaryClient primaryClient = clientRepository.findById(fileId)
         .orElseThrow(() -> new IllegalArgumentException("No file is associated with provided FileId"));
         
         if(deceasedRepository.findByBiNumberAndGraveNumber(deceasedData.getBiNumber(), deceasedData.getGraveNumber()).isPresent())
@@ -367,8 +366,8 @@ public class ClientService{
     }
 
     //get deceased records
-    public List<Deceased> getDeceasedRecords(String fileId) {
-        PrimaryClient client = clientRepository.findByClientid(fileId)
+    public List<Deceased> getDeceasedRecords(long fileId) {
+        PrimaryClient client = clientRepository.findById(fileId)
         .orElseThrow(() -> new IllegalArgumentException("No file is associated with provided FileId"));
         
         try{
