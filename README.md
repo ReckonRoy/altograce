@@ -13,9 +13,17 @@ funeral home business environment.
 * **User authentication and authorizatin**
 * **Staff auditing**
 * **Management of funerals**
-* ** Managing client payments**
+* **Managing client payments**
 * **keeping track of payments**
 * **flagging arreors within clients policy**
+
+## Tech stack
+* **Java**
+* **Spring boot**
+* **HTML**
+* **CSS**
+* **Javascrpt**
+* **MySQL**
 
 ## Author
 Le-Roy Jongwe
