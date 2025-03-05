@@ -560,8 +560,11 @@ customElements.define("display-client", class extends HTMLElement {
             <div class="client-info-card" id="subscriptionInfoCard">
                 <table id="subscriptionTable"></table>
                 <div id="plan-controls">
-                <h2>Change Current Policy</h2>
-                <select>change </select><botton>Change Policy</button>
+                    <h2>Change Current Policy</h2>
+                    <select id="policy-option">
+                        <option>${subscriptionPlan.name}</option>
+                    </select>
+                    <button>Change Policy</button>
                 </div>
             </div>
             <div class="client-info-card" id="dependencyInfoCard">
@@ -587,6 +590,7 @@ customElements.define("display-client", class extends HTMLElement {
         let clientsToShow = [];
         let dependencies = [];
         let genderValue = "";
+        let subscriptionPlan;
         /**
          * this will keep track some fields of the deceased 
          */
@@ -1040,7 +1044,7 @@ customElements.define("display-client", class extends HTMLElement {
                 
                 return response.json();
             }).then((data) => {
-                let subscriptionPlan = {
+                subscriptionPlan = {
                     "groupName": data.groupName,
                     "joiningFee": data.joiningFee,
                     "dateOfCover": data.dateOfCover,
