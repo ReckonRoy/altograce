@@ -29,7 +29,7 @@ public class CodeOfConduct
 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private int id;
 
     @Column(name="CODE_OF_CONDUCT")
     private String cocDocument;

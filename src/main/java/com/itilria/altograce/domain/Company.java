@@ -43,7 +43,7 @@ public class Company
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name="CO_NAME")
     private String name;

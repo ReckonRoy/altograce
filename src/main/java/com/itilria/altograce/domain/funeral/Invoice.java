@@ -42,7 +42,7 @@ public class Invoice{
     private String invoiceStatus;
     private String invoiceStatusDate;
     private String invoiceStatusReason;
-    private long companyId;
+    private int companyId;
 
     @OneToOne
     @JoinColumn(name = "Funeral", referencedColumnName = "id")

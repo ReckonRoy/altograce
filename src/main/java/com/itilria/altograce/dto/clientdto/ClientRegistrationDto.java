@@ -26,14 +26,18 @@ public class ClientRegistrationDto {
     private String maritalStatus;
     private String email;
     private String countryCode;
-    private String phoneContact1;
-    private String phoneContact2;
+    private int cellNumber;
+    private int homeNumber;
+    private int telephone;
+    private String country;
     private String province;
-    private String address;
+    private String city;
+    private String postCode;
+    private String street;
+    private String standUnit;
     private int staffId;
     private int packageId;
     private String groupName;
     private LocalDate dateOfCover;
     private BigDecimal joiningFee;
-    private int waitPeriod;
 }

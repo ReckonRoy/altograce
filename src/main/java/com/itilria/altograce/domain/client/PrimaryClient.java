@@ -25,6 +25,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,13 @@ import lombok.Setter;
 public class PrimaryClient{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private int id;
+
+    @Column(unique = true)
+    private String clientid;
+
+    @Transient
+    private String residentialAddress;
 
     @Column(name="TITLE")
     private String title;
@@ -58,15 +65,21 @@ public class PrimaryClient{
 
     private LocalDate dob;
 
+    private String maritalStatus;
     private String activationStatus;
 
     private String email;
-    private String phoneContact1;
-    private String phoneContact2;
+    private String countryCode;
+    private long cellNumber;
+    private long homeNumber;
+    private long telephone;
 
-    private int waitPeriod;
+    private String country;
     private String province;
-    private String address;
+    private String city;
+    private String postCode;
+    private String street;
+    private String standUnit;
 
     private LocalDate recordEntryDate;
 
@@ -79,8 +92,8 @@ public class PrimaryClient{
     private List<Funeral> funeralManagement;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "primaryClient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PrimaryPackageSubscription> primaryPackSub;
+    @OneToOne(mappedBy = "primaryClient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PrimaryPackageSubscription primaryPackSub;
 
     @JsonIgnore
     @OneToMany(mappedBy = "primaryClient", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -101,4 +114,20 @@ public class PrimaryClient{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId", referencedColumnName = "id")
     private Company company;
+
+    public void setResidentialAddress()
+    {
+        String street = this.getStreet();
+        String standUnit = this.getStandUnit();
+        this.residentialAddress = String.format("Street: %s, Stand unit/House number: %s", street, standUnit);
+    }
+
+    //clientId comprises of CompanyId, clientId_Passport, 
+    public void setClientId(String companyInitials, int fileId)
+    {
+        this.clientid = companyInitials + fileId;
+    }
+
+    @Transient
+    private String subscriptionPlan; 
 }

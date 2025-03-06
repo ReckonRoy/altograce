@@ -23,7 +23,7 @@ import java.util.List;
 public class ClientDependency{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private int id;
 
     private String name;
     private String lastName;

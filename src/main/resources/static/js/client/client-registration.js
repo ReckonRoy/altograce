@@ -1,5 +1,5 @@
 /**
- * @author Le-Roy Jongwe
+ * @author Le-Roy
  * @date 2024/03/02
  * @description get logged in user and company they belong to
  */
@@ -43,14 +43,15 @@ let clientRegistration = {
 
     //Post client data to server
     registerClient: () => {
-        fetch(`/client/management/register`, {
+        fetch(`/client/management/register/${userData.companyId}`, {
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(clientRegistration.formData),
         }).then((response) => {
-            if(!response.ok){
+            if(!response.ok)
+            {
                 return response.text().then((error) => {
                     throw new Error(error);
                 })
@@ -88,14 +89,21 @@ let clientRegistration = {
             clientRegistration.formData.id_passport = document.getElementById("id-passport-field").value;
             clientRegistration.formData.gender = clientRegistration.gender;
             clientRegistration.formData.dob = document.getElementById("dob-field").value;
+            clientRegistration.formData.maritalStatus = document.getElementById("marital-field").value;
             clientRegistration.formData.email = document.getElementById("email-field").value;
             clientRegistration.formData.groupName = document.getElementById("group-field").value;
             clientRegistration.formData.dateOfCover = document.getElementById("joiningDate-field").value;
             clientRegistration.formData.joiningFee = parseFloat(document.getElementById("joiningFee-field").value);
-            clientRegistration.formData.phoneContact1 = document.getElementById("phoneContact1-field").value;
-            clientRegistration.formData.phoneContact2 = document.getElementById("phoneContact2-field").value;
+            clientRegistration.formData.countryCode = document.getElementById("countryCode-field").value;
+            clientRegistration.formData.cellNumber = document.getElementById("cellPhone-field").value;
+            clientRegistration.formData.homePhone = document.getElementById("homePhone-field").value;
+            clientRegistration.formData.telePhone = document.getElementById("telePhone-field").value;
+            clientRegistration.formData.country = document.getElementById("country-field").value;
             clientRegistration.formData.province = document.getElementById("province-field").value;
-            clientRegistration.formData.address = document.getElementById("address-field").value;
+            clientRegistration.formData.City = document.getElementById("city-field").value;
+            clientRegistration.formData.postCode = document.getElementById("postCode-field").value;
+            clientRegistration.formData.street = document.getElementById("street-field").value;
+            clientRegistration.formData.standUnit = document.getElementById("stand-unit").value; 
             clientRegistration.formData.staffId = userData.userId;
 
             clientRegistration.registerClient();

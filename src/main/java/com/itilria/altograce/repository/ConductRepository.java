@@ -5,6 +5,6 @@ import com.itilria.altograce.domain.CodeOfConduct;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ConductRepository extends JpaRepository<CodeOfConduct, Long>{
+public interface ConductRepository extends JpaRepository<CodeOfConduct, Integer>{
 
 }

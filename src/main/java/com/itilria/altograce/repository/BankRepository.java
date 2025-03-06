@@ -5,6 +5,6 @@ import com.itilria.altograce.domain.Bank;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BankRepository extends JpaRepository<Bank, Long>{
+public interface BankRepository extends JpaRepository<Bank, Integer>{
 
 }

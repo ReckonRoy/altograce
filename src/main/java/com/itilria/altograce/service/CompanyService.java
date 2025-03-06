@@ -16,8 +16,6 @@ import com.itilria.altograce.exception.CompanyNotFoundException;
 import com.itilria.altograce.domain.Company;
 import com.itilria.altograce.repository.EthicsRepository;
 import com.itilria.altograce.domain.Ethics;
-import com.itilria.altograce.domain.UserAuthentication;
-import com.itilria.altograce.repository.UserAuthenticationRepository;
 
 @Service
 @Transactional
@@ -29,9 +27,6 @@ public class CompanyService
 
     @Autowired
     private EthicsRepository ethicsRepository;
-    
-    @Autowired
-    private UserAuthenticationRepository userAuthRepository;
 
     //find company by id
     public Company findById(int id)
@@ -63,25 +58,10 @@ public class CompanyService
         }
     }
 
-    public void saveCompany(String username, Company companyForm)
+    public void saveCompany(Company companyForm)
     {
         Company company = companyForm;
-        company = companyRepository.save(company);
-        
-        //if user is not associated with any comapny, inform them to register their company
-        if(isCompanyAssociatedWithUser(username))
-        {
-            throw new CompanyNotFoundException("No companies registered yet!."); 
-        }
-
-        Optional<UserAuthentication> userAuth = userAuthRepository.findByUsername(username);
-        updateCompanyById(userAuth.get().getId(), company.getId());
-        
-    }
-    
-    public void updateCompanyById(long id, long companyId)
-    {
-        userAuthRepository.updateCompanyById(id, companyId);
+        companyRepository.save(company);
     }
 
     public void saveEthics(int id, Ethics ethicsData)

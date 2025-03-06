@@ -18,7 +18,7 @@ public class ConductService{
     @Autowired
     private CompanyRepository companyRepository;
 
-    public CodeOfConduct findById(long id)
+    public CodeOfConduct findById(int id)
     {
         return repository.findById(id).orElse(null);
     }

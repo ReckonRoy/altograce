@@ -86,33 +86,27 @@ public class CompanyController
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body("company with registration number already exists");
         }
-        
-        
-        try{
-            Company company = new Company();
-            company.setName(request.getName());
-            company.setRegNumber(request.getRegNumber());
-            company.setTaxNumber(request.getTaxNumber());
-            company.setFspNumber(request.getFspNumber());
-            company.setEmail(request.getEmail());
-            company.setInitials(request.getInitials());
-            company.setCountryCode(request.getCountryCode());
-            company.setContact1(request.getContact1());
-            company.setContact2(request.getContact2());
-            company.setContact3(request.getContact3());
-            company.setCountry(request.getCountry());
-            company.setProvince(request.getProvince());
-            company.setCity(request.getCity());
-            company.setPostCode(request.getPostCode());
-            company.setStreet(request.getStreet());
-            company.setStandUnit(request.getStandUnit());
-            company.setUsername(userAuthService.findByUsername(userDetails.getUsername()).get());
-            companyService.saveCompany(userDetails.getUsername(), company);
-            return ResponseEntity.ok("Registration Successful!");
-        }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(e.getMessage());
-        }
+
+        Company company = new Company();
+        company.setName(request.getName());
+        company.setRegNumber(request.getRegNumber());
+        company.setTaxNumber(request.getTaxNumber());
+        company.setFspNumber(request.getFspNumber());
+        company.setEmail(request.getEmail());
+        company.setInitials(request.getInitials());
+        company.setCountryCode(request.getCountryCode());
+        company.setContact1(request.getContact1());
+        company.setContact2(request.getContact2());
+        company.setContact3(request.getContact3());
+        company.setCountry(request.getCountry());
+        company.setProvince(request.getProvince());
+        company.setCity(request.getCity());
+        company.setPostCode(request.getPostCode());
+        company.setStreet(request.getStreet());
+        company.setStandUnit(request.getStandUnit());
+        company.setUsername(userAuthService.findByUsername(userDetails.getUsername()).get());
+        companyService.saveCompany(company);
+        return ResponseEntity.ok("Registration Successful!");
     }
 
     @PostMapping("/ethics/add/{id}")

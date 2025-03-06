@@ -40,7 +40,7 @@ public class Funeral{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "client_name")
     private String clientName;
@@ -101,7 +101,7 @@ public class Funeral{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company", referencedColumnName = "id")
     private Company company;
-    private long companyid;
+    private int companyid;
 
     @JsonIgnore
     @OneToOne(mappedBy = "funeral", cascade = CascadeType.ALL, orphanRemoval = true)

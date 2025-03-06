@@ -34,33 +34,18 @@ import lombok.Setter;
 public class PremiumPolicy{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private int id;
 
     @Column(nullable = true)
     private String policyId;
-    @Column(name="PREMIUM_POLICY_NAME", nullable=false)
+
     private String policyName;
 
     private int membersCount;
 
     @Column(name="PREMIUM_POLICY_AMOUNT")
     private float premiumAmount;
-    
-    @Column(name="MINIMUM_AGE")
-    private int minAge;
-    
-    @Column(name="MAXIMUM_AGE")
-    private int maxAge;
-    
-    @Column(name="LAPSE_PERIOD")
-    private int lapsePeriod;
-    
-    @Column(name="WAIT_PERIOD")
-    private int waitPeriod;
-    
-    @Column(name="POLICY_BENEFITS")
-    private String policyBenefits;
-    
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyid", referencedColumnName = "id")

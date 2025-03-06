@@ -32,15 +32,15 @@ public class FuneralService{
     
 
 /*-----------------------------------Manage Funeral Data Entry-------------------------------------------*/
-    public Funeral addFuneral(long fileId, Funeral funeralData)
+    public Funeral addFuneral(String fileId, Funeral funeralData)
     {
-        Optional<PrimaryClient> primaryClient = clientRepository.findById(fileId);
+        Optional<PrimaryClient> primaryClient = clientRepository.findByClientid(fileId);
         if(!primaryClient.isPresent())
         {
             throw new IllegalArgumentException("No File found for client");
         }
         
-        PrimaryClient client = clientRepository.findById(fileId).get();
+        PrimaryClient client = clientRepository.findByClientid(fileId).get();
         Company company = client.getCompany();
         
         

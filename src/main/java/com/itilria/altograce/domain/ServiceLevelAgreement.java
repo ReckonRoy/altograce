@@ -35,7 +35,7 @@ public class ServiceLevelAgreement
 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private int id;
 
     @Column(name="SLA")
     private String sla;

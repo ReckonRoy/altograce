@@ -32,7 +32,7 @@ public class BranchCompany
 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private int id;
 
     @Column(name="BRANCH_NAME")
     private String name;

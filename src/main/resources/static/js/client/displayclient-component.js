@@ -161,37 +161,15 @@ customElements.define("display-client", class extends HTMLElement {
             background-color: rgba(0,0,0,0.4);
             padding-top: 60px;
         }
-
         .client-info-modal-content {
             background-color: #fefefe;
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 50%;
+            width: 80%;
             border-radius: 8px;
             position: relative;
-            backround-color: gray;
         }
-
-        /*----------Modal Header----------*/
-        #modal-heading{
-            margin: 40px auto;
-        }
-
-        #modal-heading h1{
-            text-align: center;
-            padding: 10px 0;
-            margin-bottom: 10px;
-        }
-        /*---------------------------------*/
-
-        /*----------Modal top nav controls----------*/
-        #client-infor-navbar{
-            padding: 10px 0;
-            margin: 40px auto;
-        }
-        /*---------------------------------*/
-
         .client-info-close {
             color: #aaa;
             position: absolute;
@@ -471,9 +449,10 @@ customElements.define("display-client", class extends HTMLElement {
         <table id="clientTable">
             <thead>
                 <tr>
+                    <th class="columnSort" id="0">Client ID</th>
                     <th class="columnSort" id="1">Name</th>
                     <th class="columnSort" id="2">Last Name</th>
-                    <th class="columnSort" id="3">Phone Contact 1</th>
+                    <th class="columnSort" id="3">Phone Number</th>
                     <th>Account Status</th>
                     <th>Actions</th>
                 </tr>
@@ -507,11 +486,22 @@ customElements.define("display-client", class extends HTMLElement {
                     <label>Relationship:</label>
                     <select id="relationship" required>
                         <option value="">Select Relationship</option>
-                        <option value="Spouse">Spouse</option>
-                        <option value="Child">Child</option>
-                        <option value="Sibling">Sibling</option>
-                        <option value="Parent">Parent</option>
-                        <option value="Extended Family">Extended Family</option>
+                        <option value="spouse">Spouse</option>
+                        <option value="son">Son</option>
+                        <option value="daughter">Daughter</option>
+                        <option value="brother">Brother</option>
+                        <option value="sister">Sister</option>
+                        <option value="father">Father</option>
+                        <option value="mother">Mother</option>
+                        <option value="naphew">Naphew</option>
+                        <option value="niece">Niece</option>
+                        <option value="cousin">Cousin</option>
+                        <option value="grandchild">Grand Child</option>
+                        <option value="uncle">Uncle</option>
+                        <option value="auntie">Auntie</option>
+                        <option value="grandfather">Grandfather</option>
+                        <option value="grandmother">Grandmother</option>
+                        <option value="inlaw">Inlaw</option>
                     </select>
                 </div>
                 <div>
@@ -542,30 +532,12 @@ customElements.define("display-client", class extends HTMLElement {
     <div id="clientInfoModal" class="client-info-modal">
         <div class="client-info-modal-content">
             <span class="client-info-close">&times;</span>
-            <!-- client-info-header: header for this modal -->
-            <div id="client-info-header">
-                <div id="modal-heading"></div>
-                <!-- Nav -->
-                <div id="client-infor-navbar">
-                    <button id="policy-info-btn">Policy Info</button>
-                    <button id="dependants-btn">Dependants</button>
-                    <button id="contracts-btn">Contracts</button>
-                    <button id="statements-btn">Statements</button>
-                    <button id="notes-btn">Notes</button>
-                </div>
-            </div>
             <div class="client-info-card" id="clientInfoCard">
                 <!-- Client info will be populated here -->
             </div>
             <div class="client-info-card" id="subscriptionInfoCard">
+                <!-- dependency info will be populated here -->
                 <table id="subscriptionTable"></table>
-                <div id="plan-controls">
-                    <h2>Change Current Policy</h2>
-                    <select id="policy-option">
-                        <option>1</option>
-                    </select>
-                    <button>Change Policy</button>
-                </div>
             </div>
             <div class="client-info-card" id="dependencyInfoCard">
                 <!-- dependency info will be populated here -->
@@ -590,7 +562,6 @@ customElements.define("display-client", class extends HTMLElement {
         let clientsToShow = [];
         let dependencies = [];
         let genderValue = "";
-        let subscriptionPlan;
         /**
          * this will keep track some fields of the deceased 
          */
@@ -616,7 +587,7 @@ customElements.define("display-client", class extends HTMLElement {
 
         // Function to populate the table with clients
         let populateTable = (pageNumber, pageSize) => {
-            fetch(`/client/management/clients?page=${parseInt(pageNumber)}&size=${parseInt(pageSize)}`)
+            fetch(`/client/management/clients/${userData.companyId}?page=${parseInt(pageNumber)}&size=${parseInt(pageSize)}`)
             .then((response) => {
                 if(!response.ok)
                 {
@@ -631,9 +602,10 @@ customElements.define("display-client", class extends HTMLElement {
                 clientsToShow = data.content;
                 clientsToShow.forEach((client) => {
                     var row = `<tr>
+                    <td>${client.clientid}</td>
                     <td>${client.name}</td>
                     <td>${client.lastName}</td>
-                    <td>${client.phoneContact1}</td>
+                    <td>${client.cellNumber}</td>
                     <td><p class="${client.activationStatus}">${client.activationStatus}<p></td>
                     <td>
                         <div class="action-parent">
@@ -641,11 +613,11 @@ customElements.define("display-client", class extends HTMLElement {
                             <div class="actions-container"> 
                             <span class="actions-close">&times;</span>
                                 <ul class="actions-ul">
-                                    <li><button class="billing-btn" id="${client.id}">Pay</button></li>
-                                    <li><button class="payment-history-btn" id="${client.id}">Payment history</button></li>
-                                    <li><button class="add-dep-btn" id="${client.id}">Add Dep</button></li>
-                                    <li><button class="delete-btn" id="${client.id}">Delete</button></li>
-                                    <li><button class="moreinfo-btn" id="${client.id}">More Info</button></li>
+                                    <li><button class="billing-btn" id="${client.clientid}">Pay</button></li>
+                                    <li><button class="payment-history-btn" id="${client.clientid}">Payment history</button></li>
+                                    <li><button class="add-dep-btn" id="${client.clientid}">Add Dep</button></li>
+                                    <li><button class="delete-btn" id="${client.clientid}">Delete</button></li>
+                                    <li><button class="moreinfo-btn" id="${client.clientid}">More Info</button></li>
                                 </ul>
                             </div>
                         </div>
@@ -970,51 +942,43 @@ customElements.define("display-client", class extends HTMLElement {
         });
 
         // Function to show more information about a client
-        let showMoreInfo = (id) => {
+        let showMoreInfo = (clientId) => {
             // Find the client object
-            let client = clientsToShow.find(client => client.id == id);
-
-            //set heading
-            let modalHeader = this.shadowRoot.getElementById("modal-heading");
-            modalHeader.innerHTML = `<h1>Policy for: <span id="policy-holders-name">${client.title} ${client.name} ${client.lastName}</span></h1>`;
-
-            fileId = id;
+            let client = clientsToShow.find(client => client.clientid === clientId);
+            fileId = clientId;
             idPassportNumber = client.id_passport;
             primaryClientName = client.name;
             primaryLastName = client.lastName;
             // Construct the Client Info Card HTML
             let clientInfoHTML = `
                 <table>
-                    <caption><h2>Policy Holder's Info</h2></caption> 
                     <tr>
-                        <td>Province: </td>
-                        <td>${client.province}</td>
+                        <td>Residential Address:</td>
+                        <td>${client.residentialAddress}</td>
                     </tr>
                     <tr>
-                        <td>Address:</td>
-                        <td>${client.address}</td>
+                        <td>Marital Status:</td>
+                        <td>${client.maritalStatus}</td>
                     </tr>
-                   
                     <tr>
-                        <td>Contact 1: </td>
-                        <td>${client.phoneContact1}</td>
-                    </tr>`;
-            if(client.phoneContact2 > 0){
-                clientInfoHTML += `
-                <tr>
-                    <td>Contact 2: </td>
-                    <td>${client.phoneContact2}</td>
-                </tr>`;
-            }        
-                    
-            clientInfoHTML += `
+                        <td>Postal Address:</td>
+                        <td>${client.postalAddress}</td>
+                    </tr>
+                    <tr>
+                        <td>Cell Number:</td>
+                        <td>${client.cellNumber}</td>
+                    </tr>
+                    <tr>
+                        <td>Home Number:</td>
+                        <td>${client.homeNumber}</td>
+                    </tr>
                     <tr>
                         <td>D.O.B:</td>
                         <td>${client.dob}</td>
                     </tr>
                     <tr>
                         <td>Initials:</td>
-                        <td>${client.initials}</td>
+                        <td>${client.Initials}</td>
                     </tr>
                     <tr>
                         <td>Gender:</td>
@@ -1025,17 +989,14 @@ customElements.define("display-client", class extends HTMLElement {
                         <td>${client.id_passport}</td>
                     </tr>
                 </table>
-                <div>
-                    <button>Edit</button>
-                </div>
             `;
             // Populate the client info card
             this.shadowRoot.getElementById('clientInfoCard').innerHTML = clientInfoHTML;
 
-/*-----  ---------------------------View Package Plan-----------------------------------------*/
+/*----------------------------------View Package Plan-----------------------------------------*/
             let planTable = this.shadowRoot.getElementById('subscriptionTable');
             planTable.innerHTML = '';
-            fetch(`/client/management/subscription/${id}`)
+            fetch(`/client/management/subscription/${clientId}`)
             .then((response) => {
                 if(!response.ok)
                 {
@@ -1044,38 +1005,32 @@ customElements.define("display-client", class extends HTMLElement {
                 
                 return response.json();
             }).then((data) => {
-                subscriptionPlan = {
-                    "groupName": data.groupName,
-                    "joiningFee": data.joiningFee,
-                    "dateOfCover": data.dateOfCover,
-                    "name": data.name
-                }
                 planTable.innerHTML += `
-                    <caption><h2>Policy Info</h2></caption>
-                    <tbody>
+                    <caption><h2>Package Subscription Plan</h2></caption>
+                    <thead>
                     <tr>
-                        <td><b>Plan Name</b></td><td>${subscriptionPlan.name}</td>
+                        <th>Plan Name</th>
+                        <th>Date Of Cover</th>
+                        <th>Group Name</th>
+                        <th>Joining Fee</th>
                     </tr>
+                    </thead>
+                `
+                let subscriptionPlan = {
+                        "groupName": data.groupName,
+                        "joiningFee": data.joiningFee,
+                        "dateOfCover": data.dateOfCover,
+                        "name": data.name
+                    }
+                let row = `
                     <tr>
-                        <td><b>Date Of Cover</b></td><td>${subscriptionPlan.dateOfCover}</td>
+                        <td>${subscriptionPlan.name}</td>
+                        <td>${subscriptionPlan.dateOfCover}</td>
+                        <td>${subscriptionPlan.groupName}</td>
+                        <td>${subscriptionPlan.joiningFee}</td>
                     </tr>
-                    <tr>
-                        <td><b>Joining Fee</b></td><td>${subscriptionPlan.joiningFee}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Balance Due</b></td><td>200.00</td>
-                    </tr>
-                    <tr>
-                        <td><b>Member's Count</b></td><td>7 / 8</td>
-                    </tr>
-                    <tr>
-                        <td><b>Group Name</b></td><td>${subscriptionPlan.groupName}</td>
-                    </tr>
-                    </tbody>
                 `;
-
-                let planControls = this.shadowRoot.getElementById("plan-controls");
-
+                planTable.innerHTML += row;
 
             }).catch(error => {
                 console.log(error);
@@ -1085,7 +1040,7 @@ customElements.define("display-client", class extends HTMLElement {
 /*----------------------------------View Dependencies-----------------------------------------*/
             let table = this.shadowRoot.getElementById('dependencyTable');
             table.innerHTML = '';
-            fetch(`/client/management/dependencies/${id}`)
+            fetch(`/client/management/dependencies/${clientId}`)
             .then((response) => {
                 if(!response.ok)
                 {
@@ -1095,7 +1050,7 @@ customElements.define("display-client", class extends HTMLElement {
                 return response.json();
             }).then((data) => {
                 table.innerHTML += `
-                    <caption><h2>Dependencies</h2></caption>
+                    <caption><h1>Dependencies</h1></caption>
                     <thead>
                     <tr>
                         <th>Name</th>
@@ -1138,7 +1093,7 @@ customElements.define("display-client", class extends HTMLElement {
                 let removeDep_btn = this.shadowRoot.querySelectorAll(".remove-dep-btn");
                 removeDep_btn.forEach((remove_btn) => {
                     remove_btn.addEventListener("click", () => {
-                        removeDependency(remove_btn.id, id);
+                        removeDependency(remove_btn.id, clientId);
                     })
                 });
 

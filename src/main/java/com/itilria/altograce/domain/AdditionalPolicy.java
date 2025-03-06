@@ -34,34 +34,26 @@ import lombok.Setter;
 public class AdditionalPolicy{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private int id;
 
-    @Column(name="ADDITIONAL_POLICY_NAME", nullable=false)
-    private String policyName;
+    @Column(nullable = true)
+    private String packageid;
 
-    @Column(nullable=false)
+    @Column(name="ADDITIONAL_POLICY_NAME")
+    private String packageName;
+
     private int membersCount;
 
-    @Column(name="ADDITIONAL_POLICY_AMOUNT", nullable=false)
+    @Column(name="ADDITIONAL_POLICY_AMOUNT")
     private float policyAmount;
-    
-    @Column(name="MINIMUM_AGE")
-    private int minAge;
-    
-    @Column(name="MAXIMUM_AGE")
-    private int maxAge;
-    
-    @Column(name="LAPSE_PERIOD")
-    private int lapsePeriod;
-    
-    @Column(name="WAIT_PERIOD")
-    private int waitPeriod;
-    
-    @Column(name="POLICY_BENEFITS")
-    private String policyBenefits;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyid", referencedColumnName = "id")
     private Company companyid;
+
+    public void setPackageid(String packageName, int id)
+    {
+        this.packageid = "#" + packageName.substring(0, 2) + id;
+    }
 }

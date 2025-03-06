@@ -12,12 +12,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +30,7 @@ import lombok.Setter;
 public class PrimaryPackageSubscription{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private int id;
 
     private int packageId;
     private LocalDate dateOfCover;
@@ -42,7 +41,7 @@ public class PrimaryPackageSubscription{
     private BigDecimal joiningFee;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "primaryClient", referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "primaryClient", referencedColumnName = "clientid")
     private PrimaryClient primaryClient;
 }

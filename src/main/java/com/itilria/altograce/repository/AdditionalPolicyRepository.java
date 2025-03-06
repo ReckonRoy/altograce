@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AdditionalPolicyRepository extends JpaRepository<AdditionalPolicy, Long>{
-    List<AdditionalPolicy> findByCompanyid_Id(long id);
-    long countByCompanyid_Id(long id);
-    Optional<AdditionalPolicy> findById(long id);
+public interface AdditionalPolicyRepository extends JpaRepository<AdditionalPolicy, Integer>{
+    List<AdditionalPolicy> findByCompanyid_Id(int id);
+    long countByCompanyid_Id(int id);
+    Optional<AdditionalPolicy> findById(int id);
 }

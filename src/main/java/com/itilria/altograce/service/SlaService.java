@@ -18,12 +18,12 @@ public class SlaService{
     @Autowired
     private CompanyRepository companyRepository;
 
-    public ServiceLevelAgreement findById(long id)
+    public ServiceLevelAgreement findById(int id)
     {
         return repository.findById(id).orElse(null);
     }
 
-    public void addCompanySla(long id, ServiceLevelAgreement slaData)
+    public void addCompanySla(int id, ServiceLevelAgreement slaData)
     {
         Company company = companyRepository.findById(id).orElse(null);
         if(company != null)

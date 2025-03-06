@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 import com.itilria.altograce.domain.PremiumPolicy;
 
 @Repository
-public interface PremiumPolicyRepository extends JpaRepository<PremiumPolicy, Long>{
-    List<PremiumPolicy> findByCompanyid_Id(long id);
-    long countByCompanyid_Id(long id);
-    Optional<PremiumPolicy> findById(long id);
+public interface PremiumPolicyRepository extends JpaRepository<PremiumPolicy, Integer>{
+    List<PremiumPolicy> findByCompanyid_Id(int id);
+    long countByCompanyid_Id(int id);
+    Optional<PremiumPolicy> findById(int id);
     @Query("SELECT c FROM Company c WHERE c.id = :packageId")
-    Optional<PremiumPolicy> findByPackageId(long packageId);
+    Optional<PremiumPolicy> findByPackageId(int packageId);
 }

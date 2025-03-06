@@ -29,7 +29,7 @@ public class Ethics
 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private int id;
 
     @Column(name="ETHICS")
     private String ethics;

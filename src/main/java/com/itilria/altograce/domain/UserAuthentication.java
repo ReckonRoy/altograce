@@ -20,9 +20,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class UserAuthentication implements UserDetails{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
-    public long getId()
+    public int getId()
     {
         return this.id;
     }
@@ -41,7 +41,7 @@ public class UserAuthentication implements UserDetails{
     private boolean enabled;
 
     @Column(nullable = true)
-    private long companyId;
+    private int companyId;
 
     @JsonIgnore
     @OneToOne(mappedBy = "authid", cascade = CascadeType.ALL, orphanRemoval = true)
