@@ -34,7 +34,7 @@ public class UserService{
     private VacationRepository vacationRepository;
     
     /*-----------------------------GET EMPLOYEES----------------------------*/
-    public List<UserForm> getEmployees(int comId)
+    public List<UserForm> getEmployees(long comId)
     {
         List<UserAuthentication> userAuth = uaRepository.findByCompanyId(comId);
         List<UserForm> employee = new ArrayList<UserForm>();

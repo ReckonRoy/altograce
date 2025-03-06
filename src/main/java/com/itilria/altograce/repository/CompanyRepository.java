@@ -10,11 +10,11 @@ import org.springframework.stereotype.Repository;
 import com.itilria.altograce.domain.Company;
 
 @Repository
-public interface CompanyRepository extends JpaRepository<Company, Integer>{
+public interface CompanyRepository extends JpaRepository<Company, Long>{
     @Query("SELECT c FROM Company c WHERE c.username = :username")
     Company findByUsername(String username);
     List<Company> findByUsername_Username(String username);
     long countByUsername_Username(String username);
     boolean existsByRegNumber(String regNumber);
-    Optional<Company> findById(int id);
+    Optional<Company> findById(long id);
 }

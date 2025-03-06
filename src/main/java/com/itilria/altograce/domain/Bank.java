@@ -29,7 +29,7 @@ public class Bank
 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
+    private long id;
 
     @Column(name="BANK_NAME")
     private String bankName;

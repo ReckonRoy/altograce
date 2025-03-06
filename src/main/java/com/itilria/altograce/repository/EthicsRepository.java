@@ -5,6 +5,6 @@ import com.itilria.altograce.domain.Ethics;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EthicsRepository extends JpaRepository<Ethics, Integer>{
+public interface EthicsRepository extends JpaRepository<Ethics, Long>{
 
 }

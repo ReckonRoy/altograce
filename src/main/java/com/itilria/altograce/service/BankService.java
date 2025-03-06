@@ -18,12 +18,12 @@ public class BankService{
     @Autowired
     private CompanyRepository companyRepository;
 
-    public Bank findById(int id)
+    public Bank findById(long id)
     {
         return repository.findById(id).orElse(null);
     }
 
-    public void addCompanyBankingDetails(int id, Bank bankData)
+    public void addCompanyBankingDetails(long id, Bank bankData)
     {
         Company company = companyRepository.findById(id).orElse(null);
         if(company != null)

@@ -27,7 +27,7 @@ public class EmployeeLeave
 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
+    private long id;
 
     private LocalDate startDate;
     private LocalDate endDate;

@@ -30,9 +30,7 @@ import lombok.Setter;
 public class ClientSettings{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
-
-    private int waitingPeriod;
+    private long id;
 
     @JsonBackReference
     @OneToOne(fetch = FetchType.LAZY)

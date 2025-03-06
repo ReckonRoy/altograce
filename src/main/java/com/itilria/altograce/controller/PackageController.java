@@ -22,6 +22,8 @@ import com.itilria.altograce.domain.PremiumPolicy;
 import com.itilria.altograce.service.PremiumPolicyService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Controller 
 @RequiredArgsConstructor
@@ -37,10 +39,10 @@ public class PackageController{
         return "package-management";
     }
 /**************************Handle Packages*****************************************************/
-    @PostMapping("/add-package/{id}")
-    public ResponseEntity<?> addPremiumPolicy(@PathVariable int id, @RequestBody PremiumPolicy request)
+    @PostMapping("/add-package")
+    public ResponseEntity<?> addPremiumPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PremiumPolicy request)
     {
-        PremiumPolicy result = premiumPolicyService.addPremiumPolicy(id, request);
+        PremiumPolicy result = premiumPolicyService.addPremiumPolicy(userDetails.getUsername(), request);
         if(result != null)
         {
             return ResponseEntity.ok(result);
@@ -50,10 +52,10 @@ public class PackageController{
         }
     }
 
-    @GetMapping("/packages/{id}")
-    public ResponseEntity<List<PremiumPolicy>> getPremiumPolicies(@PathVariable int id)
+    @GetMapping("/packages")
+    public ResponseEntity<List<PremiumPolicy>> getPremiumPolicies(@AuthenticationPrincipal UserDetails userDetails)
     {
-        List<PremiumPolicy> result = premiumPolicyService.getPackages(id);
+        List<PremiumPolicy> result = premiumPolicyService.getPackages(userDetails.getUsername());
         if(result != null)
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -63,8 +65,8 @@ public class PackageController{
     }
 
     //Get package
-    @PostMapping("/get-plan/{id}")
-    public ResponseEntity<?> getSubscriptionPlan(@PathVariable int id, @RequestBody PremiumPolicy request)
+    @PostMapping("/getpremiumpolicy")
+    public ResponseEntity<?> getPremiumPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PremiumPolicy request)
     {
         /*
          * @Param subscrionPlan 
@@ -72,7 +74,7 @@ public class PackageController{
          */
         try
         {
-            PremiumPolicy result = premiumPolicyService.getSubscriptionPlan(id, request);
+            PremiumPolicy result = premiumPolicyService.getPremiumPolicy(userDetails.getUsername(), request);
             return  ResponseEntity.ok(result);
         }catch(IllegalStateException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -80,8 +82,8 @@ public class PackageController{
     }
 
     //Update package
-    @PostMapping("/update-plan/{id}")
-    public ResponseEntity<?> updateSubscriptionPlan(@PathVariable int id, @RequestBody PremiumPolicy request)
+    @PostMapping("/update-plan")
+    public ResponseEntity<?> updateSubscriptionPlan(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PremiumPolicy request)
     {
         /*
          * @Param subscrionPlan 
@@ -89,7 +91,7 @@ public class PackageController{
          */
         try
         {
-            PremiumPolicy result = premiumPolicyService.updateSubscriptionPlan(id, request);
+            PremiumPolicy result = premiumPolicyService.updateSubscriptionPlan(userDetails.getUsername(), request);
             return  ResponseEntity.ok(result);
         }catch(IllegalStateException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -106,10 +108,10 @@ public class PackageController{
 /*_________________________________________________________________________________________________________*/
 
 /**************************AdditionalPolicy*****************************************************/
-    @PostMapping("/add-optional-package/{id}")
-    public ResponseEntity<?> addOptionalPackage(@PathVariable int id, @RequestBody AdditionalPolicy request)
+    @PostMapping("/add-additional-policy")
+    public ResponseEntity<?> addAdditionalPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AdditionalPolicy request)
     {
-        AdditionalPolicy result = premiumPolicyService.addOptionalPackage(id, request);
+        AdditionalPolicy result = premiumPolicyService.addAdditionalPolicy(userDetails.getUsername(), request);
         if(result != null)
         {
             return ResponseEntity.ok(result);
@@ -119,10 +121,10 @@ public class PackageController{
         }
     }
 
-    @GetMapping("/optional-packages/{id}")
-    public ResponseEntity<List<AdditionalPolicy>> getOptionalPackages(@PathVariable int id)
+    @GetMapping("/additional-policies")
+    public ResponseEntity<List<AdditionalPolicy>> getAllAdditionalPolicies(@AuthenticationPrincipal UserDetails userDetails)
     {
-        List<AdditionalPolicy> result = premiumPolicyService.getOptionalPackages(id);
+        List<AdditionalPolicy> result = premiumPolicyService.getAllAdditionalPolicies(userDetails.getUsername());
         if(result != null)
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -132,8 +134,8 @@ public class PackageController{
     }
 
     //Get package
-    @PostMapping("/get-optional-plan/{id}")
-    public ResponseEntity<?> getOptionalSubscriptionPlan(@PathVariable int id, @RequestBody AdditionalPolicy request)
+    @PostMapping("/get-optional-plan")
+    public ResponseEntity<?> getAdditionalPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AdditionalPolicy request)
     {
         /*
          * @Param subscrionPlan 
@@ -141,7 +143,7 @@ public class PackageController{
          */
         try
         {
-            AdditionalPolicy result = premiumPolicyService.getOptionalSubscriptionPlan(id, request);
+            AdditionalPolicy result = premiumPolicyService.getAdditionalPolicy(userDetails.getUsername(), request);
             return  ResponseEntity.ok(result);
         }catch(IllegalStateException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -149,8 +151,8 @@ public class PackageController{
     }
 
     //Update optional plan
-    @PostMapping("/update-optionalplan/{id}")
-    public ResponseEntity<?> updateOptionalSubscriptionPlan(@PathVariable int id, @RequestBody AdditionalPolicy request)
+    @PostMapping("/update-additional-policy")
+    public ResponseEntity<?> updateAdditionalPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AdditionalPolicy request)
     {
         /*
          * @Param subscrionPlan 
@@ -158,10 +160,11 @@ public class PackageController{
          */
         try
         {
-            AdditionalPolicy result = premiumPolicyService.updateOptionalSubscriptionPlan(id, request);
+            AdditionalPolicy result = premiumPolicyService.updateAdditionalPolicy(userDetails.getUsername(), request);
             return  ResponseEntity.ok(result);
         }catch(IllegalStateException ex){
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ex.getMessage());
         }    
     }
 

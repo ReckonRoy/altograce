@@ -46,10 +46,10 @@ public class UserAuthenticationService{
     }
 
     //Register employees
-    public UserAuthentication employeeRegistration(int companyId, AuthForm authForm)
+    public UserAuthentication employeeRegistration(long companyId, AuthForm authForm)
     {
         if(!userAuthenticationRepository.findByEmail(authForm.getEmail()).isPresent()){
-            UserAuthentication userCredentials = authForm.toUser(authForm);;
+            UserAuthentication userCredentials = authForm.toUser(authForm);
             // Save user credentials with activated=false
             userCredentials.setEnabled(false);
             userCredentials.setCompanyId(companyId);

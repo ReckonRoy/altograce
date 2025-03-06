@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BranchCompanyRepository extends JpaRepository<BranchCompany, Integer>{
-    List<BranchCompany> findByCompany_Id(int id);
-    Optional<BranchCompany> findById(int id);
+public interface BranchCompanyRepository extends JpaRepository<BranchCompany, Long>{
+    List<BranchCompany> findByCompany_Id(long id);
+    Optional<BranchCompany> findById(long id);
 }

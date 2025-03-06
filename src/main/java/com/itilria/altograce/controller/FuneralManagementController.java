@@ -59,13 +59,13 @@ public class FuneralManagementController
 
 /*--------------------------------------------------------------Logic related routes-----------------------------------------*/
     @PostMapping("/add/{fileId}")
-    public ResponseEntity<?> addDeceased(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String fileId, @RequestBody Funeral request)
+    public ResponseEntity<?> addDeceased(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long fileId, @RequestBody Funeral request)
     {
         //get user id and companyId
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
         Funeral funeralResult = funeralService.addFuneral(fileId, request);
         if(funeralResult != null){
-            clientService.staffAudit("ADDED FUNERAL SERVICE", result.getCompanyId(), fileId, result.getId());
+            clientService.staffAudit("ADDED FUNERAL SERVICE", userDetails.getUsername(), fileId, result.getId());
             return ResponseEntity.ok(funeralResult);
         }else{
             return new ResponseEntity<>("Failed to add data", HttpStatus.BAD_REQUEST);

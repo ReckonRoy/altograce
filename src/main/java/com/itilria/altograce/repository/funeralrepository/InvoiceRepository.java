@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.itilria.altograce.domain.funeral.Invoice;
 
 @Repository
-public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
+public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     Optional<Invoice> findByInvoiceNumber(String invoiceNumber);
-    List<Invoice> findByCompanyIdAndInvoiceDateBetween(int companyId, LocalDate today, LocalDate twoWeeksFromNow);
+    List<Invoice> findByCompanyIdAndInvoiceDateBetween(long companyId, LocalDate today, LocalDate twoWeeksFromNow);
 }

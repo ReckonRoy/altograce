@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.itilria.altograce.domain.funeral.Funeral;
 
 @Repository
-public interface FuneralManagementRepository extends JpaRepository<Funeral, Integer> {
+public interface FuneralManagementRepository extends JpaRepository<Funeral, Long> {
     Optional<Funeral> findByIdentityNumber(String identityNumber);
-    List<Funeral> findByCompanyidAndDateOfBurialBetween(int id, LocalDate today, LocalDate twoWeeksFromNow);
+    List<Funeral> findByCompanyidAndDateOfBurialBetween(long id, LocalDate today, LocalDate twoWeeksFromNow);
 }
