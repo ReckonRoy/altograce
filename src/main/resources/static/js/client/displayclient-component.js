@@ -562,7 +562,7 @@ customElements.define("display-client", class extends HTMLElement {
                 <div id="plan-controls">
                     <h2>Change Current Policy</h2>
                     <select id="policy-option">
-                        <option>${subscriptionPlan.name}</option>
+                        <option>1</option>
                     </select>
                     <button>Change Policy</button>
                 </div>
@@ -1057,7 +1057,7 @@ customElements.define("display-client", class extends HTMLElement {
                         <td><b>Plan Name</b></td><td>${subscriptionPlan.name}</td>
                     </tr>
                     <tr>
-                        <td><b>Date Of Cover<b></td><td>${subscriptionPlan.dateOfCover}</td>
+                        <td><b>Date Of Cover</b></td><td>${subscriptionPlan.dateOfCover}</td>
                     </tr>
                     <tr>
                         <td><b>Joining Fee</b></td><td>${subscriptionPlan.joiningFee}</td>
@@ -1066,7 +1066,7 @@ customElements.define("display-client", class extends HTMLElement {
                         <td><b>Balance Due</b></td><td>200.00</td>
                     </tr>
                     <tr>
-                        <td><b>Member's Count<b></td><td>3 / 8</td>
+                        <td><b>Member's Count</b></td><td>7 / 8</td>
                     </tr>
                     <tr>
                         <td><b>Group Name</b></td><td>${subscriptionPlan.groupName}</td>
