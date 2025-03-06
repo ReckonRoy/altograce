@@ -1063,6 +1063,12 @@ customElements.define("display-client", class extends HTMLElement {
                         <td><b>Joining Fee</b></td><td>${subscriptionPlan.joiningFee}</td>
                     </tr>
                     <tr>
+                        <td><b>Wait Period Left</b></td><td>${subscriptionPlan.joiningFee}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Lapse Period</b></td><td>${subscriptionPlan.joiningFee}</td>
+                    </tr>
+                    <tr>
                         <td><b>Balance Due</b></td><td>200.00</td>
                     </tr>
                     <tr>

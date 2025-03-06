@@ -2,12 +2,9 @@ package com.itilria.altograce.dto.clientdto;
 
 import lombok.AllArgsConstructor;
 import java.time.LocalDate;
-import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
-import java.util.Set;
 import java.math.BigDecimal;
 
 @Data
