@@ -11,6 +11,7 @@ customElements.define("display-client", class extends HTMLElement {
     getGender(){
         return this.gender;
     }
+
     connectedCallback() {
       this.attachShadow({ mode: 'open' });
       this.shadowRoot.innerHTML =`<style>
@@ -416,6 +417,11 @@ customElements.define("display-client", class extends HTMLElement {
         font-style: normal;
         }
 
+        /*--------------Dependency Info Card---------------------*/
+        #dependencyInfoCard{
+            display: none;
+        }
+
         /*---------------FLASH MESSAGE STYLES--------------------*/
         #flash-message{
             display: none;
@@ -557,7 +563,7 @@ customElements.define("display-client", class extends HTMLElement {
             <div class="client-info-card" id="clientInfoCard">
                 <!-- Client info will be populated here -->
             </div>
-            <div class="client-info-card" id="subscriptionInfoCard">
+            <div class="client-info-card" id="policyInfoCard">
                 <table id="subscriptionTable"></table>
                 <div id="plan-controls">
                     <h2>Change Current Policy</h2>
@@ -1063,10 +1069,10 @@ customElements.define("display-client", class extends HTMLElement {
                         <td><b>Joining Fee</b></td><td>${subscriptionPlan.joiningFee}</td>
                     </tr>
                     <tr>
-                        <td><b>Wait Period Left</b></td><td>${subscriptionPlan.joiningFee}</td>
+                        <td><b>Wait Period Left</b></td><td>5 of 6 months</td>
                     </tr>
                     <tr>
-                        <td><b>Lapse Period</b></td><td>${subscriptionPlan.joiningFee}</td>
+                        <td><b>Lapse Period</b></td><td>1 of 3 months</td>
                     </tr>
                     <tr>
                         <td><b>Balance Due</b></td><td>200.00</td>
@@ -1088,7 +1094,18 @@ customElements.define("display-client", class extends HTMLElement {
             })
 /*------------------------------------------------------------------------------------------------*/
             
+
 /*----------------------------------View Dependencies-----------------------------------------*/
+            let dependencyTabBtn = this.shadowRoot.getElementById("dependants-btn");
+            dependencyTabBtn.addEventListener("click", () => {
+                this.shadowRoot.getElementById("clientInfoCard").style.display = "none"; 
+                this.shadowRoot.getElementById("policyInfoCard").style.display = "none";
+
+                //invoke dependency management component
+                let dependencyManagementComponent = document.createElement("dependency-management-component");
+                dependencyManagementComponent.setAttribute('fileId', fileId);
+
+            });
             let table = this.shadowRoot.getElementById('dependencyTable');
             table.innerHTML = '';
             fetch(`/client/management/dependencies/${id}`)
