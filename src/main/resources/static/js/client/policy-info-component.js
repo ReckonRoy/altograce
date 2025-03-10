@@ -26,8 +26,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
     /*--------------------------------------render html content--------------------------------------*/ 
     render()
     {
-        if(!this.shadowRoot) return
-        alert(this.getAttribute('fileId'));
+        if(!this.shadowRoot) return;
         this.shadowRoot.innerHTML = `
 
         `;
@@ -68,7 +67,21 @@ customElements.define('policy-info-component', class extends HTMLElement{
     //get dependencies from server 
     getPolicyInfo(fileId)
     {
-        alert(`This is my fileId: ${fileId} from policy info compenent`);
+        fetch(`/client/management/policy/${20}`)
+            .then((response) => {
+                if(!response.ok)
+                {
+                    return response.text().then(error => {
+                        throw new Error(error);
+                    })
+                }
+                
+                return response.json();
+            }).then((data) => {
+
+            }).catch(error => {
+                alert(error);
+            })
     }
 
     updatePolicyHolderInfo(fileId){

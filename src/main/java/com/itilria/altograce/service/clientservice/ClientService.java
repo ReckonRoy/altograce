@@ -134,6 +134,23 @@ public class ClientService{
 
         return clientRepository.findByCompanyId_Id(company.get().getId(), PageRequest.of(page, size));
     }
+    
+    //Get Client
+    public PrimaryClient getClient(String username , long id) {
+        UserAuthentication userAuth = userAuthRepository.findByUsername(username).orElse(null);
+        Optional<Company> company = companyRepository.findById(userAuth.getCompanyId());
+        if(!company.isPresent()){
+            throw new IllegalArgumentException("Error - denial of service due to system authorization!");
+        }
+        
+        Optional<PrimaryClient> policyHolder = clientRepository.findById(id);
+        if(!policyHolder.isPresent()){
+            throw new IllegalArgumentException("Error - client does not exist");
+        }
+        
+        return policyHolder.get();
+    }
+
 
     //Delete file - Delete file
     public boolean deleteFile(long fileId){
@@ -319,12 +336,12 @@ public class ClientService{
         Optional<UserAuthentication> userAuth = userAuthRepository.findByUsername(username);
         if(!userAuth.isPresent())
         {
-            throw new IllegalArgumentException("Invalid User");
+            throw new IllegalArgumentException("Error - denial of service due to account authorization");
         }
         // Retrieve the company entity by ID
         Optional<Company> company = companyRepository.findById(userAuth.get().getCompanyId());
         if(!company.isPresent()){
-            throw new IllegalArgumentException("User no an Employee of any Company");
+            throw new IllegalArgumentException("Error - denial of service due to account authorization");
         }
 
         // Calculate the date two weeks from today

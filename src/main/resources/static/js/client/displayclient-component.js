@@ -762,6 +762,8 @@ customElements.define("display-client", class extends HTMLElement {
                         {
                             actions.style.display = "";
                         }
+
+                        loadPolicyInfo(viewinfo_btn.id);
                         showMoreInfo(viewinfo_btn.id);
                     })
                 });
@@ -993,12 +995,13 @@ customElements.define("display-client", class extends HTMLElement {
         });
 
         /*Display policy info component*/
-        let loadPolicyInfo = (id) => {
+        let loadPolicyInfo = (fileId) => {
             let mainContentWrapper = this.shadowRoot.getElementById("client-info-main");
+            mainContentWrapper.innerHTML = ``;
             let policyInfoComponent = document.createElement("policy-info-component");
             if(policyInfoComponent)
             {
-                policyInfoComponent.setAttribute('fileId', id);
+                policyInfoComponent.setAttribute('fileId', fileId);
                 mainContentWrapper.appendChild(policyInfoComponent);
             }
         }

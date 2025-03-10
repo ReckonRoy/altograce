@@ -136,6 +136,19 @@ public class ClientManagementController{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
+    
+    //get client
+    @GetMapping("/management/client/{fileId}")
+    public ResponseEntity<?> getClient(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long fileId)
+    {
+        try{
+            PrimaryClient result = clientService.getClient(userDetails.getUsername(), fileId);
+            return ResponseEntity.ok(result);
+        }catch(Exception ex)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
 /*--------------------------------Subscription Section------------------------------------------*/
     //get subscription route
     @GetMapping("/management/subscription/{clientid}")
