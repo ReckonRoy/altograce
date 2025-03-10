@@ -26,7 +26,8 @@ customElements.define('dependency-management-component', class extends HTMLEleme
     /*--------------------------------------render html content--------------------------------------*/ 
     render()
     {
-        if(!this.shadowRoot) return;
+        if(!this.shadowRoot) return
+        alert(this.getAttribute('fileId'));
         this.shadowRoot.innerHTML = `
 
         `;

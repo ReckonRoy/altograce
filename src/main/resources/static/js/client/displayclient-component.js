@@ -191,7 +191,15 @@ customElements.define("display-client", class extends HTMLElement {
             padding: 10px 0;
             margin: 40px auto;
         }
-        /*---------------------------------*/
+        /*----------------------------------------*/
+        /*Client Info main styles*/
+        #client-info-main
+        {
+            display: flex;
+            padding: 10px 0;
+            margin: 40px auto;
+        }
+
 
         .client-info-close {
             color: #aaa;
@@ -560,6 +568,15 @@ customElements.define("display-client", class extends HTMLElement {
                     <button id="notes-btn">Notes</button>
                 </div>
             </div>
+
+            <!-- main content div-->
+            <div id="client-info-main">
+                <!-- 
+                *main content goes in here
+                *the content is created from components
+                -->
+            </div>
+
             <div class="client-info-card" id="clientInfoCard">
                 <!-- Client info will be populated here -->
             </div>
@@ -975,6 +992,17 @@ customElements.define("display-client", class extends HTMLElement {
             closeModal();
         });
 
+        /*Display policy info component*/
+        let loadPolicyInfo = (id) => {
+            let mainContentWrapper = this.shadowRoot.getElementById("client-info-main");
+            let policyInfoComponent = document.createElement("policy-info-component");
+            if(policyInfoComponent)
+            {
+                policyInfoComponent.setAttribute('fileId', id);
+                mainContentWrapper.appendChild(policyInfoComponent);
+            }
+        }
+
         // Function to show more information about a client
         let showMoreInfo = (id) => {
             // Find the client object
@@ -1102,8 +1130,14 @@ customElements.define("display-client", class extends HTMLElement {
                 this.shadowRoot.getElementById("policyInfoCard").style.display = "none";
 
                 //invoke dependency management component
+                let dependencyInfoCard = this.shadowRoot.getElementById("dependencyInfoCard");
                 let dependencyManagementComponent = document.createElement("dependency-management-component");
-                dependencyManagementComponent.setAttribute('fileId', fileId);
+                if(dependencyManagementComponent)
+                {
+                   dependencyManagementComponent.setAttribute('fileId', fileId); 
+                   dependencyInfoCard.appendChild(dependencyManagementComponent);
+                }
+                
 
             });
             let table = this.shadowRoot.getElementById('dependencyTable');
