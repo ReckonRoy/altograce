@@ -215,20 +215,7 @@ customElements.define("display-client", class extends HTMLElement {
             color: black;
             text-decoration: none;
         }
-        .client-info-card {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .client-info-card h3 {
-            margin-top: 0;
-            font-size: 24px;
-        }
-        .client-info-card p {
-            margin: 10px 0;
-            font-size: 16px;
-        }
+        
         .client-info-controls {
             text-align: center;
             margin-top: 20px;
@@ -425,11 +412,6 @@ customElements.define("display-client", class extends HTMLElement {
         font-style: normal;
         }
 
-        /*--------------Dependency Info Card---------------------*/
-        #dependencyInfoCard{
-            display: none;
-        }
-
         /*---------------FLASH MESSAGE STYLES--------------------*/
         #flash-message{
             display: none;
@@ -575,24 +557,6 @@ customElements.define("display-client", class extends HTMLElement {
                 *main content goes in here
                 *the content is created from components
                 -->
-            </div>
-
-            <div class="client-info-card" id="clientInfoCard">
-                <!-- Client info will be populated here -->
-            </div>
-            <div class="client-info-card" id="policyInfoCard">
-                <table id="subscriptionTable"></table>
-                <div id="plan-controls">
-                    <h2>Change Current Policy</h2>
-                    <select id="policy-option">
-                        <option>1</option>
-                    </select>
-                    <button>Change Policy</button>
-                </div>
-            </div>
-            <div class="client-info-card" id="dependencyInfoCard">
-                <!-- dependency info will be populated here -->
-                <table id="dependencyTable"></table>
             </div>
             <div class="client-info-controls">
                 <button onclick="billing()">Billing</button>
@@ -994,7 +958,7 @@ customElements.define("display-client", class extends HTMLElement {
             closeModal();
         });
 
-        /*Display policy info component*/
+        /*----------------------------------Display policy info component-----------------------------*/
         let loadPolicyInfo = (fileId) => {
             let mainContentWrapper = this.shadowRoot.getElementById("client-info-main");
             mainContentWrapper.innerHTML = ``;
@@ -1005,7 +969,24 @@ customElements.define("display-client", class extends HTMLElement {
                 mainContentWrapper.appendChild(policyInfoComponent);
             }
         }
+        /*------------------------------------------------------------------------------------------------*/
 
+        /*----------------------------------View Dependencies-----------------------------------------*/
+        let dependencyTabBtn = this.shadowRoot.getElementById("dependants-btn");
+        dependencyTabBtn.addEventListener("click", () => {
+            this.shadowRoot.getElementById("client-info-main").innerHTML = "";
+
+            //invoke dependency management component
+            let mainContentWrapper = this.shadowRoot.getElementById("client-info-main");
+            mainContentWrapper.innerHTML = ``;
+            let dependencyManagementComponent = document.createElement("dependency-management-component");
+            if(dependencyManagementComponent)
+            {
+               dependencyManagementComponent.setAttribute('fileId', fileId); 
+               mainContentWrapper.appendChild(dependencyManagementComponent);
+            }
+        });
+        /*------------------------------------------------------------------------------------------------*/
         // Function to show more information about a client
         let showMoreInfo = (id) => {
             // Find the client object
@@ -1019,211 +1000,8 @@ customElements.define("display-client", class extends HTMLElement {
             idPassportNumber = client.id_passport;
             primaryClientName = client.name;
             primaryLastName = client.lastName;
-            // Construct the Client Info Card HTML
-            let clientInfoHTML = `
-                <table>
-                    <caption><h2>Policy Holder's Info</h2></caption> 
-                    <tr>
-                        <td>Province: </td>
-                        <td>${client.province}</td>
-                    </tr>
-                    <tr>
-                        <td>Address:</td>
-                        <td>${client.address}</td>
-                    </tr>
-                   
-                    <tr>
-                        <td>Contact 1: </td>
-                        <td>${client.phoneContact1}</td>
-                    </tr>`;
-            if(client.phoneContact2 > 0){
-                clientInfoHTML += `
-                <tr>
-                    <td>Contact 2: </td>
-                    <td>${client.phoneContact2}</td>
-                </tr>`;
-            }        
-                    
-            clientInfoHTML += `
-                    <tr>
-                        <td>D.O.B:</td>
-                        <td>${client.dob}</td>
-                    </tr>
-                    <tr>
-                        <td>Initials:</td>
-                        <td>${client.initials}</td>
-                    </tr>
-                    <tr>
-                        <td>Gender:</td>
-                        <td>${client.gender}</td>
-                    </tr>
-                    <tr>
-                        <td>ID/Passport Number:</td>
-                        <td>${client.id_passport}</td>
-                    </tr>
-                </table>
-                <div>
-                    <button>Edit</button>
-                </div>
-            `;
-            // Populate the client info card
-            this.shadowRoot.getElementById('clientInfoCard').innerHTML = clientInfoHTML;
-
-/*-----  ---------------------------View Package Plan-----------------------------------------*/
-            let planTable = this.shadowRoot.getElementById('subscriptionTable');
-            planTable.innerHTML = '';
-            fetch(`/client/management/subscription/${id}`)
-            .then((response) => {
-                if(!response.ok)
-                {
-                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
-                }
-                
-                return response.json();
-            }).then((data) => {
-                subscriptionPlan = {
-                    "groupName": data.groupName,
-                    "joiningFee": data.joiningFee,
-                    "dateOfCover": data.dateOfCover,
-                    "name": data.name
-                }
-                planTable.innerHTML += `
-                    <caption><h2>Policy Info</h2></caption>
-                    <tbody>
-                    <tr>
-                        <td><b>Plan Name</b></td><td>${subscriptionPlan.name}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Date Of Cover</b></td><td>${subscriptionPlan.dateOfCover}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Joining Fee</b></td><td>${subscriptionPlan.joiningFee}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Wait Period Left</b></td><td>5 of 6 months</td>
-                    </tr>
-                    <tr>
-                        <td><b>Lapse Period</b></td><td>1 of 3 months</td>
-                    </tr>
-                    <tr>
-                        <td><b>Balance Due</b></td><td>200.00</td>
-                    </tr>
-                    <tr>
-                        <td><b>Member's Count</b></td><td>7 / 8</td>
-                    </tr>
-                    <tr>
-                        <td><b>Group Name</b></td><td>${subscriptionPlan.groupName}</td>
-                    </tr>
-                    </tbody>
-                `;
-
-                let planControls = this.shadowRoot.getElementById("plan-controls");
-
-
-            }).catch(error => {
-                console.log(error);
-            })
 /*------------------------------------------------------------------------------------------------*/
             
-
-/*----------------------------------View Dependencies-----------------------------------------*/
-            let dependencyTabBtn = this.shadowRoot.getElementById("dependants-btn");
-            dependencyTabBtn.addEventListener("click", () => {
-                this.shadowRoot.getElementById("clientInfoCard").style.display = "none"; 
-                this.shadowRoot.getElementById("policyInfoCard").style.display = "none";
-
-                //invoke dependency management component
-                let dependencyInfoCard = this.shadowRoot.getElementById("dependencyInfoCard");
-                let dependencyManagementComponent = document.createElement("dependency-management-component");
-                if(dependencyManagementComponent)
-                {
-                   dependencyManagementComponent.setAttribute('fileId', fileId); 
-                   dependencyInfoCard.appendChild(dependencyManagementComponent);
-                }
-                
-
-            });
-            let table = this.shadowRoot.getElementById('dependencyTable');
-            table.innerHTML = '';
-            fetch(`/client/management/dependencies/${id}`)
-            .then((response) => {
-                if(!response.ok)
-                {
-                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
-                }
-                
-                return response.json();
-            }).then((data) => {
-                table.innerHTML += `
-                    <caption><h2>Dependencies</h2></caption>
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Last Name</th>
-                        <th>Gender</th>
-                        <th>D.O.B</th>
-                        <th>Relationship</th>
-                        <th>ID/Passport Number</th>
-                    </tr>
-                    </thead>
-                `
-                data.forEach((dependency) => {
-                    dependencies.push({
-                        id: dependency.id,
-                        name: dependency.name,
-                        surname: dependency.lastName,
-                        id_passport: dependency.id_passport, 
-                    });
-                    let row = `
-                        <tr>
-                            <td>${dependency.name}</td>
-                            <td>${dependency.lastName}</td>
-                            <td>${dependency.gender}</td>
-                            <td>${dependency.dob}</td>
-                            <td>${dependency.relationship}</td>
-                            <td>${dependency.id_passport}</td>
-                        </tr>
-                    
-                        <tr>
-                            <td colspan="7">
-                                <button class="remove-dep-btn" id="${dependency.id}">Remove</button>
-                                <button class="add-dep-btn" id="${dependency.id}">Replace</button>
-                                <button class="deceased-btn" id="${dependency.id}">Deceased</button>
-                            </td>
-                        </tr>
-                   `;
-                    table.innerHTML += row;
-                })
-
-                let removeDep_btn = this.shadowRoot.querySelectorAll(".remove-dep-btn");
-                removeDep_btn.forEach((remove_btn) => {
-                    remove_btn.addEventListener("click", () => {
-                        removeDependency(remove_btn.id, id);
-                    })
-                });
-
-                let deceased_btn = this.shadowRoot.querySelectorAll(".deceased-btn");
-                deceased_btn.forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        /*-----preset-----*/
-                        deceased_btn.forEach((btn) => {
-                            btn.style.backgroundColor = "#007bff";
-                            btn.style.color = "#fff";
-                            btn.style.border = "none";
-                        });
-                        /*-----------------------------------------------------------------------*/
-
-                        btn.style.backgroundColor = "white";
-                        btn.style.color = "black";
-                        btn.style.border = "1px solid black";
-                        let id_val = parseInt(btn.id);
-                        processDeaceased(id_val);
-                    })
-                });
-
-            }).catch(error => {
-                console.log(error);
-            })
 /*---------------------------------------------------------------------------------------------------*/
 
             // Display the modal

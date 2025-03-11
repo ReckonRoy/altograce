@@ -138,7 +138,7 @@ public class ClientManagementController{
     }
     
     //get client
-    @GetMapping("/management/client/{fileId}")
+    @GetMapping("/management/policy/{fileId}")
     public ResponseEntity<?> getClient(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long fileId)
     {
         try{
