@@ -112,6 +112,9 @@ public class ClientManagementController{
                 primarySubscription.setDateOfCover(request.getDateOfCover());
                 primarySubscription.setJoiningFee(request.getJoiningFee());
                 primarySubscription.setGroupName(request.getGroupName());
+                primarySubscription.setLapsePeriod(request.getLapsePeriod());
+                primarySubscription.setWaitPeriod(request.getWaitPeriod());
+                primarySubscription.setPremiumAmount(request.getPremiumAmount());
                 primarySubscription.setPrimaryClient(clientResult);
                 clientService.addPrimarySubscription(primarySubscription);
 

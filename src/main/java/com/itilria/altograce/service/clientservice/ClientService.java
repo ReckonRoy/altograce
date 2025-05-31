@@ -203,12 +203,37 @@ public class ClientService{
             subscriptionMap.put("dateOfCover", subscriptionResult.getDateOfCover().toString());
             subscriptionMap.put("groupName", subscriptionResult.getGroupName());
             subscriptionMap.put("joiningFee", subscriptionResult.getJoiningFee().toString());
+
+            long waitPeriodLeft = getWaitPeriodLeft(subscriptionResult.getDateOfCover(), subscriptionResult.getWaitPeriod());
+            if(waitPeriodLeft < subscriptionResult.getWaitPeriod()){
+                waitPeriodLeft = subscriptionResult.getWaitPeriod() - waitPeriodLeft;
+                subscriptionMap.put("waitPeriod", subscriptionResult.getWaitPeriod().toString());
+                subscriptionMap.put("waitPeriodLeft", waitPeriodLeft + "");                
+            }else{
+                String zeroWaitPeriodLeft = "0";
+                subscriptionMap.put("waitPeriodLeft", zeroWaitPeriodLeft);
+            }
+
+            //lapse period
+            //subscriptionMap.put("lapsePeriod", subscriptionResult.getLapsePeriod().toString());
+            
             String packageId = Long.toString(subscriptionResult.getId()) ;
             subscriptionMap.put("packageId", packageId);
             return subscriptionMap;
         }else{
             return null;
         }
+    }
+
+    //get number of months left for account to be activated
+    public long getWaitPeriodLeft(LocalDate joiningDate, int waitingPeriodMonths)
+    {
+        //get current date
+        LocalDate currentDate = LocalDate.now();
+        //get the difference between joining date and current date
+        long monthsLeft = ChronoUnit.MONTHS.between(joiningDate, currentDate);
+
+        return monthsLeft;
     }
 /*-------------------------------------------------------------------------------------------------------*/    
 /*
@@ -313,6 +338,30 @@ public class ClientService{
             billingData.setPrimaryClient(primaryClient);
 
             return clientBillingRepository.save(billingData);
+        }else{
+            return null;
+        }
+    }
+
+    /**get payment status
+     * we need to know the last time client made payment 
+     * details needed:
+     * 1. get last payment date, get amount payed
+     * - is date current
+     * - compare if amount payed is equals to premium amount.
+     * - is amount payed == premium amount
+     * 2. if payment is current and no balance is owed - status: payment is up to date
+     * 3. if payment status is not current - get balance.
+     * - balance =  number of months behind * premium amount
+     * 4. amount payed
+     * 5. determine lapse period
+    */
+    public void getPaymentSummary(long clientId)
+    {
+        PrimaryClient primaryClient = clientRepository.findById(clientId).orElse(null);
+        if(client != null)
+        {
+            return clientBillingRepository.findByPrimaryClient_Id(client.getId());            
         }else{
             return null;
         }

@@ -26,8 +26,7 @@ customElements.define('dependency-management-component', class extends HTMLEleme
     /*--------------------------------------render html content--------------------------------------*/ 
     render()
     {
-        if(!this.shadowRoot) return
-        alert(this.getAttribute('fileId'));
+        if(!this.shadowRoot) return;
         this.shadowRoot.innerHTML = `
 
         <style>
@@ -210,7 +209,7 @@ customElements.define('dependency-management-component', class extends HTMLEleme
                 let removeDep_btn = this.shadowRoot.querySelectorAll(".remove-dep-btn");
                 removeDep_btn.forEach((remove_btn) => {
                     remove_btn.addEventListener("click", () => {
-                        removeDependency(remove_btn.id, id);
+                        this.removeDependency(remove_btn.id, fileId);
                     })
                 });
 
@@ -236,6 +235,27 @@ customElements.define('dependency-management-component', class extends HTMLEleme
             }).catch(error => {
                 console.log(error);
             })
+    }
+
+    //Remove dependency
+    removeDependency(dependency_id, clientId){
+        let dependencyId = parseInt(dependency_id);
+        fetch(`/client/management/dependencies/remove/${dependencyId}`,{
+            method: "POST",
+            headers: {
+                'Content-Type': "application/json",
+            },
+            body: JSON.stringify({clientid: clientId}),
+        }).then((response) => {
+            if(!response.ok){
+                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+            }
+             return response.text();
+        }).then((data) => {
+            this.getDependencies(clientId);
+        }).catch(error => {
+            alert("Failed to delete dependent. Please try again later, if problem persist kindy contact web master: webmaster@altograce.co.za");
+        })
     }
 
     handleDependencies(){

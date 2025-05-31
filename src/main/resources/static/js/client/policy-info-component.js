@@ -36,11 +36,11 @@ customElements.define('policy-info-component', class extends HTMLElement{
                     width: 100%;
                     border-collapse: collapse;
                     margin-bottom: 20px;
-                    box-shadow: 0 5px 10px #515151;
+                    box-shadow: 0 5px 5px #515151;
                 }
 
                 thead{
-                    box-shadow: 0 5px 10px #515151;
+                    box-shadow: 0 5px 5px #515151;
                 }
 
                 th, td {
@@ -106,12 +106,31 @@ customElements.define('policy-info-component', class extends HTMLElement{
                     background-color: #d0636a;
                     color: #fdc7cc;
                 }
+
+                /*Policy Holder's Info Style*/
+                #policy-info-div{
+                    margin-bottom: 50px;
+                }
+                /*______________________________________*/
+
+                /*Policy Info Style*/
+                #policies-div
+                {
+                    marging-top: 50px;
+                }
+
+                #policies-div h2{
+                    text-align:left:
+                    font-size: 30px;
+                }
             </style>
 
             <div class="client-info-card" id="client-info-card">
             </div>    
             
             <div class="client-info-card" id="policy-info-card">
+            <div id="policy-info-div"></div>
+            <div id="policies-div"></div>
             </div>  
         `;
     }
@@ -128,9 +147,10 @@ customElements.define('policy-info-component', class extends HTMLElement{
             this.render();
             this.rendered = true;
 
-            //get dependendencies
-            this.getClientInfo(this.fileId);
+            //get policy details
+            this.getPolicyHolderInfo(this.fileId);
             this.getPolicyInfo(this.fileId);
+            this.getPolicies();
             this.updatePolicyHolderInfo(this.fileId);
             this.updatePolicy(this.fileId);
         }
@@ -150,7 +170,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
 
     /*-------------------------------------------Methods--------------------------------------------*/
     //get policy info from server 
-    getClientInfo(fileId)
+    getPolicyHolderInfo(fileId)
     {
         fetch(`/client/management/policy/${fileId}`)
             .then((response) => {
@@ -230,12 +250,11 @@ customElements.define('policy-info-component', class extends HTMLElement{
                 
                 return response.json();
             }).then((data) => {
-
-                let contentWrapper = this.shadowRoot.getElementById("policy-info-card");
-                let policyInfoTable = `
-                    <table>
-                        <caption><h2>Policy Info</h2></caption>
-                        <tbody>
+                let policyInfoDiv = this.shadowRoot.getElementById('policy-info-div');
+                let policyInfoTableContent = `  
+                <table>             
+                    <caption><h2>Policy Info</h2></caption>
+                    <tbody>
                         <tr>
                             <td><b>Plan Name</b></td><td>${data.name}</td>
                         </tr>
@@ -245,37 +264,56 @@ customElements.define('policy-info-component', class extends HTMLElement{
                         <tr>
                             <td><b>Joining Fee</b></td><td>${data.joiningFee}</td>
                         </tr>
+                        `;
+                        if(parseInt(data.waitPeriodLeft) > 0){
+                            policyInfoTableContent += `
+                                <tr>
+                                    <td><b>Wait Period Left/Number of months left for account to be activated</b></td><td>${data.waitPeriodLeft} of ${data.waitPeriod} months</td>
+                                </tr>
+                            `;
+                        }
+                        ;
+
+                        policyInfoTableContent += `
                         <tr>
-                            <td><b>Wait Period Left</b></td><td>5 of 6 months</td>
-                        </tr>
-                        <tr>
-                            <td><b>Lapse Period</b></td><td>1 of 3 months</td>
+                            <td><b>Lapse Period</b></td><td>1 of ${data.lapsePeriod} months</td>
                         </tr>
                         <tr>
                             <td><b>Balance Due</b></td><td>200.00</td>
                         </tr>
                         <tr>
-                            <td><b>Member's Count</b></td><td>7 / 8</td>
+                            <td><b>Member's Count</b></td><td>7 / ${data.membersCount}</td>
                         </tr>
                         <tr>
                             <td><b>Group Name</b></td><td>${data.groupName}</td>
                         </tr>
-                        </tbody>    
-                    </table>
-
-                    <div id="plan-controls">
-                    <h2>Change Current Policy</h2>
-                    <select id="policy-option">
-                        <option>1</option>
-                    </select>
-                    <button>Change Policy</button>
-                </div>
+                    </tbody>   
+                </table> 
                 `;
 
-                contentWrapper.innerHTML = policyInfoTable;
+                policyInfoDiv.innerHTML = policyInfoTableContent;
             }).catch(error => {
                 alert(error);
             })
+    }
+
+    getPolicies(){
+        fetch(`/package/packages`)
+        .then(response => {
+            return response.json();
+        }).then(data => {
+            let policyDiv = this.shadowRoot.getElementById('policies-div');
+            let policyDivContent = `
+            <h2>Change Current Policy</h2>
+            <select id="policy-option">`;
+            data.forEach((pkg, index) => {
+                policyDivContent += `<option value="${pkg.id}">${pkg.policyName} - ${pkg.premiumAmount} - ${pkg.membersCount} Members</option>`;
+            })
+
+            policyDivContent += `</select>
+                            <button id="changePolicyBtn">Change Policy</button>`;
+            policyDiv.innerHTML = policyDivContent;
+        })
     }
 
     updatePolicyHolderInfo(fileId){

@@ -21,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +45,7 @@ public class PremiumPolicy{
     private int membersCount;
 
     @Column(name="PREMIUM_POLICY_AMOUNT")
-    private float premiumAmount;
+    private BigDecimal premiumAmount;
     
     @Column(name="MINIMUM_AGE")
     private int minAge;

@@ -37,6 +37,9 @@ public class PrimaryPackageSubscription{
     private LocalDate dateOfCover;
     private LocalDate recordEntryDate;
     private String groupName;
+    private BigDecimal premiumAmount;
+    private Integer waitPeriod;
+    private Integer lapsePeriod;
 
     @Column(nullable=false)
     private BigDecimal joiningFee;

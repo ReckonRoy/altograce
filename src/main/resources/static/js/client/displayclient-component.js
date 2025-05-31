@@ -538,6 +538,7 @@ customElements.define("display-client", class extends HTMLElement {
     <div id="clientInfoModal" class="client-info-modal">
         <div class="client-info-modal-content">
             <span class="client-info-close">&times;</span>
+
             <!-- client-info-header: header for this modal -->
             <div id="client-info-header">
                 <div id="modal-heading"></div>
@@ -558,6 +559,7 @@ customElements.define("display-client", class extends HTMLElement {
                 *the content is created from components
                 -->
             </div>
+
             <div class="client-info-controls">
                 <button onclick="billing()">Billing</button>
                 <button onclick="deleteClient()">Delete</button>
@@ -574,7 +576,7 @@ customElements.define("display-client", class extends HTMLElement {
         let idPassportNumber = "";
         let primaryClientName = "";
         let primaryLastName = "";
-        let clientsToShow = [];
+        let clientsToShow = []
         let dependencies = [];
         let genderValue = "";
         let subscriptionPlan;
@@ -958,7 +960,7 @@ customElements.define("display-client", class extends HTMLElement {
             closeModal();
         });
 
-        /*----------------------------------Display policy info component-----------------------------*/
+        /*----------------------------------Display Policy Info Component-----------------------------*/
         let loadPolicyInfo = (fileId) => {
             let mainContentWrapper = this.shadowRoot.getElementById("client-info-main");
             mainContentWrapper.innerHTML = ``;
@@ -969,16 +971,22 @@ customElements.define("display-client", class extends HTMLElement {
                 mainContentWrapper.appendChild(policyInfoComponent);
             }
         }
+
+         //Tab button - loadPolicyInfo
+         let policyInfoTabBtn = this.shadowRoot.getElementById('policy-info-btn');
+         policyInfoTabBtn.addEventListener("click", () => {
+            this.shadowRoot.getElementById("client-info-main").innerHTML = "";
+            loadPolicyInfo(fileId);
+         });
         /*------------------------------------------------------------------------------------------------*/
 
-        /*----------------------------------View Dependencies-----------------------------------------*/
+        /*----------------------------------Dependencies Info Component-----------------------------------------*/
         let dependencyTabBtn = this.shadowRoot.getElementById("dependants-btn");
         dependencyTabBtn.addEventListener("click", () => {
             this.shadowRoot.getElementById("client-info-main").innerHTML = "";
 
             //invoke dependency management component
             let mainContentWrapper = this.shadowRoot.getElementById("client-info-main");
-            mainContentWrapper.innerHTML = ``;
             let dependencyManagementComponent = document.createElement("dependency-management-component");
             if(dependencyManagementComponent)
             {
@@ -986,6 +994,7 @@ customElements.define("display-client", class extends HTMLElement {
                mainContentWrapper.appendChild(dependencyManagementComponent);
             }
         });
+        
         /*------------------------------------------------------------------------------------------------*/
         // Function to show more information about a client
         let showMoreInfo = (id) => {
@@ -1000,34 +1009,13 @@ customElements.define("display-client", class extends HTMLElement {
             idPassportNumber = client.id_passport;
             primaryClientName = client.name;
             primaryLastName = client.lastName;
-/*------------------------------------------------------------------------------------------------*/
-            
-/*---------------------------------------------------------------------------------------------------*/
 
             // Display the modal
             this.shadowRoot.getElementById('clientInfoModal').style.display = "block";
         }
+        //-----End showMoreInfo
+        /*______________________________________________________________________________________________*/
 
-        //Remove dependency
-        let removeDependency = (dependency_id, clientId) => {
-            let dependencyId = parseInt(dependency_id);
-            fetch(`/client/management/dependencies/remove/${dependencyId}`,{
-                method: "POST",
-                headers: {
-                    'Content-Type': "application/json",
-                },
-                body: JSON.stringify({clientid: clientId}),
-            }).then((response) => {
-                if(!response.ok){
-                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
-                }
-                 return response.text();
-            }).then((data) => {
-                alert(data);
-            }).catch(error => {
-                alert("Failed to delete dependent. Please try again later, if problem persist kindy contact web master: webmaster@altograce.co.za");
-            })
-        }
 
         // Function to close the client info modal
         let closeClientInfoModal = () => {
@@ -1038,6 +1026,7 @@ customElements.define("display-client", class extends HTMLElement {
         this.shadowRoot.querySelector(".client-info-close").addEventListener("click", ()=>{
             closeClientInfoModal();
         });
+
 /*-------------------------------Deacesed Information Processing-------------------------------------*/
         let processDeaceased = (id_val) => {
             deceased = dependencies.find(dependency => dependency.id === id_val);

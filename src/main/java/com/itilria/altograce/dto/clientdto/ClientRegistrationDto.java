@@ -32,5 +32,8 @@ public class ClientRegistrationDto {
     private String groupName;
     private LocalDate dateOfCover;
     private BigDecimal joiningFee;
+    private BigDecimal premiumAmount;
+    private Integer lapsePeriod;
+    private Integer membersCount;
     private int waitPeriod;
 }
