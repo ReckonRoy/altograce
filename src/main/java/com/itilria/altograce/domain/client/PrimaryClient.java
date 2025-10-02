@@ -75,6 +75,10 @@ public class PrimaryClient{
     private List<ClientDependency> clientDependency;
     
     @JsonIgnore
+    @OneToMany(mappedBy = "policyHolder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Addon> addons;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "primaryClient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Funeral> funeralManagement;
 

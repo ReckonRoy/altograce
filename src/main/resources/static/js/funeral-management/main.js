@@ -13,20 +13,19 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     
     let fileId = getQueryParam("fileId");
-    let deceasedName = getQueryParam("name");
-    let surname = getQueryParam("surname");
-    let primaryClient = getQueryParam("clientName");
+    let deceasedId = getQueryParam("deceasedId");
+    let deceasedFullName = getQueryParam("deceasedFullName");
+    let policyHolderName = getQueryParam("policyHolderName");
     let idPassport = getQueryParam("id_passport");
-    let dependentId = getQueryParam("dependentId");
+    
 
     
     let funeralFormComponent = document.createElement("funeral-form-component");
-    funeralFormComponent.setAttribute("primaryClient", primaryClient);
+    funeralFormComponent.setAttribute("policyHolderName", policyHolderName);
     funeralFormComponent.setAttribute("fileId", fileId);
-    funeralFormComponent.setAttribute("deceasedName", deceasedName);
-    funeralFormComponent.setAttribute("surname", surname);
+    funeralFormComponent.setAttribute("deceasedId", deceasedId);
+    funeralFormComponent.setAttribute("deceasedFullName", deceasedFullName);
     funeralFormComponent.setAttribute("idPassport", idPassport);
-    funeralFormComponent.setAttribute("dependentId", dependentId);
     
     
     let formContainer = document.getElementById("form-container");

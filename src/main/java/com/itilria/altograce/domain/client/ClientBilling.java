@@ -36,9 +36,19 @@ public class ClientBilling{
     private LocalDate recordEntryDate;
 
     @Column(nullable=false)
-    private BigDecimal amountPayed;
+    private BigDecimal amountPaid;
 
     private String paymentMethod;
+
+    private boolean partialPayment;
+
+    public boolean isPartialPayment() {
+        return partialPayment;
+    }
+
+    public void setPartialPayment(boolean partialPayment) {
+        this.partialPayment = partialPayment;
+    }
 
     @JsonBackReference
     @ManyToOne

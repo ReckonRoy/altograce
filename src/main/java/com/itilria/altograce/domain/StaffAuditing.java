@@ -35,9 +35,9 @@ public class StaffAuditing{
      */
     @Column(name = "ACTION")
     private String staffAction;
+
     private long companyId;
     private long staffId;
     private long clientId;
-
     private LocalDate recordEntryDate;
 }

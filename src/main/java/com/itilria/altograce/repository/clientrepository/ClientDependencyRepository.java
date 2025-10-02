@@ -12,4 +12,6 @@ public interface ClientDependencyRepository extends JpaRepository<ClientDependen
     List<ClientDependency> findByPrimaryClient_Id(long id);
     @Query("SELECT u FROM ClientDependency u WHERE u.id_passport = ?1")
     Optional<ClientDependency> findByPassport(String id_passport);
+    int countByPrimaryClient_Id(long id);
+
 }

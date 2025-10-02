@@ -7,13 +7,13 @@
 customElements.define("funeral-form-component", class extends HTMLElement {
 /*------------------------------------------------------------------------------------------------------*/
     // Define the primary client property
-    set primaryClient(value) {
-        this.setAttribute('primaryClient', value); // Update the attribute value
+    set policyHolderName(value) {
+        this.setAttribute('policyHolderName', value); // Update the attribute value
         this.render(); // Render the component whenever the property is set
     }
 
-    get primaryClient() {
-        return this.getAttribute('primaryClient');
+    get policyHolderName() {
+        return this.getAttribute('policyHolderName');
     }
 
     // Define the fileId client property
@@ -28,23 +28,15 @@ customElements.define("funeral-form-component", class extends HTMLElement {
 
     // Define the deceased name property
     set deceasedName(value) {
-        this.setAttribute('deceasedName', value); // Update the attribute value
+        this.setAttribute('deceasedFullName', value); // Update the attribute value
         this.render(); // Render the component whenever the property is set
     }
 
     get deceasedName() {
-        return this.getAttribute('deceasedName');
+        return this.getAttribute('deceasedFullName');
     }
 
-    // Define the surnname property
-    set surname(value) {
-        this.setAttribute('surname', value); // Update the attribute value
-        this.render(); // Render the component whenever the property is set
-    }
-
-    get surname() {
-        return this.getAttribute('surname');
-    }
+    
 
     // Deceased Id/Passport property
     set idPassport(value) {
@@ -57,13 +49,13 @@ customElements.define("funeral-form-component", class extends HTMLElement {
     }
 
     // id
-    set dependentId(value) {
-        this.setAttribute('dependentId', value); // Update the attribute value
+    set deceasedId(value) {
+        this.setAttribute('deceasedId', value); // Update the attribute value
         this.render(); // Render the component whenever the property is set
     }
 
-    get dependentId() {
-        return this.getAttribute('dependentId');
+    get deceasedId() {
+        return this.getAttribute('deceasedId');
     }
 
     
@@ -149,8 +141,8 @@ customElements.define("funeral-form-component", class extends HTMLElement {
                 <h2>Generate Invoice</h2>
                 <form id="invoice-generation-form">
                     <div class="form-group">
-                        <label for="client-name">Client Name:</label>
-                        <input type="text" id="client-name" name="clientName" value="${this.primaryClient}" required>
+                        <label for="client-name">Policy holder's Name:</label>
+                        <input type="text" id="client-name" name="clientName" value="${this.policyHolderName}" required>
                     </div>
                     <div class="form-group">
                         <label for="date-of-collection">Date of Collection of Deceased:</label>
@@ -248,9 +240,9 @@ customElements.define("funeral-form-component", class extends HTMLElement {
             this.handleEvents();
         }
     }
-
+ 
     static get observedAttributes() {
-        return ['primaryClient', 'fileId', 'deceasedName', 'surname', 'idPassport'];
+        return ['fileId', 'policyHolderName', 'deceasedFullName', 'idPassport'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

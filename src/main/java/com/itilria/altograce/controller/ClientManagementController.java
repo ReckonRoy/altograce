@@ -29,6 +29,7 @@ import com.itilria.altograce.domain.client.ClientBilling;
 import com.itilria.altograce.domain.client.ClientDependency;
 import com.itilria.altograce.domain.client.Deceased;
 import com.itilria.altograce.domain.client.PrimaryClient;
+import com.itilria.altograce.domain.client.Addon;
 import com.itilria.altograce.domain.client.PrimaryPackageSubscription;
 import com.itilria.altograce.domain.funeral.Invoice;
 import com.itilria.altograce.dto.clientdto.ClientRegistrationDto;
@@ -85,7 +86,8 @@ public class ClientManagementController{
      * pass data objects to service methods
      */
     @PostMapping("/management/register")
-    public ResponseEntity<?> registerClient(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ClientRegistrationDto request)
+    public ResponseEntity<?> registerClient(@AuthenticationPrincipal UserDetails userDetails,
+     @RequestBody ClientRegistrationDto request)
     {
         try{
             PrimaryClient client = new PrimaryClient();
@@ -142,7 +144,8 @@ public class ClientManagementController{
     
     //get client
     @GetMapping("/management/policy/{fileId}")
-    public ResponseEntity<?> getClient(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long fileId)
+    public ResponseEntity<?> getClient(@AuthenticationPrincipal UserDetails userDetails,
+     @PathVariable long fileId)
     {
         try{
             PrimaryClient result = clientService.getClient(userDetails.getUsername(), fileId);
@@ -155,21 +158,23 @@ public class ClientManagementController{
 /*--------------------------------Subscription Section------------------------------------------*/
     //get subscription route
     @GetMapping("/management/subscription/{clientid}")
-    public ResponseEntity<?> getSubscriptionPlan(@PathVariable int clientid)
-    {
-        Map<String, String> result = clientService.getSubscriptionPlan(clientid);
-        if(result != null)
-        {
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("No subscription plan available", HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> getSubscriptionPlan(@AuthenticationPrincipal UserDetails userDetails,
+     @PathVariable long clientid) {
+        try {
+            Map<String, Object> result = clientService.getSubscriptionPlan(userDetails.getUsername(), clientid);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
 /*____________________________________________________________________________________________*/
 /*-------------------------------------Dependency Section------------------------------------*/
     //Add dependency route
     @PostMapping("/management/add/dependency/{clientid}")
-    public ResponseEntity<?> addDependency(@PathVariable long clientid, @RequestBody ClientDependency request)
+    public ResponseEntity<?> addDependency(@PathVariable long clientid,
+     @RequestBody ClientDependency request)
     {
         try{
             ClientDependency result = clientService.addDependency(clientid, request);
@@ -200,7 +205,8 @@ public class ClientManagementController{
 
     //remove dependency route
     @PostMapping("/management/dependencies/remove/{id}")
-    public ResponseEntity<?> removeDependent(@AuthenticationPrincipal UserDetails userDetails, @PathVariable int id, @RequestBody Map<String, String> request)
+    public ResponseEntity<?> removeDependent(@AuthenticationPrincipal UserDetails userDetails,
+     @PathVariable long id, @RequestBody Map<String, String> request)
     {
         //get user id and companyId
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
@@ -222,7 +228,8 @@ public class ClientManagementController{
 
     //delete file route
     @DeleteMapping("/delete-file/{fileId}")
-    public ResponseEntity<?> deleteFile(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long fileId)
+    public ResponseEntity<?> deleteFile(@AuthenticationPrincipal UserDetails userDetails,
+     @PathVariable long fileId)
     {
         try{
             //get user id and companyId
@@ -260,16 +267,31 @@ public class ClientManagementController{
 /*----------------------------------Client Billing Route-----------------------------------------*/
     //add billing route
     @PostMapping("/billing/{clientId}")
-    public ResponseEntity<?> billClient(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long clientId, @RequestBody ClientBilling request){
-        //get user id and companyId
+    public ResponseEntity<?> billClient(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable long clientId,
+            @RequestBody ClientBilling request) {
+
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
-        ClientBilling billingResult = clientService.billClient(clientId, request);
-        if(billingResult != null)
-        {
+        List<ClientBilling> billingResults = clientService.billClient(clientId, request);
+
+        if (!billingResults.isEmpty()) {
             clientService.staffAudit("Billing", userDetails.getUsername(), clientId, result.getId());
-            return ResponseEntity.ok("Client Has been successfully billed!");
-        }else{
+            return ResponseEntity.ok(billingResults.size() + " payment record(s) created successfully!");
+        } else {
             return new ResponseEntity<>("Payment Transaction Failed!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //payment details route
+    @GetMapping("get-balance/{clientId}")
+    public ResponseEntity<?> getlatestPaymentDetails(@AuthenticationPrincipal UserDetails userDetails,
+     @PathVariable long clientId){
+        try{
+            Map<String, Object> response = clientService.getBalanceDue(userDetails.getUsername(), clientId);
+            return ResponseEntity.ok(response);
+        }catch(IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
 
@@ -284,6 +306,31 @@ public class ClientManagementController{
             return new ResponseEntity<>("No Payment history availaable", HttpStatus.NO_CONTENT);
         }
     }
+
+    //delete a payment
+    @PostMapping("/remove-payment/{clientId}")
+    public ResponseEntity<?> removePayment(@AuthenticationPrincipal UserDetails userDetails,
+     @PathVariable long clientId,
+     @RequestBody Map<String, String> request)
+    {
+        //get user id and companyId
+        UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
+        Map<String, Long> userData = new HashMap<>();
+        userData.put("userId", result.getId());
+        userData.put("companyId", result.getCompanyId());
+
+        boolean removeResult = clientService.removePayment(clientId, Long.parseLong(request.get("paymentid")));
+        
+        if(removeResult == true)
+        {
+            clientService.staffAudit("REMOVE", userDetails.getUsername(), clientId, result.getId());
+            return ResponseEntity.ok("Payment has been successfuly removed");
+        }else{
+            return new ResponseEntity<>("Failed to remove Payment. Primary Client does not exist", HttpStatus.NO_CONTENT);
+        }
+        
+    }
+
 
 /*________________________________________________________________________________________________*/
 
@@ -343,6 +390,27 @@ public class ClientManagementController{
             return new ResponseEntity<>(result, HttpStatus.OK);
         }catch(IllegalArgumentException illegalArgumentException){
             return new ResponseEntity<>(illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+/*---------------------------- ADDON ROUTES ---------------------------*/
+/*
+ * ADD ADDON ROUTE
+ * ADD INDIVIDUAL ADDON
+*/
+    @PostMapping("/create-addon/{clientId}")
+    public ResponseEntity<?> createAddon(@AuthenticationPrincipal UserDetails userDetails,
+     @PathVariable long clientId,
+     @RequestBody Addon request){
+        try{
+            UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
+            boolean createAddonRequest = clientService.createAddon(userDetails.getUsername(), clientId, request);
+            
+            //The action being done/username/client this action is affceting/ the staff who commited this action
+            clientService.staffAudit("Added addon", userDetails.getUsername(), clientId, result.getId());
+            return ResponseEntity.ok("Addon has been successfuly added"); 
+        }catch(IllegalArgumentException exception){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
     }
 }

@@ -122,10 +122,6 @@ customElements.define("billing-component", class extends HTMLElement {
                       <label for="amount-to-pay">Amount to Pay:</label><br/>
                       <input type="number" id="amount-to-pay" name="amount-to-pay" required>
                   </div>
-                  <div id="date-div" class="form-group">
-                      <label for="payment-date">Payment Date:</label>
-                      <input type="date" id="payment-date" name="payment-date" value="" required>
-                  </div>
                   <div id="pmethod-div" class="form-group">
                       <label for="payment-method">Payment Method:</label>
                       <select id="payment-method" name="payment-method">
@@ -148,8 +144,7 @@ customElements.define("billing-component", class extends HTMLElement {
 
       let submitBilling = () => {
         let billingData = {
-            'amountPayed': parseFloat(this.shadowRoot.getElementById('amount-to-pay').value),
-            'paymentDate': this.shadowRoot.getElementById('payment-date').value,
+            'amountPaid': parseFloat(this.shadowRoot.getElementById('amount-to-pay').value),
             'paymentMethod': this.shadowRoot.getElementById('payment-method').value,
         }
 

@@ -168,7 +168,7 @@ customElements.define("display-client", class extends HTMLElement {
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 50%;
+            width: 70%;
             border-radius: 8px;
             position: relative;
             backround-color: gray;
@@ -990,7 +990,10 @@ customElements.define("display-client", class extends HTMLElement {
             let dependencyManagementComponent = document.createElement("dependency-management-component");
             if(dependencyManagementComponent)
             {
+               let client = clientsToShow.find(client => client.id == fileId);
+               let policyHolderName = `${client.name} ${client.lastName}`;
                dependencyManagementComponent.setAttribute('fileId', fileId); 
+               dependencyManagementComponent.setAttribute('policyHolderName', policyHolderName); 
                mainContentWrapper.appendChild(dependencyManagementComponent);
             }
         });
@@ -1028,37 +1031,21 @@ customElements.define("display-client", class extends HTMLElement {
         });
 
 /*-------------------------------Deacesed Information Processing-------------------------------------*/
-        let processDeaceased = (id_val) => {
-            deceased = dependencies.find(dependency => dependency.id === id_val);
-        }
-
         let fa_btn = this.shadowRoot.getElementById("fa-btn");
         fa_btn.addEventListener("click", () => {
             funeralArrangements();
         });
 
+        /** 
         let funeralArrangements = () => {
             let fileNumber = fileId;
-            let clientName = primaryClientName;
-            let surname = primaryLastName;
-            let name;
-            if(deceased.name === undefined){
-                name = "";
-            }else{
-                name = `${deceased.name} ${deceased.surname}`;
-            }
-                
-            
-            let id_pass;
-            if(name !== ""){
-                id_pass = deceased.id_passport;
-            }else{
-                id_pass = idPassportNumber;
-            }
+            let name = `${deceased.name} ${deceased.surname}`;
+            id_pass = deceased.id_passport;
             
             location.href = "/funeral/management" + "?fileId=" + encodeURIComponent(fileNumber) + "&clientName=" + encodeURIComponent(clientName) + "&name=" +
              encodeURIComponent(name) + "&surname=" + encodeURIComponent(surname) + "&id_passport=" + encodeURIComponent(id_pass) + "&dependentId=" + deceased.id;
         }
+        */
 
         // Function to display clients in the table
         let displayClient = (clientsToShow) => {
