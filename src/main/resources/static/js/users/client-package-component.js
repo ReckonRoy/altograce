@@ -197,7 +197,7 @@ customElements.define("add-package", class extends HTMLElement {
                                 <input type="radio" class="package-radio-btn" name="package" value="${pkg.id}" id="package${pkg.id}">
                                 <label for="package${pkg.id}">${pkg.policyName} - ${pkg.premiumAmount} - ${pkg.membersCount} Members</label>
                             </div>
-                            <button class="read-more-button" id="${pkg.id}">Read More</button>
+                            
                         `;
                         packagesDiv.appendChild(card);
                     });
@@ -210,109 +210,10 @@ customElements.define("add-package", class extends HTMLElement {
                             clientRegistration.formData.waitPeriod = packages[btn.value].waitPeriod;
                         });
                     });
-                    /*
-                    let readMore_btn = this.shadowRoot.querySelectorAll(".read-more-button");
-                    readMore_btn.forEach((btn) => {
-                        btn.addEventListener("click", () => {
-                            let packageId = parseInt(btn.id);
-                            showDetails(packageId);
-                        });
-                    });
-                    */
                 })
             }, 2000);
         }
 
-        /*
-        let showDetails = (packageId) => {
-            const packageDetailsDiv = this.shadowRoot.getElementById('package-details');
-            packageDetailsDiv.innerHTML = '';
-
-            const detailsOverlay = this.shadowRoot.querySelector('.details-overlay');
-            detailsOverlay.style.display = 'block';
-
-            const detailsModal = this.shadowRoot.getElementById('details-modal');
-            detailsModal.style.display = 'block';
-
-            //items offered on package
-            const itemsTable = document.createElement('table');
-            itemsTable.className = 'details-table';
-            let packageForm = {packageType: "standard"};
-            fetch(`/package/items/${packageId}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(packageForm),
-            })
-            .then(response => response.json())
-            .then(data => {
-                const itemsHeading = document.createElement('h4');
-                itemsHeading.textContent = 'Items:';
-                packageDetailsDiv.appendChild(itemsHeading);
-
-                const itemsHeaderRow = document.createElement('tr');
-                itemsHeaderRow.innerHTML = '<th>Item</th><th>Quantity</th>';
-                itemsTable.appendChild(itemsHeaderRow); 
-                data.forEach(item => {
-                    const itemRow = document.createElement('tr');
-                    itemRow.innerHTML = `<td>${item.itemName}</td><td>${item.itemQuantity}</td>`;
-                    itemsTable.appendChild(itemRow);
-                    packageDetailsDiv.appendChild(itemsTable);
-                });
-            }).catch(error => {
-            });    
-
-            
-            const servicesTable = document.createElement('table');
-            servicesTable.className = 'details-table';
-            let serviceForm = {packageType: "standard"};
-            fetch(`/package/services/${packageId}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(serviceForm),
-            })
-            .then(response => response.json())
-            .then(data => {
-                const servicesHeading = document.createElement('h4');
-                servicesHeading.textContent = 'Services:';
-                packageDetailsDiv.appendChild(servicesHeading);
-
-                const servicesHeaderRow = document.createElement('tr');
-                servicesHeaderRow.innerHTML = '<th>Service Name</th><th>Description</th>';
-                servicesTable.appendChild(servicesHeaderRow);
-                data.forEach(service => {
-                    const serviceRow = document.createElement('tr');
-                    serviceRow.innerHTML = `<td>${service.serviceName}</td><td>${service.description}</td>`;
-                    servicesTable.appendChild(serviceRow);
-                });
-                packageDetailsDiv.appendChild(servicesTable);
-            }).catch(error => {
-                
-            });
-        }
-        */
-
-        /*
-        let closeDetails = () => {
-            const detailsOverlay = this.shadowRoot.querySelector('.details-overlay');
-            detailsOverlay.style.display = 'none';
-
-            const detailsModal = this.shadowRoot.getElementById('details-modal');
-            detailsModal.style.display = 'none';
-        }
-        */
-
-        /*
-        let close_btn = this.shadowRoot.querySelectorAll(".close-button");
-        close_btn.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                closeDetails();
-            });
-        });
-        */
         renderPackages();
     }
 });

@@ -14,6 +14,46 @@ customElements.define('policy-info-component', class extends HTMLElement{
     __productDescription;
     __createdAt;
     __waitPeriod;
+    __addonCount;
+    __addonData;
+	__policyHolderData;
+
+    /*------------------------------------------------------ */
+    get addonData()
+    {
+        return this.__addonData;
+    }
+
+    set addonData(addonData){
+        this.__addonData = addonData;
+    }
+
+    /*------------------------------------------------------ */
+	
+	/*------------------------------------------------------ */
+    get policyHolderData()
+    {
+        return this.__policyHolderData;
+    }
+
+    set policyHolderData(policyHolderData){
+        this.__policyHolderData = policyHolderData;
+    }
+
+    /*------------------------------------------------------ */
+    
+    /*------------------------------------------------------ */
+    get addonCount(){
+        return this.__addonCount;
+    }
+
+    /**
+     * @param {number} addonCount
+     */
+    set addonCount(addonCount){
+        this.__addonCount = addonCount;
+    }
+    /*------------------------------------------------------ */
 
     /*------------------------------------------------------ */
     get productName(){
@@ -299,25 +339,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
                 }
                 /*______________________________________*/
 
-                /*styles for createAddon go here*/
-                /* Addon wrapper */
-                .addon-wrapper {
-                    background: #ffffff;
-                    border-radius: 12px;
-                    padding: 30px;
-                    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-                    margin-top: 20px;
-                    max-width: 600px;
-                }
-
-                /* Heading */
-                .addon-wrapper h2 {
-                    font-size: 22px;
-                    font-weight: 600;
-                    margin-bottom: 20px;
-                    color: #333;
-                    text-transform: capitalize;
-                }
+                /* ================ styles for createAddon form ============ */
 
                 /* Modern form grid */
                 .addon-wrapper .modern-form {
@@ -379,6 +401,108 @@ customElements.define('policy-info-component', class extends HTMLElement{
                     transform: translateY(-2px);
                 }
 
+                /*----------- addon view grid ----------*/
+                /*----------- addon wrapper ----------*/
+				.addon-wrapper {
+				  width: 95%;
+				  background: #fff;
+				  padding: 20px;
+				  border-radius: 12px;
+				  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+				  font-family: "Segoe UI", Roboto, sans-serif;
+				  color: #333;
+				  margin: 10px auto;
+				  box-sizing: border-box;
+				}
+				
+				/* Heading style */
+				.addon-wrapper h2 {
+				  font-size: 1.4rem;
+				  font-weight: 600;
+				  margin-bottom: 15px;
+				  color: #444;
+				  letter-spacing: 0.5px;
+				}
+				
+				/*----------- addon view grid ----------*/
+				#addonViewGrid {
+				  display: grid;
+				  grid-template-columns: 1.2fr 1fr 2fr 1fr 1fr; /* proportional spacing */
+				  border: 1px solid #ddd;
+				  border-radius: 8px;
+				  overflow: hidden;
+				  width: 100%;
+				  box-sizing: border-box;
+				}
+				
+				/* Header row (first 5 items) */
+				#addonViewGrid > div:nth-child(-n+5) {
+				  background: #f5f7fa;
+				  font-weight: 600;
+				  color: #222;
+				  overflow: visible;  /* headers don't need scroll */
+				  max-height: none;
+				}
+				
+				/* Each cell */
+				#addonViewGrid > div,
+				#addonViewGrid > button {
+				  padding: 12px 16px;
+				  border-bottom: 1px solid #eee;
+				  border-right: 1px solid #eee;
+				  font-size: 0.95rem;
+				  text-align: left;
+				  background: #fafafa;
+				  max-height: 60px;             /* limit each cell height */
+				  overflow: hidden;             /* prevent row stretching */
+				  display: flex;                /* align content nicely */
+				  align-items: center;          /* vertically center shorter text */
+				}
+				
+				/* Remove border for last column */
+				#addonViewGrid > div:nth-child(5n),
+				#addonViewGrid > button:nth-child(5n) {
+				  border-right: none;
+				}
+				
+				/* Description column only — allow scroll */
+				#addonViewGrid > div:nth-child(5n + 3) {  /* 3rd, 8th, 13th ... */
+				  overflow-y: auto;             /* scroll vertically inside */
+				  white-space: normal;
+				  word-wrap: break-word;
+				}
+				
+				/* Optional: small scrollbar styling */
+				#addonViewGrid > div:nth-child(3n + 3)::-webkit-scrollbar {
+				  width: 6px;
+				}
+				#addonViewGrid > div:nth-child(3n + 3)::-webkit-scrollbar-thumb {
+				  background-color: #ccc;
+				  border-radius: 3px;
+				}
+				
+				/* Buttons */
+				#addonViewGrid button {
+				  background: #e63946;
+				  color: white;
+				  border: none;
+				  border-radius: 6px;
+				  padding: 6px 12px;
+				  cursor: pointer;
+				  font-size: 0.9rem;
+				  transition: background 0.2s ease;
+				  height: 40px;                 /* fix button height */
+				  align-self: center;
+				}
+
+				#addonViewGrid button:hover {
+				  background: #d62828;
+				}
+
+
+                #open-addons-table-btn{
+                    display: none;
+                }
                 /*Validation*/
                 /* Validation styles */
                 .required {
@@ -405,6 +529,156 @@ customElements.define('policy-info-component', class extends HTMLElement{
                     display: block;
                 }
             /*______________________________________*/
+			/* ===========================================
+			    Responsive Design
+			   =========================================== */
+
+			
+			@media (max-width: 1024px) {
+				
+				.prop-button{
+					width: 80%;
+				}
+			  /* Tablets (≤1024px wide) */
+			  /* Table: reduce padding and font size */
+			  table, th, td {
+			    font-size: 0.9rem;
+			    padding: 0.8rem 1rem;
+			  }
+
+			  /* Cards and wrappers fit better on tablets */
+			  .client-info-card,
+			  .addon-wrapper,
+			  .change-policy-wrapper {
+				margin: 0 auto;
+				padding: 0;
+			  }
+
+			  /* Grid: make columns more equal and readable */
+			  #addonViewGrid {
+			    grid-template-columns: 1.5fr 1fr 1.8fr 1fr 1fr;
+				width: 100%;
+			  }
+
+			  /* Headings smaller */
+			  h2, h3 {
+			    font-size: 1.2rem;
+			  }
+
+			  button {
+			    padding: 8px 16px;
+			    font-size: 0.9rem;
+			  }
+			}
+
+			/* Mobile phones (≤768px wide) */
+			@media (max-width: 768px) {
+				
+			/* Cards and wrappers fit better on tablets */
+			  .client-info-card,
+			  .addon-wrapper,
+			  .change-policy-wrapper {
+				width: 100%;
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			  }
+			  
+			  /* Table: convert to horizontal scroll */
+			  table {
+			    display: block;
+			    overflow-x: auto;
+			    white-space: nowrap;
+			    border: none;
+				width: 100%;
+			  }
+
+			  th, td {
+			    padding: 0.8rem;
+			    font-size: 0.85rem;
+			  }
+
+			  /* Card layout: stack nicely */
+			  .client-info-card,
+			  .addon-wrapper,
+			  .change-policy-wrapper {
+			    width: 100%;
+				margin: 10px 0;
+			    box-shadow: none;
+				box-sizing: border-box;
+				padding: 5px 0;
+			  }
+			  
+
+			  /* Form grids: switch to single-column */
+			  .modern-form {
+			    display: flex;
+			    flex-direction: column;
+			  }
+
+			  /* Buttons: full width on mobile */
+			  button, .submit-btn {
+			    width: 100%;
+			    font-size: 0.9rem;
+			    padding: 12px;
+			  }
+
+			  /* addon view grid */
+			  #addonViewGrid{
+				width: 100%;
+			  }
+			    /* Make description scrollable if needed */
+			    #addonViewGrid > div:nth-child(5n-2) {
+			      overflow-y: auto;
+			      white-space: normal;
+			      word-wrap: break-word;
+			      max-height: 60px;
+			      width: 100%;
+			    }
+
+			    /* Each cell takes full width on mobile */
+			    #addonViewGrid > div {
+			      flex-direction: row;
+			      width: 100%;
+			      display: flex;
+			      justify-content: space-between;
+			    }
+
+			    /* Buttons sit below row content */
+			    #addonViewGrid > div:nth-child(5n) {
+			      margin-top: 8px;
+			      width: auto;
+			      align-self: flex-start;
+			    }
+			  }
+			}
+
+			/* Very small screens (≤480px wide) */
+			@media (max-width: 480px) {
+			  th, td {
+			    font-size: 0.8rem;
+			    padding: 0.6rem;
+			  }
+
+			  h2, h3 {
+			    font-size: 1rem;
+			  }
+
+			  .addon-wrapper h2 {
+			    font-size: 1.1rem;
+			  }
+
+			  .submit-btn {
+			    font-size: 0.85rem;
+			    padding: 10px;
+			  }
+
+			  input, textarea, select {
+			    font-size: 0.9rem;
+			    padding: 10px;
+			  }
+			}
+
                  
             </style>
             <!-- Policy holder's information -->
@@ -414,7 +688,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
             <div class="client-info-card" id="policy-info-card">
                 <!-- Display policy information-->
                 <div id="policy-info-div"></div>
-                <!-- Upgrade or downgrade cureent user policy -->
+                <!-- Upgrade or downgrade current user policy -->
                 <div id="policies-div"></div>
             </div>  
         `;
@@ -436,7 +710,6 @@ customElements.define('policy-info-component', class extends HTMLElement{
             this.getPolicyHolderInfo(this.fileId);
             this.getPolicyInfo(this.fileId);
             this.getPolicies();
-            this.updatePolicyHolderInfo(this.fileId);
             this.updatePolicy(this.fileId);
             this.#getDependencies(this.fileId);
             this.attachEventListeners();
@@ -454,8 +727,38 @@ customElements.define('policy-info-component', class extends HTMLElement{
         this.render();
     }
     /*_______________________________________________________________________________________________*/
+	/* ========================= reload ui for initial state ======================== */
 
+	reloadUI() {
+	    this.getPolicyHolderInfo(this.fileId);
+	    this.getPolicyInfo(this.fileId);
+	    this.getPolicies();
+	    this.updatePolicy(this.fileId);
+	    this.#getDependencies(this.fileId);
+	    this.attachEventListeners();
+	}
     /*-------------------------------------------Methods--------------------------------------------*/
+    displayPolicyHolderInfoActions(){
+        const actionsWrapper = document.createElement("div");
+        const actionsContent = `
+        <div>
+            <button class="prop-button" id="open-changepolicyholder-form">Change policy holder</button> 
+            <button class="prop-button" id="open-policyholderupdate-form">Update</button> 
+            <button class="prop-button" id="open-addons-form">Create Addons</button>
+            <button class="prop-button" id="open-addons-table-btn">View Addons</button>
+        </div>`;
+
+        actionsWrapper.innerHTML = actionsContent;
+
+        const addonBtn = actionsWrapper.querySelector("#open-addons-table-btn");
+        if(this.addonCount > 0 )
+        {
+            addonBtn.style.display = "inline";
+        }
+
+        return actionsWrapper;
+    }
+
     //get policy holder's info from server 
     getPolicyHolderInfo(fileId)
     {
@@ -468,17 +771,18 @@ customElements.define('policy-info-component', class extends HTMLElement{
                     })
                 }
                 
-                return response.json();
+				let policyHolderdata = response.json();
+				
+                return policyHolderdata;
             }).then((data) => {
+				this.policyHolderData = data;
                 let contentWrapper = this.shadowRoot.getElementById("client-info-card");
+                contentWrapper.innerHTML = "";
+                this.addonCount = data.addonCount;
 
                 let clientInfoTable = `
                     <table id="client-info-table">
                     <caption><h2>Policy Holder's Info</h2></caption> 
-                    <tr>
-                        <td>Province: </td>
-                        <td>${data.province}</td>
-                    </tr>
                     <tr>
                         <td>Address:</td>
                         <td>${data.address}</td>
@@ -489,7 +793,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
                         <td>${data.phoneContact1}</td>
                     </tr>`;
 
-                if(data.phoneContact2 > 0){
+                if(data.phoneContact2){
                     clientInfoTable += `
                     <tr>
                         <td>Contact 2: </td>
@@ -514,17 +818,167 @@ customElements.define('policy-info-component', class extends HTMLElement{
                             <td>ID/Passport Number:</td>
                             <td>${data.id_passport}</td>
                         </tr>
-                    </table>
-                    <div>
-                        <button class="prop-button" id="open-changepolicyholder-form">Change policy holder</button> | <button class="prop-button" id="open-policyholderupdate-form">Update</button> | <button class="prop-button" id="open-addons-form">Add Ons</button>
-                    </div>
+                    </table> 
                 `;
-            contentWrapper.innerHTML = clientInfoTable;
+                contentWrapper.innerHTML = clientInfoTable;
+                contentWrapper.appendChild(this.displayPolicyHolderInfoActions());
+                    
             }).catch(error => {
                 alert(error);
             })
     }
 
+	
+	/* ================ Create update Policy holder form ================ */
+	createUpdateForm() {
+	    
+		let contentWrapper = this.shadowRoot.getElementById("client-info-card");
+		contentWrapper.innerHTML = "";
+				 
+		// Wrapper for addon contents
+		const createUpdatePolicyHolderFormWrapper = document.createElement("div");
+		createUpdatePolicyHolderFormWrapper.classList.add("addon-wrapper");
+		         
+		// heading informing user about form
+		const heading = document.createElement("h2");
+		heading.textContent = "Update Policy Holder infor";
+		createUpdatePolicyHolderFormWrapper.appendChild(heading);
+
+		const formDiv = document.createElement("div");
+		formDiv.id = "update-policy-holder-form";
+		formDiv.classList.add("modern-form");
+		 
+			let formContent = `
+		 	<label>Date Of Birth</label><input type="date" value="${this.policyHolderData.dob}" id="dob-field"/>
+			<label>ID_Passport</label><input type="text" value="${this.policyHolderData.id_passport}" id="id-passport-field"/>
+			<label>Contact</label><input type="text" value="${this.policyHolderData.phoneContact1}" id="contact-field"/>
+			<label>Address</label>
+			<textarea rows="5" cols="50" id="address-field">${this.policyHolderData.address}</textarea>
+		 `;
+		 
+		 formDiv.innerHTML = formContent;
+		
+	    // Submit button
+	    const submitBtn = document.createElement('button');
+	    submitBtn.type = 'button';
+	    submitBtn.textContent = 'Update Info';
+	    formDiv.appendChild(submitBtn);
+		submitBtn.classList.add("submit-btn");
+		
+		createUpdatePolicyHolderFormWrapper.appendChild(formDiv);
+	    contentWrapper.appendChild(createUpdatePolicyHolderFormWrapper);
+		contentWrapper.appendChild(this.displayPolicyHolderInfoActions());
+		
+		submitBtn.addEventListener('click', () => {
+			let dobField = this.shadowRoot.getElementById("dob-field").value.trim();
+			let id_passportField = this.shadowRoot.getElementById("id-passport-field").value.trim();
+			let contactField = this.shadowRoot.getElementById("contact-field").value.trim();
+			let addressField = this.shadowRoot.getElementById("address-field").value.trim();
+			alert(addressField);
+			let isValid = this.validatePolicyHolderDetails(dobField, id_passportField, contactField, addressField);
+			
+			if (isValid) {
+		        // Proceed with async update
+		        this.updatePolicyHolder(dobField, id_passportField, contactField, addressField);
+		    }
+	    });
+	}
+	
+	/* ================= Validate policy holder details ======================== 
+	* validate update policy holder form dteails
+	*/
+	validatePolicyHolderDetails(dob, id_passport, contact, address) {
+		let errors = [];
+
+	    // Date of birth validation
+	    if (!dob) {
+	        errors.push("Date of birth is required.");
+	    } else {
+	        const today = new Date();
+	        const birthDate = new Date(dob);
+	        const age = today.getFullYear() - birthDate.getFullYear();
+	        if (birthDate > today) {
+	            errors.push("Date of birth cannot be in the future.");
+	        } else if (age < 18) {
+	            errors.push("Policy holder must be at least 18 years old.");
+	        }
+	    }
+
+	    // ID / Passport validation
+	    if (!id_passport || id_passport.trim().length < 6) {
+	        errors.push("ID / Passport number must be at least 6 characters long.");
+	    }
+
+	    // Contact validation
+	    const contactPattern = /^\+?\d{7,15}$/; // Accepts +27... or just digits
+	    if (!contact || !contactPattern.test(contact.trim())) {
+	        errors.push("Enter a valid contact number (e.g., +27123456789).");
+	    }
+
+	    // Address validation
+	    if (!address || address.trim().length < 5) {
+	        errors.push("Address must be at least 5 characters long.");
+	    }
+
+	    // Handle validation result
+	    if (errors.length > 0) {
+	        let message = "Please correct the following:\n\n" + errors.join("\n");
+	        alert(message);
+	        return false;
+	    } else {
+	        return true;
+	    }
+	} 
+    
+	/* ==================== Proceed with updating policy holder infor ================= 
+	* before updating user must confirm to making the change
+	* we cam make use of a prompt
+	*/
+	async updatePolicyHolder(dobField, id_passportField, contactField, addressField){
+		// Ask user to confirm their action
+	    const confirmUpdate = confirm("Are you sure you want to update the policy holder information?");
+	    if (!confirmUpdate) {
+	        alert("Update cancelled.");
+	        return;
+	    }
+
+	    // Prepare the data
+	    let updateData = {
+	        dob: dobField,
+	        id_passport: id_passportField,
+	        phoneContact1: contactField,
+	        address: addressField
+	    };
+
+	    try {
+	        // Send PUT request to backend (replace endpoint URL as needed)
+	        const res = await fetch(`/client/update/clientdetails/${this.fileId}`, {
+	            method: "PATCH",
+	            headers: {
+	                "Content-Type": "application/json"
+	            },
+	            body: JSON.stringify(updateData)
+	        });
+
+	        // Handle response
+	        if (!res.ok) {
+	            const errText = await res.text();
+	            throw new Error(errText || "Failed to update policy holder info.");
+	        }
+
+	        const result = await res.text();
+
+	        // Notify success
+	        alert(result);
+			this.render();
+			this.reloadUI();
+
+	    } catch (error) {
+	        console.error("Error updating policy holder:", error);
+	        alert(`Update failed: ${error.message}`);
+	    }
+	}
+	
     /** 
      * Get Policy information from server
      * billing info - billing status, amount owed
@@ -570,11 +1024,8 @@ customElements.define('policy-info-component', class extends HTMLElement{
                             {
                                 policyInfoTableContent += `
                                     <tr>
-                                        <td><b>Lapse Status</b></td>
-                                        <td> 
-                                            <td>${data.policyStatus}</td>
-                                            <td>${data.monthsBehind} "of" ${data.lapsePeriod}</td> 
-                                        </td>
+                                        <td> <b>Lapse Status</b> </td>
+                                        <td>${data.lapseStatus}: ${data.monthsBehind} "of" ${data.lapsePeriod}</td>
                                     </tr>
                                 `;
                             }
@@ -657,11 +1108,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
     }
 
     /** 
-     * hi chat gpt we are working with this method
-     * createAddon()
-     * add addon to individual within a policy
-     * this method creaates a form content, 
-     * in which the user fills in the addon detail
+     * create addon form
      */ 
     
     createAddon() {
@@ -710,16 +1157,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
             <button type="submit" class="submit-btn">Proceed</button>
         `;
         addonWrapper.appendChild(form);
-
-        // Add action buttons back
-        const actionsDiv = document.createElement("div");
-        actionsDiv.innerHTML = `
-            <button class="prop-button" id="open-changepolicyholder-form">Change policy holder</button> | 
-            <button class="prop-button" id="open-policyholderupdate-form">Update</button> | 
-            <button class="prop-button" id="open-addons-form">Add Ons</button>
-        `;
-        addonWrapper.appendChild(actionsDiv);
-
+        addonWrapper.appendChild(this.displayPolicyHolderInfoActions());
         contentWrapper.appendChild(addonWrapper);
 
         // when the submit button is clicked we invoke validateForm method. the method validates form fields
@@ -744,8 +1182,6 @@ customElements.define('policy-info-component', class extends HTMLElement{
             this.createdAt = this.shadowRoot.getElementById("addon-created-at").value;
             this.waitPeriod = this.shadowRoot.getElementById("addon-wait-period").value;
 
-            alert(`wait period: ${this.waitPeriod}`);
-            alert(`createdAt: ${this.createdAt}`);
             const resolve = await fetch(`/client/create-addon/${this.fileId}`,{
                 method: "POST",
                 headers: {'Content-Type': "application/json"},
@@ -755,12 +1191,16 @@ customElements.define('policy-info-component', class extends HTMLElement{
                     description: this.productDescription,
                     waitingPeriodMonths: this.waitPeriod,
                     createdAt: this.createdAt,
+					isPrimaryClient: true,
                 }),
             });
 
-            if(!resolve.ok)throw new Error(`Message from server: ${resolve.text()}`);
+            if(!resolve.ok){
+                const serverMessage = await resolve.text();
+                throw new Error(`Message from server: ${serverMessage}`);
+            }
             const serverMessage = await resolve.text();
-
+            alert(serverMessage);
         } catch(error){
             alert(error);
         } 
@@ -805,7 +1245,101 @@ customElements.define('policy-info-component', class extends HTMLElement{
     
         return valid;
     }
-    /*---------------------- END ADD ADDON METHOD ------------------*/
+
+    /*---------------------- DISPLAY ADDONS --------------*/
+	
+    //fetch a list of addons from server
+    async fetchAddons(){
+        try {
+            const resolve = await fetch(`/client/addons/${this.fileId}`);
+            if(!resolve.ok){
+                const serverMessage = await resolve.text();
+                throw new Error(serverMessage);
+            }
+            this.addonsData = await resolve.json();
+        } catch (error) {
+            alert(error);
+        }
+    }
+
+    //display the json list retrieved from server by fetchAddons
+     async displayAddons(){
+        const contentWrapper = this.shadowRoot.getElementById("client-info-card");
+        contentWrapper.innerHTML = "";
+    
+        // Wrapper for addon contents
+        const manageAddonsWrapper = document.createElement("div");
+        manageAddonsWrapper.classList.add("addon-wrapper");
+        
+        // h2 must not be overwhelming. the font should be friendly
+        const heading = document.createElement("h2");
+        heading.textContent = "Manage Addons";
+        manageAddonsWrapper.appendChild(heading);
+		
+		const addonViewGrid = document.createElement("div");
+		addonViewGrid.id = "addonViewGrid";
+		let addonView = ` <div>Item Name</div> <div>Monthly Fee</div> <div>Discription</div> <div>Status</div> <div>Actions</div> `;
+		addonViewGrid.innerHTML = addonView;
+		
+		//retrieve addon data from server
+		await this.fetchAddons();
+		this.addonsData.map(( data ) => {
+			addonView += `
+	            <div>${data.name}</div> <div>${data.monthlyAmount}</div> <div>${data.description}</div> <div>${data.isActive}</div> <button data-action="remove" data-id="${data.id}" class="delete-addon" id="delete-addon">Delete</button>
+	        `;	
+		});
+        
+        addonViewGrid.innerHTML = addonView;
+        manageAddonsWrapper.appendChild(addonViewGrid)
+        manageAddonsWrapper.appendChild(this.displayPolicyHolderInfoActions())
+        contentWrapper.appendChild(manageAddonsWrapper);
+		this.addOnEventListeners();
+	}
+	
+	/**
+	 * remove an addon
+	 * refresh the addon display 
+	 */
+	async removeAddon(addonId){
+		// confirm delete addon
+		if (confirm("Are you sure you want to delete this addon?")) {
+			try{
+				const response = await fetch(`/client/addons/remove/${addonId}/${this.fileId}`, {
+					method: "DELETE",
+				});
+				
+				if(!response.ok){
+					const serverMessage = await response.text();
+					throw new Error(serverMessage)
+				}
+				
+				await this.displayAddons();
+			} catch (error){
+				alert(error);
+			}
+		}
+	}
+	
+	addOnEventListeners(){
+			const deleteButtons = this.shadowRoot.querySelectorAll(".delete-addon");
+			deleteButtons.forEach( btn => {
+				const action = btn.dataset.action;
+				const id = parseInt(btn.dataset.id);
+				
+				btn.addEventListener("click", async() => {
+					if(action === "remove"){
+						btn.disabled = true;
+						btn.textContent = "Deleting...";
+						await this.removeAddon(id);
+						btn.disabled = false;
+						btn.textContent = "Delete";
+
+					}
+				});
+			});
+		}
+	
+    /*---------------------- END ADDON METHOD SECTION------------------*/
 
     // Create Change Policyholder form
     createChangePolicyholderForm() {
@@ -882,17 +1416,9 @@ customElements.define('policy-info-component', class extends HTMLElement{
         info.textContent =
             "Please note: Once confirmed, this process is irreversible. Ensure the selected member is correct.";
         changePolicyWrapper.appendChild(info);
-
-        // Add action buttons back
-        const actionsDiv = document.createElement("div");
-        actionsDiv.innerHTML = `
-            <button class="prop-button" id="open-changepolicyholder-form">Change policy holder</button> | 
-            <button class="prop-button" id="open-policyholderupdate-form">Update</button> | 
-            <button class="prop-button" id="open-addons-form">Add Ons</button>
-        `;
-        changePolicyWrapper.appendChild(actionsDiv);
-
         contentWrapper.appendChild(changePolicyWrapper);
+        contentWrapper.appendChild(this.displayPolicyHolderInfoActions());
+
             
     }
 
@@ -905,16 +1431,15 @@ customElements.define('policy-info-component', class extends HTMLElement{
                 this.createChangePolicyholderForm();
             }
             if (event.target?.id === "open-policyholderupdate-form") {
-                alert("Opening policyholder update form");
+                this.createUpdateForm();
             }
             if (event.target?.id === "open-addons-form") {
                 this.createAddon();
             }
+            if(event.target?.id === "open-addons-table-btn"){
+                this.displayAddons();
+            }
         });
-    }
-
-    updatePolicyHolderInfo(fileId){
-
     }
 
     updatePolicy(fileId){

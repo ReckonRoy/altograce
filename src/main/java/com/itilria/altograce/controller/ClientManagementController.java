@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -102,7 +103,6 @@ public class ClientManagementController{
             client.setPhoneContact1(request.getPhoneContact1());
             client.setPhoneContact2(request.getPhoneContact2());
             client.setWaitPeriod(request.getWaitPeriod());
-            client.setProvince(request.getProvince());
             client.setAddress(request.getAddress());
             client.setDateOfCover(request.getDateOfCover());
             PrimaryClient clientResult = clientService.registerClient(userDetails.getUsername(), client, request.getWaitPeriod());
@@ -155,6 +155,35 @@ public class ClientManagementController{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
+    
+    /* =============== Update policy holder information ====================== */
+    @PatchMapping("/update/clientdetails/{fileId}")
+    public ResponseEntity<?> updatePolicHolderDetails(@AuthenticationPrincipal UserDetails userDetails, @PathVariable long fileId, @RequestBody Map<String, Object> request)
+    {
+    	try{
+            UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
+            Boolean updateResult  = clientService.updatePolicyHolderDetails(userDetails.getUsername(), fileId, request);
+            
+            /**
+             * Audit user actions 
+             * The action being done/username/client this action is affecting/ the staff who committed this action
+            */
+            if(updateResult) {
+            	clientService.staffAudit("updated policy holder details", userDetails.getUsername(), fileId, result.getId());
+            	return ResponseEntity.ok("Policy holder details have been successfuly updated");
+            }else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No client record was updated. Please check the ID.");
+            }
+            
+    	 } catch (IllegalArgumentException ex) {
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+         } catch (Exception ex) {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
+         }
+    }
+    
+/*____________________________________________________________________________________________*/
 /*--------------------------------Subscription Section------------------------------------------*/
     //get subscription route
     @GetMapping("/management/subscription/{clientid}")
@@ -257,13 +286,6 @@ public class ClientManagementController{
         return "client-template/client-settings";
     }
 
-    /*
-    @GetMapping("/settings/getwaitingperiod/{comId}")
-    public ResponseEntity<?> getWaitingPeriod()
-    {
-        
-    }*/
-
 /*----------------------------------Client Billing Route-----------------------------------------*/
     //add billing route
     @PostMapping("/billing/{clientId}")
@@ -334,7 +356,7 @@ public class ClientManagementController{
 
 /*________________________________________________________________________________________________*/
 
-/*--------------------------------------Decead Records Route--------------------------------------*/
+/*--------------------------------------Deceased Records Route--------------------------------------*/
 //route - add deceased record
     @PostMapping("/add/deceased/{fileId}")
     public ResponseEntity<?> addDeceased(@PathVariable long fileId, @RequestBody Deceased request)
@@ -413,4 +435,42 @@ public class ClientManagementController{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
     }
+
+    //get addons route
+    @GetMapping("/addons/{clientId}")
+    public ResponseEntity<?> getAddons(@AuthenticationPrincipal UserDetails userDetails,
+    @PathVariable long clientId)
+    {
+        try{
+            UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
+            List<Addon> addonData = clientService.getAddons(userDetails.getUsername(), clientId);
+            
+            //The action being done/username/client this action is affecting/ the staff who commited this action
+            clientService.staffAudit("viewed addons", userDetails.getUsername(), clientId, result.getId());
+            return ResponseEntity.ok(addonData); 
+        }catch(IllegalArgumentException exception){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }
+    }
+    
+    // remove an addon
+ // delete addon
+    @DeleteMapping("/addons/remove/{addonId}/{fileId}")
+    public ResponseEntity<?> deleteAddon(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable long addonId,
+            @PathVariable long fileId) {
+        try {
+            UserAuthentication user = userAuthService.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
+            clientService.removeAddon(user.getUsername(), addonId, fileId);
+            clientService.staffAudit("removed addon", user.getUsername(), fileId, user.getId());
+            
+            return ResponseEntity.ok("Addon removed successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }

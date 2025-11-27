@@ -123,3 +123,13 @@ button:hover {
 #nav-wrapper{
     width: 100%;
 }
+
+@media (max-width: 768px) {
+	#display-client{
+	    width: 100%;
+	    background-color: #fff;
+	    border-radius: 8px;
+		box-sizing: border-box;
+		padding: 0;
+	}
+}

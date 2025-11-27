@@ -44,6 +44,7 @@ public class Addon{
     @Id
     private long id;
 
+    private boolean isPrimaryClient = false;
     private String name;
     private BigDecimal monthlyAmount;
     private String description;
@@ -71,6 +72,11 @@ public class Addon{
     @JoinColumn(name = "dependent_id", referencedColumnName = "id")
     private ClientDependency dependent;
     */
+    
+    public LocalDate getCreatedAt() {
+    	return this.createdAt;
+    }
+    
     //------------------ Constructors ------------------
     @PrePersist
     public void onCreate(){

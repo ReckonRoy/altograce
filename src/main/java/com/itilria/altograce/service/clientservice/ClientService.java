@@ -106,8 +106,6 @@ public class ClientService{
         client.setPhoneContact1(clientData.getPhoneContact1());
         client.setPhoneContact2(clientData.getPhoneContact2());
         client.setWaitPeriod(clientData.getWaitPeriod());
-
-        client.setProvince(clientData.getProvince());
         client.setAddress(clientData.getAddress());
 
         if(clientData.getDob() != null){
@@ -131,7 +129,42 @@ public class ClientService{
         return clientRepository.save(client);
         
     }
+    
+    /**
+     * Update policy holder details
+     * */
+    public Boolean updatePolicyHolderDetails(String username, long fileId, Map<String, Object> request) {
+    	//check if staff is registered in database 
+    	UserAuthentication userAuth = userAuthRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+    	
+    	//check if staff belongs to this company
+        companyRepository.findById(userAuth.getCompanyId())
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
 
+        //check if policy holder is in system
+        PrimaryClient primaryClient = clientRepository.findById(fileId)
+                .orElseThrow(() -> new IllegalArgumentException("Sorry, client does not exist!"));
+        
+        // Extract and cast fields safely
+        String dobStr = (String) request.get("dob");
+        String idPassport = (String) request.get("id_passport");
+        String contact = (String) request.get("phoneContact1");
+        String address = (String) request.get("address");
+
+        LocalDate dob = null;
+        if (dobStr != null && !dobStr.isEmpty()) {
+            dob = LocalDate.parse(dobStr);
+        }
+
+        // Perform update
+        int result = clientRepository.updatePrimaryClientById(dob, idPassport, contact, address, fileId);
+
+        // Return success if at least one row was updated
+        return result > 0;    
+    }
+    
+    
     //Get All Clients
     public Page<PrimaryClient> getClients(String username , int page, int size) {
         UserAuthentication userAuth = userAuthRepository.findByUsername(username).orElse(null);
@@ -148,6 +181,7 @@ public class ClientService{
     public PrimaryClient getClient(String username , long id) {
         UserAuthentication userAuth = userAuthRepository.findByUsername(username).orElse(null);
         Optional<Company> company = companyRepository.findById(userAuth.getCompanyId());
+        int addonCount = addonRepository.countByPolicyHolder_Id(id);
         if(!company.isPresent()){
             throw new IllegalArgumentException("Error - denial of service due to system authorization!");
         }
@@ -156,8 +190,10 @@ public class ClientService{
         if(!policyHolder.isPresent()){
             throw new IllegalArgumentException("Error - client does not exist");
         }
-        
-        return policyHolder.get();
+
+        PrimaryClient client = policyHolder.get();
+        client.setAddonCount(addonCount);
+        return client;
     }
 
 
@@ -526,17 +562,7 @@ public class ClientService{
 
 
     /**get payment status
-     * we need to know the last time client made payment 
-     * details needed:
-     * 1. get last payment date, get amount paid
-     * - is date current
-     * - compare if amount paid is equals to premium amount.
-     * - is amount paid == premium amount
-     * 2. if payment is current and no balance is owed - status: payment is up to date
-     * 3. if payment status is not current - get balance.
-     * - balance =  number of months behind * premium amount
-     * 4. amount paid
-     * 5. determine lapse period
+     * this method gets the payment
     */
     public Map<String, Object> getBalanceDue(String username, long clientId)
     {
@@ -712,8 +738,9 @@ public class ClientService{
     }
 
 /*-------------------------- Individual Policy Addons ----------------------*/
+    //create an addon
     public boolean createAddon(String username, Long clientId, Addon addonRequest) {
-        // 1. Validate and fetch required data
+       
         UserAuthentication userAuth = userAuthRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
 
@@ -737,9 +764,58 @@ public class ClientService{
             addonRequest.setCreatedAt(LocalDate.now());
         }
 
+        addonRequest.setPolicyHolder(primaryClient);
+
         addonRepository.save(addonRequest);
         return true;
 
     }
+
+    //get addons
+    public List<Addon> getAddons(String username, long clientId)
+    {
+        UserAuthentication userAuth = userAuthRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
+        companyRepository.findById(userAuth.getCompanyId())
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
+        PrimaryClient primaryClient = clientRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Sorry, client does not exist!"));
+
+        PrimaryPackageSubscription subscription = primaryPackSubRep.findByPrimaryClient_Id(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("This client has not been subscribed to any services"));
+
+        List<Addon> addons = addonRepository.findByPolicyHolder_IdAndIsPrimaryClient(clientId, true);
+     // 🔹 Check and update eligibility for each addon
+        addons.forEach(addon -> {
+            boolean activeBefore = addon.getIsActive();
+            boolean eligible = addon.checkEligibility();
+
+            if (!activeBefore && eligible) {
+                addonRepository.save(addon);
+            }
+        });
+        return addons;
+    } 
+    
+    // delete an addon
+    @Transactional
+    public void removeAddon(String username, long addonId, long fileId) {
+        UserAuthentication userAuth = userAuthRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
+        companyRepository.findById(userAuth.getCompanyId())
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+        
+        PrimaryClient primaryClient = clientRepository.findById(fileId)
+                .orElseThrow(() -> new IllegalArgumentException("Sorry, client does not exist!"));
+
+        Addon addon = addonRepository.findById(addonId)
+                .orElseThrow(() -> new IllegalArgumentException("Addon not found"));
+
+        addonRepository.delete(addon);
+    }
+
 
 }

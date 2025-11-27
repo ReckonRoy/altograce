@@ -16,7 +16,7 @@ import com.itilria.altograce.domain.funeral.Funeral;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -65,8 +65,10 @@ public class PrimaryClient{
     private String phoneContact2;
 
     private int waitPeriod;
-    private String province;
     private String address;
+
+    @Transient
+    private int addonCount;
 
     private LocalDate recordEntryDate;
 

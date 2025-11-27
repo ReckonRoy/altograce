@@ -16,163 +16,174 @@ customElements.define("display-client", class extends HTMLElement {
       this.attachShadow({ mode: 'open' });
       this.shadowRoot.innerHTML =`<style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+		
+
+		:host {
+		  font-family: "Poppins", sans-serif;
+		  color: #222;
+		}
 
         .container {
-            width: 90%;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
+		  width: 95%;
+		  max-width: 100%;
+		  margin: 2rem auto;
+		  background-color: #fff;
+		  padding: 2rem;
         }
+		
         h2 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
+		  color: #333;
+		  text-align: center;
+		  margin-bottom: 1.5rem;
+		  font-weight: 600;
+		  font-size: 1.8rem;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 10px #515151;
-        }
+		
+		/* ------------ Table Styling ------------ */
+		table {
+		  width: 100%;
+		  border-collapse: collapse;
+		  margin-bottom: 1.5rem;
+		  border-radius: 8px;
+		  overflow-y: both;
+		  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+		}
 
         thead{
-            box-shadow: 0 5px 10px #515151;
+            background-color: #f7f8fa;
         }
 
         th, td {
-            border: 1px solid #ddd;
-            padding: 1rem 2rem;
-            text-align: left;
+			border: 1px solid #eee;
+			padding: 1rem;
+			text-align: left;
+			font-size: 0.95rem;
             
         }
         th {
-            background-color: #f2f2f2;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 900;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			font-weight: 600;
+			background-color: #f4f6f9;
         }
 
         tr:nth-child(even){
-            background-color: #f1f5fa;
+  			background-color: #f9fafc;
         }
 
-        input[type="text"],
-        input[type="date"],
-        select {
-            width: calc(100% - 24px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+
+		/* ------------ Inputs & Buttons ------------ */		
+		input[type="text"],
+		input[type="date"],
+		select {
+		  width: 100%;
+		  padding: 10px 12px;
+		  margin: 0.5rem 0;
+		  border: 1px solid #ccc;
+		  border-radius: 6px;
+		  font-size: 0.95rem;
+		  box-sizing: border-box;
+		}
+
+		input:focus,
+		select:focus {
+		  outline: none;
+		  border-color: #007bff;
+		  box-shadow: 0 0 5px rgba(0,123,255,0.3);
+		}
+		
         input[type="radio"] {
             margin: 5px;
         }
-        button {
-            padding: 10px 20px;
-            margin: 5px; /* Add margin around all sides */
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        button:hover {
-            background-color: #0056b3;
-        }
+		
+		button {
+		  padding: 10px 18px;
+		  margin: 5px;
+		  background-color: #007bff;
+		  color: #fff;
+		  border: none;
+		  border-radius: 6px;
+		  cursor: pointer;
+		  font-weight: 500;
+		  transition: background 0.3s;
+		}
 
-        .delete-btn{
-            background-color: #fdc7cc;
-            color: #d0636a;
-        }
+		button:hover {
+		  background-color: #0056b3;
+		}
+		
+		.delete-btn {
+		  background-color: #ffe6e6;
+		  color: #b02a37;
+		}
 
-        .delete-btn:hover{
-            background-color: #d0636a;
-            color: #fdc7cc;
-        }
+		.delete-btn:hover {
+		  background-color: #b02a37;
+		  color: #ffe6e6;
+		}
+
         #show-deceased-btn{
             background-color: black;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            border-radius: 8px;
-            position: relative;
-        }
+		
+		/* ------------ Modal Styling ------------ */
+		.modal,
+		.client-info-modal {
+		  display: none;
+		  position: fixed;
+		  z-index: 10;
+		  inset: 0;
+		  background-color: rgba(0,0,0,0.4);
+		  overflow-y: auto;
+		  padding: 2rem 0;
+		}
 
-        #dependencyForm{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.2rem;
-        }
+		.modal-content,
+		.client-info-modal-content {
+		  background: #fff;
+		  margin: auto;
+		  padding: 2rem;
+		  border-radius: 12px;
+		  position: relative;
+		  animation: fadeIn 0.3s ease;
+		  width: 70%;
+		  box-sizing: border-box;
+		}
+		
+		@keyframes fadeIn {
+		  from {opacity: 0; transform: scale(0.95);}
+		  to {opacity: 1; transform: scale(1);}
+		}
+		
+		.close,
+		.client-info-close {
+		  color: #aaa;
+		  position: absolute;
+		  top: 15px;
+		  right: 15px;
+		  font-size: 24px;
+		  cursor: pointer;
+		  transition: color 0.2s;
+		}
 
-        #rel-div{
-            grid-column: span 2;
-        }
+		.close:hover,
+		.client-info-close:hover {
+		  color: #000;
+		}
+		
+		/* ------------ Dependency Form Grid ------------ */
+		#dependencyForm {
+		  display: grid;
+		  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		  gap: 1rem;
+		}
 
-        #dependencyForm button{
-            grid-column: span 2;
-            width: 50%;
-            padding: 10px 0;
-            margin: 0 auto;
-            font-weight: bolder;
-        }
-        .close {
-            color: #aaa;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-        }
-        /* Additional styles for the new modal */
-        .client-info-modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-
-        .client-info-modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 70%;
-            border-radius: 8px;
-            position: relative;
-            backround-color: gray;
-        }
+		#dependencyForm button {
+		  grid-column: 1 / -1;
+		  width: 50%;
+		  justify-self: center;
+		  font-weight: 600;
+		}
 
         /*----------Modal Header----------*/
         #modal-heading{
@@ -186,19 +197,28 @@ customElements.define("display-client", class extends HTMLElement {
         }
         /*---------------------------------*/
 
-        /*----------Modal top nav controls----------*/
-        #client-infor-navbar{
-            padding: 10px 0;
-            margin: 40px auto;
-        }
-        /*----------------------------------------*/
-        /*Client Info main styles*/
-        #client-info-main
-        {
-            display: flex;
-            padding: 10px 0;
-            margin: 40px auto;
-        }
+		/* ------------ Client Info Modal ------------ */
+		#client-info-header {
+		  text-align: center;
+		}
+
+		#client-infor-navbar {
+		  display: flex;
+		  flex-wrap: wrap;
+		  justify-content: center;
+		  gap: 0.5rem;
+		  margin: 1.5rem 0;
+		}
+
+		#client-infor-navbar button {
+		  flex: 1 1 120px;
+		}
+
+		#client-info-main {
+		  display: flex;
+		  flex-direction: column;
+		  gap: 1rem;
+		}
 
 
         .client-info-close {
@@ -233,88 +253,157 @@ customElements.define("display-client", class extends HTMLElement {
             background-color: #0056b3;
         }
 
-        .ACTIVATED{
-            background-color: #c2e3c4;
-            color: #69a06a;
-            padding: 10px;
-            box-sizing: border-box;
-            text-align: center;
-            border-radius: 5px; 
-        }
+		/* ------------ Status Labels ------------ */
+		.ACTIVATED {
+		  background-color: #d4f8d3;
+		  color: #2d6a2d;
+		  padding: 8px;
+		  border-radius: 5px;
+		  text-align: center;
+		}
 
-        .INACTIVE{
-            background-color: #fdc7cc;
-            color: #d07473;
-            padding: 10px;
-            box-sizing: border-box;
-            text-align: center;
-            border-radius: 5px;
-        }
+		.INACTIVE {
+		  background-color: #ffe2e2;
+		  color: #a33a3a;
+		  padding: 8px;
+		  border-radius: 5px;
+		  text-align: center;
+		}
         
         .action-parent{
             position: relative;
         }
         
-        .actions-container{
-            display: none;
-            flex-direction: column;
-            position: absolute;
-            top: 0;
-            border: 1px solid gray;
-            background: white;
-            padding: 10px;
-            gap: 1rem;
-            box-sizing: border-box;
-            border-radius: 5px;
-            width: 100%;
-            z-index: 10;
-        }
-        
-        .actions-ul{
-            list-style: none;
-            padding: 0;
-        }
-        
-        .actions-ul li{
-            flex: 1;
-        }
-        
-        .actions-ul li > button{
-            width: 100%;
-            padding: 5px; 
-            font-weight: bold;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
+		/* ------------ Custom Actions Dropdown (Modern & Elegant) ------------ */
 
-        .select-action{
-            cursor: pointer;
-            text-align: center;
-            padding: 5px;
-            border: 1px solid gray;
-            border-radius: 5px;
-        }
+		.action-parent {
+		  position: relative;
+		  display: inline-block;
+		  width: 100%;
+		}
 
-        .select-action:hover{
-            border: 1px solid blue;
-        }
+		/* Dropdown Container */
+		.actions-container {
+		  display: none;
+		  flex-direction: column;
+		  position: absolute;
+		  top: 110%;
+		  left: 0;
+		  background: #ffffff;
+		  border: 1px solid #e5e7eb;
+		  border-radius: 10px;
+		  width: 180px;
+		  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+		  padding: 0.8rem 0;
+		  z-index: 20;
+		  animation: fadeInDropdown 0.25s ease;
+		  transform-origin: top;
+		}
 
-        .actions-close {
-            position: absolute;
-            top: 0;
-            right: 0;
-            color: red;
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+		@keyframes fadeInDropdown {
+		  from {
+		    opacity: 0;
+		    transform: translateY(-8px) scale(0.98);
+		  }
+		  to {
+		    opacity: 1;
+		    transform: translateY(0) scale(1);
+		  }
+		}
 
-        .actions-close:hover,
-        .actions-close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+		/* Dropdown Trigger */
+		.select-action {
+		  cursor: pointer;
+		  text-align: center;
+		  padding: 10px 16px;
+		  background-color: #f9fafb;
+		  border: 1px solid #d1d5db;
+		  border-radius: 8px;
+		  font-weight: 500;
+		  font-size: 0.95rem;
+		  color: #374151;
+		  transition: all 0.3s ease;
+		}
+
+		.select-action:hover {
+		  background-color: #eef2ff;
+		  border-color: #6366f1;
+		  color: #111827;
+		  box-shadow: 0 2px 6px rgba(99,102,241,0.15);
+		}
+
+		/* List Styles */
+		.actions-ul {
+		  list-style: none;
+		  margin: 0;
+		  padding: 0;
+		}
+
+		.actions-ul li {
+		  width: 100%;
+		}
+
+		/* Buttons inside dropdown */
+		.actions-ul li > button {
+		  width: 100%;
+		  background: none;
+		  border: none;
+		  text-align: left;
+		  padding: 10px 16px;
+		  font-size: 0.95rem;
+		  color: #374151;
+		  font-weight: 500;
+		  cursor: pointer;
+		  transition: all 0.2s ease;
+		  border-radius: 6px;
+		}
+
+		.actions-ul li > button:hover {
+		  background-color: #f3f4f6;
+		  color: #111827;
+		  padding-left: 20px;
+		}
+
+		/* Divider (optional for grouping actions) */
+		.actions-divider {
+		  height: 1px;
+		  background-color: #e5e7eb;
+		  margin: 0.4rem 0;
+		}
+
+		/* Close Icon (if used inside dropdown) */
+		.actions-close {
+		  position: absolute;
+		  top: 8px;
+		  right: 10px;
+		  color: #9ca3af;
+		  font-size: 20px;
+		  font-weight: bold;
+		  cursor: pointer;
+		  transition: color 0.2s ease;
+		}
+
+		.actions-close:hover {
+		  color: #111827;
+		}
+
+		/* Responsive Adjustments */
+		@media (max-width: 600px) {
+		  .actions-container {
+		    width: 95%;
+		    left: 2.5%;
+		  }
+
+		  .select-action {
+		    font-size: 1rem;
+		    padding: 12px;
+		  }
+
+		  .actions-ul li > button {
+		    font-size: 1rem;
+		    padding: 12px;
+		  }
+		}
 
         #con-dialog{
             display: none;
@@ -413,35 +502,121 @@ customElements.define("display-client", class extends HTMLElement {
         }
 
         /*---------------FLASH MESSAGE STYLES--------------------*/
-        #flash-message{
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            text-align: center;
+		#flash-message {
+		  display: none;
+		  position: fixed;
+		  top: 10px;
+		  left: 10%;
+		  right: 10%;
+		  z-index: 20;
+		}
+
+		.success-message,
+		.error-flash-message {
+		  padding: 1rem;
+		  border-radius: 6px;
+		  text-align: center;
+		  font-weight: 600;
+		  color: white;
+		}
+
+		.success-message {
+		  background-color: #28a745;
+		}
+
+		.error-flash-message {
+		  background-color: #dc3545;
+		}
+		
+        .client-info-modal {
+            padding-top: 20px 0;
         }
 
-        .error-flash-message{
-            width: 100%;
-            color: white;
-            border: 1px solid gray;
-            background-color: red;
-        }
-
-        .success-message{
-            width: 100%;
-            color: white;
-            border: 1px solid gray;
-            background-color: green;
-        }
-
-        #flash-message-p{
-            font-weight: bolder;
+        .client-info-modal-content {
             padding: 20px 0;
-            box-sizing: border-box;
+            border: 1px solid #888;
         }
+		/* ------------ Responsive Design ------------ */
+		@media (max-width: 992px) {
+		  .container {
+		    padding: 1.5rem;
+		  }
+
+		  h2 {
+		    font-size: 1.5rem;
+		  }
+
+		  th, td {
+		    font-size: 0.9rem;
+		    padding: 0.75rem;
+		  }
+		}
+		
+		@media (max-width: 768px) {
+			
+			.client-info-modal{
+				width: 100%;
+			}	
+			
+			.client-info-modal-content{
+				width: 100%;
+				margin: 0 auto;
+			}	
+				
+			/* ============ table style ============= */		
+			.client-cards {
+			    display: flex;
+			    flex-direction: column;
+			    gap: 1.2rem;
+			    margin-top: 1rem;
+			  }
+
+			  .client-card {
+			    background: #fff;
+			    border: 1px solid #e2e5ea;
+			    border-radius: 10px;
+			    padding: 1rem;
+			    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+			    transition: transform 0.2s ease;
+			  }
+
+			  .client-card:hover {
+			    transform: translateY(-3px);
+			  }
+
+			  .client-item {
+			    display: flex;
+			    justify-content: space-between;
+			    align-items: center;
+			    padding: 6px 0;
+			    border-bottom: 1px solid #f1f1f1;
+			  }
+
+			  .client-item:last-child {
+			    border-bottom: none;
+			  }
+
+			  .client-item strong {
+			    font-weight: 600;
+			    color: #444;
+			    flex: 0 0 45%;
+			  }
+
+			  .client-item span {
+			    flex: 1;
+			    text-align: right;
+			    color: #222;
+			  }
+			  /* ============ End table style ============= */
+
+		  input[type="text"] {
+		    width: 100%;
+		  }
+		  
+	    #dependencyForm button {
+	      width: 100%;
+	    }
+	  }
     </style>
     <div id="flash-message">
         <p id="flash-message-p"></p>    
@@ -561,8 +736,6 @@ customElements.define("display-client", class extends HTMLElement {
             </div>
 
             <div class="client-info-controls">
-                <button onclick="billing()">Billing</button>
-                <button onclick="deleteClient()">Delete</button>
                 <button id="show-deceased-btn">Deceased Records</button>
                 <button id="fa-btn">Funeral Arrangements</button>
             </div>
@@ -603,7 +776,71 @@ customElements.define("display-client", class extends HTMLElement {
         }
         /*________________________________________________________________________________________________*/
 
-        // Function to populate the table with clients
+		/* ========================================== 
+		Restructure html when view is mobile-view 
+		=============================================*/
+		const restructureClientTable = () => {
+		  const table = this.shadowRoot.getElementById('clientTable');
+		  const tbody = this.shadowRoot.getElementById('clientList');
+		  if (!table || !tbody) return;
+
+		  const isMobile = window.innerWidth <= 768;
+
+		  // If already transformed and still mobile, skip
+		  if (isMobile && !table.classList.contains('mobile-view')) {
+		    table.classList.add('mobile-view');
+
+		    // Get headers text
+		    const headers = [...this.shadowRoot.querySelectorAll('thead th')].map(th =>
+		      th.textContent.trim()
+		    );
+
+		    // Create mobile cards
+		    const rows = [...tbody.querySelectorAll('tr')];
+		    const cardsContainer = document.createElement('div');
+		    cardsContainer.classList.add('client-cards');
+
+		    rows.forEach(row => {
+		      const cells = [...row.querySelectorAll('td')];
+		      const card = document.createElement('div');
+		      card.classList.add('client-card');
+
+		      cells.forEach((cell, i) => {
+		        const item = document.createElement('div');
+		        item.classList.add('client-item');
+
+		        const label = document.createElement('strong');
+		        label.textContent = headers[i] + ': ';
+		        const value = document.createElement('span');
+		        value.innerHTML = cell.innerHTML;
+
+		        item.appendChild(label);
+		        item.appendChild(value);
+		        card.appendChild(item);
+		      });
+
+		      cardsContainer.appendChild(card);
+		    });
+
+		    // Hide the old table and append cards
+		    table.style.display = 'none';
+		    table.parentNode.insertBefore(cardsContainer, table.nextSibling);
+		  } 
+		  else if (!isMobile && table.classList.contains('mobile-view')) {
+		    // Revert to table layout
+		    table.classList.remove('mobile-view');
+		    const cardsContainer = this.shadowRoot.querySelector('.client-cards');
+		    if (cardsContainer) cardsContainer.remove();
+		    table.style.display = 'table';
+		  }
+		};
+
+
+		// Trigger restructure on load and resize
+		window.addEventListener('load', restructureClientTable);
+		window.addEventListener('resize', restructureClientTable);
+		
+        /*------------------Function to populate the table with clients --------------------*/
         let populateTable = (pageNumber, pageSize) => {
             fetch(`/client/management/clients?page=${parseInt(pageNumber)}&size=${parseInt(pageSize)}`)
             .then((response) => {
@@ -642,6 +879,9 @@ customElements.define("display-client", class extends HTMLElement {
                     </tr>`;
                     table.innerHTML += row;
                 });
+				
+				//restructure content when data is loaded from back end
+				restructureClientTable();  
                 
                 /**
                 * Actions container - manage visibility of actions container
@@ -965,6 +1205,7 @@ customElements.define("display-client", class extends HTMLElement {
             let mainContentWrapper = this.shadowRoot.getElementById("client-info-main");
             mainContentWrapper.innerHTML = ``;
             let policyInfoComponent = document.createElement("policy-info-component");
+			policyInfoComponent.id = "policy-info-component";
             if(policyInfoComponent)
             {
                 policyInfoComponent.setAttribute('fileId', fileId);
