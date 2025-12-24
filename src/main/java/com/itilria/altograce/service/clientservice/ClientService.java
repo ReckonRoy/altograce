@@ -171,7 +171,7 @@ public class ClientService{
         Optional<Company> company = companyRepository.findById(userAuth.getCompanyId());
 
         if(!company.isPresent()){
-            throw new IllegalArgumentException("Failed to save your details, Company was not found in our database!");
+            throw new IllegalArgumentException("Sorry you cannot access this companies database, Authorization denied!");
         }
 
         return clientRepository.findByCompanyId_Id(company.get().getId(), PageRequest.of(page, size));
@@ -183,7 +183,7 @@ public class ClientService{
         Optional<Company> company = companyRepository.findById(userAuth.getCompanyId());
         int addonCount = addonRepository.countByPolicyHolder_Id(id);
         if(!company.isPresent()){
-            throw new IllegalArgumentException("Error - denial of service due to system authorization!");
+            throw new IllegalArgumentException("Error - You can not access this resource authorization denied!");
         }
         
         Optional<PrimaryClient> policyHolder = clientRepository.findById(id);
@@ -244,7 +244,8 @@ public class ClientService{
     
     //get information about client's policy, the plan they subscribed to and payment details
     public Map<String, Object> getSubscriptionPlan(String username, long id) {
-        // 1. Validate and fetch required data
+    	
+        // Validate and fetch required data
         UserAuthentication userAuth = userAuthRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
 
@@ -292,113 +293,7 @@ public class ClientService{
         return subscriptionMap;
     }
 
-    /*-------------------------------Payment Status Section------------------------------------------*/
-    private void calculatePaymentStatus(PrimaryClient client, PremiumPolicy policy,
-                                    PrimaryPackageSubscription subscription, Map<String, Object> map) {
-
-    LocalDate today = LocalDate.now();
-    BigDecimal monthlyFee = policy.getPremiumAmount();
-    LocalDate dateOfCover = subscription.getDateOfCover();
-
-    // 🔹 Total months due since start-of-coverage
-    int monthsDue = monthsBetween(dateOfCover, today) + 1;
-    BigDecimal totalOwed = monthlyFee.multiply(BigDecimal.valueOf(monthsDue));
-
-    // 🔹 Sum of all payments
-    List<ClientBilling> allPayments = clientBillingRepository.findByPrimaryClient_Id(client.getId());
-    BigDecimal totalPaid = allPayments.stream()
-            .map(b -> Optional.ofNullable(b.getAmountPaid()).orElse(BigDecimal.ZERO))
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    // 🔹 Full months covered by payment
-    int monthsCovered = totalPaid.divide(monthlyFee, 0, RoundingMode.DOWN).intValue();
-
-    // 🔹 Partial month remainder
-    BigDecimal partialRemainder = totalPaid.remainder(monthlyFee);
-
-    // 🔹 Balance owed
-    BigDecimal balance = totalOwed.subtract(totalPaid);
-
-    // 🔹 Months behind / ahead
-    int adjustedMonthsBehind = monthsDue - monthsCovered;
-    int monthsBehind = Math.max(adjustedMonthsBehind, 0);
-    int monthsAhead = Math.max(monthsCovered - monthsDue, 0);
-
-
-    // Next due date
-    LocalDate nextDueDate = dateOfCover.plusMonths(monthsCovered);
-
-    // 5. Determine status
-    String status;
-
-    if (monthsBehind > 0) {
-        status = "Payment is overdue";
-        nextDueDate = dateOfCover.plusMonths(monthsCovered);
-    } else if (monthsAhead > 0) {
-        status = "Paid in advance (" + monthsAhead + " month" + (monthsAhead > 1 ? "s" : "") + ")";
-        nextDueDate = dateOfCover.plusMonths(monthsDue + monthsAhead);
-    } else {
-        status = "Payment is up to date";
-        nextDueDate = dateOfCover.plusMonths(monthsCovered);
-    }
-
-
-    // 6. Lapse status (based on subscription lapse period)
-    String lapseStatus = null;
-    int lapsePeriod = subscription.getLapsePeriod();
-
-    if ("Payment is overdue".equals(status)) {
-        if (monthsBehind == (lapsePeriod - 1)) {
-            lapseStatus = "Policy is about to lapse!";
-        } else if (monthsBehind >= lapsePeriod) {
-            lapseStatus = "Policy has lapsed!";
-        }
-    }
-
-    // 🔹 Populate map
-    map.put("totalOwed", totalOwed);
-    map.put("totalPaid", totalPaid);
-    map.put("monthsDue", monthsDue);
-    map.put("monthsCovered", monthsCovered);
-    map.put("partialRemainder", partialRemainder);
-    map.put("monthsBehind", Math.max(adjustedMonthsBehind, 0));
-    map.put("monthsAhead", monthsAhead);
-    map.put("status", status);
-    map.put("lapseStatus", lapseStatus);
-    map.put("lapsePeriod", lapsePeriod);
-    map.put("nextDueDate", nextDueDate);
-    map.put("balance", balance);
-    map.put("isOverdue", adjustedMonthsBehind > 0);
-}
-
-
-    private int monthsBetween(LocalDate start, LocalDate end) {
-        if (end.isBefore(start)) {
-            return 0;
-        }
-
-        int months = (end.getYear() - start.getYear()) * 12 + (end.getMonthValue() - start.getMonthValue());
-
-        // If end day is before start day, current month is not yet complete
-        if (end.getDayOfMonth() < start.getDayOfMonth()) {
-            months -= 1;
-        }
-
-        return months;
-    }
-
-
-
-    //get number of months left for account to be activated
-    public long getWaitPeriodLeft(LocalDate joiningDate, int waitingPeriodMonths)
-    {
-        //get current date
-        LocalDate currentDate = LocalDate.now();
-        //get the difference between joining date and current date
-        long monthsLeft = ChronoUnit.MONTHS.between(joiningDate, currentDate);
-
-        return monthsLeft;
-    }
+    
 /*-------------------------------------------------------------------------------------------------------*/    
 /*
     public List<PrimaryPackageSubscription> getPackageSubscription(String clientId)
@@ -486,8 +381,157 @@ public class ClientService{
 
     }
 
-    /*-------------------------------Billing Section------------------------------------------*/
+    /* ==========================================================================================
+     * ------------------------------- END BILLING AND PAYMENT PROCESSES -----------------------
+     * ========================================================================================== */
+    
+    /* 
+     * GET ALL ADDONS MONTHLY FEE WITHIN A POLICY FILE 
+     * SUM UP ALL ADDONS MONTHLY FEES
+     * RETURN TOTAL MONTHLY FEE AMOUNT
+     */
+    public BigDecimal getTotalAddonFee(long clientId, String username) {
+    	
+    	// Validate and fetch required data
+        UserAuthentication userAuth = userAuthRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
+        companyRepository.findById(userAuth.getCompanyId())
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+    	
+    	PrimaryClient client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Client does not exist"));
+    	
+    	//get a list of all addons under this policy holder's file
+    	List<Addon> addons = addonRepository.findByPolicyHolder_Id(clientId);
+    	
+    	if(addons == null || addons.isEmpty()) {
+    		return BigDecimal.ZERO;
+    	}
+    	
+    	// Sum up all addons
+    	return addons.stream()
+            .map(Addon::getMonthlyAmount) // assuming your Addon entity has getAddonFee()
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    
+    /*
+     * PROCESS PAYMENT STATUS
+     * BALANCE OWED
+     * MONTHS BEHIND PAYMENTS
+     * MONTHS PAYED AHEAD
+     * POLICY LAPSE PERIOD
+     */
+    private void calculatePaymentStatus(PrimaryClient client, PremiumPolicy policy, PrimaryPackageSubscription subscription, Map<String, Object> map) {
+
+	    LocalDate today = LocalDate.now();
+	    BigDecimal monthlyFee = policy.getPremiumAmount();
+	    LocalDate dateOfCover = subscription.getDateOfCover();
+	
+	    // 🔹 Total months due since start-of-coverage
+	    int monthsDue = monthsBetween(dateOfCover, today) + 1;
+	    BigDecimal totalOwed = monthlyFee.multiply(BigDecimal.valueOf(monthsDue));
+	
+	    // 🔹 Sum of all payments
+	    List<ClientBilling> allPayments = clientBillingRepository.findByPrimaryClient_Id(client.getId());
+	    BigDecimal totalPaid = allPayments.stream()
+	            .map(b -> Optional.ofNullable(b.getAmountPaid()).orElse(BigDecimal.ZERO))
+	            .reduce(BigDecimal.ZERO, BigDecimal::add);
+	
+	    // 🔹 Full months covered by payment
+	    int monthsCovered = totalPaid.divide(monthlyFee, 0, RoundingMode.DOWN).intValue();
+	
+	    // 🔹 Partial month remainder
+	    BigDecimal partialRemainder = totalPaid.remainder(monthlyFee);
+	
+	    // 🔹 Balance owed
+	    BigDecimal balance = totalOwed.subtract(totalPaid);
+	
+	    // 🔹 Months behind / ahead
+	    int adjustedMonthsBehind = monthsDue - monthsCovered;
+	    int monthsBehind = Math.max(adjustedMonthsBehind, 0);
+	    int monthsAhead = Math.max(monthsCovered - monthsDue, 0);
+	
+	
+	    // Next due date
+	    LocalDate nextDueDate = dateOfCover.plusMonths(monthsCovered);
+	
+	    // 5. Determine status
+	    String status;
+	
+	    if (monthsBehind > 0) {
+	        status = "Payment is overdue";
+	        nextDueDate = dateOfCover.plusMonths(monthsCovered);
+	    } else if (monthsAhead > 0) {
+	        status = "Paid in advance (" + monthsAhead + " month" + (monthsAhead > 1 ? "s" : "") + ")";
+	        nextDueDate = dateOfCover.plusMonths(monthsDue + monthsAhead);
+	    } else {
+	        status = "Payment is up to date";
+	        nextDueDate = dateOfCover.plusMonths(monthsCovered);
+	    }
+	
+	
+	    // 6. Lapse status (based on subscription lapse period)
+	    String lapseStatus = null;
+	    int lapsePeriod = subscription.getLapsePeriod();
+	
+	    if ("Payment is overdue".equals(status)) {
+	        if (monthsBehind == (lapsePeriod - 1)) {
+	            lapseStatus = "Policy is about to lapse!";
+	        } else if (monthsBehind >= lapsePeriod) {
+	            lapseStatus = "Policy has lapsed!";
+	        }
+	    }
+	
+	    // 🔹 Populate map
+	    map.put("totalOwed", totalOwed);
+	    map.put("totalPaid", totalPaid);
+	    map.put("monthsDue", monthsDue);
+	    map.put("monthsCovered", monthsCovered);
+	    map.put("partialRemainder", partialRemainder);
+	    map.put("monthsBehind", Math.max(adjustedMonthsBehind, 0));
+	    map.put("monthsAhead", monthsAhead);
+	    map.put("status", status);
+	    map.put("lapseStatus", lapseStatus);
+	    map.put("lapsePeriod", lapsePeriod);
+	    map.put("nextDueDate", nextDueDate);
+	    map.put("balance", balance);
+	    map.put("isOverdue", adjustedMonthsBehind > 0);
+	}
+
+
+    private int monthsBetween(LocalDate start, LocalDate end) {
+        if (end.isBefore(start)) {
+            return 0;
+        }
+
+        int months = (end.getYear() - start.getYear()) * 12 + (end.getMonthValue() - start.getMonthValue());
+
+        // If end day is before start day, current month is not yet complete
+        if (end.getDayOfMonth() < start.getDayOfMonth()) {
+            months -= 1;
+        }
+
+        return months;
+    }
+
+
+
+    //get number of months left for account to be activated
+    public long getWaitPeriodLeft(LocalDate joiningDate, int waitingPeriodMonths)
+    {
+        //get current date
+        LocalDate currentDate = LocalDate.now();
+        //get the difference between joining date and current date
+        long monthsLeft = ChronoUnit.MONTHS.between(joiningDate, currentDate);
+
+        return monthsLeft;
+    }
+    
+    
+    // PROCESS CLIENT PAYMENT 
     public List<ClientBilling> billClient(long clientId, ClientBilling billingData) {
+    	
         PrimaryClient client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Client does not exist"));
     
@@ -504,7 +548,7 @@ public class ClientService{
     
         List<ClientBilling> createdBillings = new ArrayList<>();
     
-        // 🔹 Get last billing entry
+        //  Get last billing entry
         ClientBilling lastBilling = clientBillingRepository
                 .findTopByPrimaryClientIdOrderByPaymentDateDesc(clientId)
                 .orElse(null);
@@ -654,7 +698,9 @@ public class ClientService{
 
     }
 
-/*__________________________________________________________________________________________*/
+    /* ==========================================================================================
+     * ------------------------------- END BILLING AND PAYMENT PROCESSES -----------------------
+     * ========================================================================================== */
 
 /*---------------------------------------Client Invoice Section----------------------------*/ 
     //Get invoices that are in range of within two weeks
@@ -738,7 +784,7 @@ public class ClientService{
     }
 
 /*-------------------------- Individual Policy Addons ----------------------*/
-    //create an addon
+    //create an addon policy holder
     public boolean createAddon(String username, Long clientId, Addon addonRequest) {
        
         UserAuthentication userAuth = userAuthRepository.findByUsername(username)
@@ -765,13 +811,57 @@ public class ClientService{
         }
 
         addonRequest.setPolicyHolder(primaryClient);
+        addonRequest.setIsPrimaryClient(addonRequest.isPrimaryClient());
+
+        addonRepository.save(addonRequest);
+        return true;
+
+    }
+    
+  //create an addon for dependent
+    public boolean createDependentAddon(String username, Long clientId, Long dependentId, Addon addonRequest) {
+       
+        UserAuthentication userAuth = userAuthRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
+        companyRepository.findById(userAuth.getCompanyId())
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
+        PrimaryClient primaryClient = clientRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Sorry, client does not exist!"));
+        
+        ClientDependency clientDependent = dependantsRepository.findById(dependentId)
+        		.orElseThrow(() -> new IllegalArgumentException("Sorry, this dependent does not exist!"));
+
+        PrimaryPackageSubscription subscription = primaryPackSubRep.findByPrimaryClient_Id(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("This client has not been subscribed to any services"));
+           
+        //check if property createdAt is not null
+        //if it is now createdAt value = LocalDate.now() 
+        if(addonRequest.getCreatedAt() != null)
+        {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            String formattedCreatedAt = addonRequest.getCreatedAt().format(formatter);
+            addonRequest.setCreatedAt(LocalDate.parse(formattedCreatedAt, formatter));
+        }else{
+            addonRequest.setCreatedAt(LocalDate.now());
+        }
+
+        addonRequest.setPolicyHolder(primaryClient);
+        
+        if(dependentId > 0)
+        {
+        	addonRequest.setDependent(clientDependent);
+        }
+        addonRequest.setIsPrimaryClient(addonRequest.isPrimaryClient());
 
         addonRepository.save(addonRequest);
         return true;
 
     }
 
-    //get addons
+    /*--------------------------------------------------------------------------------------------------------------------------------*/
+    //get policy holder addons
     public List<Addon> getAddons(String username, long clientId)
     {
         UserAuthentication userAuth = userAuthRepository.findByUsername(username)
@@ -797,7 +887,40 @@ public class ClientService{
             }
         });
         return addons;
-    } 
+    }
+    /*--------------------------------------------------------------------------------------------------------------------------------*/
+    
+    /*--------------------------------------------------------------------------------------------------------------------------------*/
+    //get a list of addons belonging to a dependent
+    public List<Addon> getDependentAddons(String username, long clientId, long dependentId)
+    {
+        UserAuthentication userAuth = userAuthRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
+        companyRepository.findById(userAuth.getCompanyId())
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
+        PrimaryClient primaryClient = clientRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Sorry, client does not exist!"));
+
+        PrimaryPackageSubscription subscription = primaryPackSubRep.findByPrimaryClient_Id(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("This client has not been subscribed to any services"));
+
+        List<Addon> addons = addonRepository.findByDependent_IdAndIsPrimaryClient(dependentId, false);
+        
+        // 🔹 Check and update eligibility for each addon
+        addons.forEach(addon -> {
+            boolean activeBefore = addon.getIsActive();
+            boolean eligible = addon.checkEligibility();
+
+            if (!activeBefore && eligible) {
+                addonRepository.save(addon);
+            }
+        });
+        
+        return addons;
+    }
+    /*--------------------------------------------------------------------------------------------------------------------------------*/
     
     // delete an addon
     @Transactional

@@ -435,8 +435,26 @@ public class ClientManagementController{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
     }
+    
+    @PostMapping("/create-addon-dependent/{clientId}/{dependentId}")
+    public ResponseEntity<?> createDependentAddon(@AuthenticationPrincipal UserDetails userDetails,
+     @PathVariable long clientId,
+     @PathVariable long dependentId,
+     @RequestBody Addon request){
+        try{
+            UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
+            boolean createAddonRequest = clientService.createDependentAddon(userDetails.getUsername(), clientId, dependentId, request);
+            
+            //The action being done/username/client this action is affceting/ the staff who commited this action
+            clientService.staffAudit("Added addon", userDetails.getUsername(), clientId, result.getId());
+            return ResponseEntity.ok("Addon has been successfuly added"); 
+        }catch(IllegalArgumentException exception){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }
+    }
 
-    //get addons route
+    /*------------------------------------------------------------------------------------------------------------------*/
+    //get policy holder addons route
     @GetMapping("/addons/{clientId}")
     public ResponseEntity<?> getAddons(@AuthenticationPrincipal UserDetails userDetails,
     @PathVariable long clientId)
@@ -452,6 +470,25 @@ public class ClientManagementController{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
     }
+    /*------------------------------------------------------------------------------------------------------------------*/
+    //get a list of addons belonging to a dependent route
+    @GetMapping("/addons/{clientId}/{dependentId}")
+    public ResponseEntity<?> getDependentAddons(@AuthenticationPrincipal UserDetails userDetails,
+    @PathVariable long clientId, @PathVariable long dependentId)
+    {
+        try{
+            UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
+            List<Addon> addonData = clientService.getDependentAddons(userDetails.getUsername(), clientId, dependentId);
+            
+            //The action being done/username/client this action is affecting/ the staff who commited this action
+            clientService.staffAudit("viewed addons", userDetails.getUsername(), clientId, result.getId());
+            return ResponseEntity.ok(addonData); 
+        }catch(IllegalArgumentException exception){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }
+    }
+   
+   
     
     // remove an addon
  // delete addon

@@ -66,14 +66,22 @@ public class Addon{
     @JoinColumn(name = "policy_holder_id", referencedColumnName = "id")
     private PrimaryClient policyHolder;
 
-    /* 
-    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dependent_id", referencedColumnName = "id")
     private ClientDependency dependent;
-    */
     
-    public LocalDate getCreatedAt() {
+    
+    
+    
+    public ClientDependency getDependent() {
+		return dependent;
+	}
+
+	public void setDependent(ClientDependency dependent) {
+		this.dependent = dependent;
+	}
+
+	public LocalDate getCreatedAt() {
     	return this.createdAt;
     }
     
@@ -96,7 +104,16 @@ public class Addon{
         updatedAt = LocalDate.now();
     }
 
-    //------------------- Helper Methods ------------------
+    
+    public boolean isPrimaryClient() {
+		return isPrimaryClient;
+	}
+
+	public void setIsPrimaryClient(boolean isPrimaryClient) {
+		this.isPrimaryClient = isPrimaryClient;
+	}
+
+	//------------------- Helper Methods ------------------
     public boolean checkEligibility(){
         if(!isActive && activationDate != null && LocalDate.now().isAfter(activationDate)){
             isActive = true;

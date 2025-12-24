@@ -498,7 +498,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
 				#addonViewGrid button:hover {
 				  background: #d62828;
 				}
-
+				/*---------------------------------------------------------------------------------*/
 
                 #open-addons-table-btn{
                     display: none;

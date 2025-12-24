@@ -12,5 +12,7 @@ public interface AddonRepository extends JpaRepository<Addon, Long>{
    
     int countByPolicyHolder_Id(long clientId);
     List<Addon> findByPolicyHolder_IdAndIsPrimaryClient(long clientId, boolean isPrimaryClient);
+    List<Addon> findByDependent_IdAndIsPrimaryClient(long dependentId, boolean isPrimaryClient);
+    List<Addon> findByPolicyHolder_Id(long clientId);
 
 }
