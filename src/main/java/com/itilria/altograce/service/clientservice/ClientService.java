@@ -390,14 +390,7 @@ public class ClientService{
      * SUM UP ALL ADDONS MONTHLY FEES
      * RETURN TOTAL MONTHLY FEE AMOUNT
      */
-    public BigDecimal getTotalAddonFee(long clientId, String username) {
-    	
-    	// Validate and fetch required data
-        UserAuthentication userAuth = userAuthRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
-
-        companyRepository.findById(userAuth.getCompanyId())
-                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+    public BigDecimal getTotalAddonFee(long clientId) {
     	
     	PrimaryClient client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Client does not exist"));
@@ -541,7 +534,11 @@ public class ClientService{
         PremiumPolicy policy = servicePackageRepository.findById(subscription.getPackageId())
                 .orElseThrow(() -> new IllegalArgumentException("No premium policy found"));
     
-        BigDecimal monthlyFee = policy.getPremiumAmount();
+       
+        BigDecimal basePremium = policy.getPremiumAmount();
+        BigDecimal addonTotal = getTotalAddonFee(clientId);
+        BigDecimal monthlyFee = basePremium.add(addonTotal);
+        
         LocalDate paymentDate = billingData.getPaymentDate() != null ? billingData.getPaymentDate() : LocalDate.now();
         BigDecimal amountPaid = billingData.getAmountPaid();
         String paymentMethod = billingData.getPaymentMethod();
@@ -652,7 +649,10 @@ public class ClientService{
             throw new IllegalArgumentException("No premium policy found for this client");
         }
 
-        BigDecimal subscriptionAmount = premiumPolicy.getPremiumAmount(); // e.g., 500
+        BigDecimal baseAmount = premiumPolicy.getPremiumAmount();
+        BigDecimal addonTotal = getTotalAddonFee(clientId);
+        BigDecimal subscriptionAmount = baseAmount.add(addonTotal);
+        
         paymentDetails.put("subscriptionAmount", subscriptionAmount);
 
         // 5. Determine if up to date
