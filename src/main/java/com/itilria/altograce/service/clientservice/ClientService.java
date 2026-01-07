@@ -419,11 +419,11 @@ public class ClientService{
 
 	    LocalDate today = LocalDate.now();
 	    BigDecimal monthlyFee = policy.getPremiumAmount();
+        BigDecimal addonTotal = getTotalAddonFee(client.getId());
+        BigDecimal subscriptionAmount = monthlyFee.add(addonTotal);
 	    LocalDate dateOfCover = subscription.getDateOfCover();
 	
-	    // 🔹 Total months due since start-of-coverage
-	    int monthsDue = monthsBetween(dateOfCover, today) + 1;
-	    BigDecimal totalOwed = monthlyFee.multiply(BigDecimal.valueOf(monthsDue));
+	    
 	
 	    // 🔹 Sum of all payments
 	    List<ClientBilling> allPayments = clientBillingRepository.findByPrimaryClient_Id(client.getId());
@@ -433,18 +433,18 @@ public class ClientService{
 	
 	    // 🔹 Full months covered by payment
 	    int monthsCovered = totalPaid.divide(monthlyFee, 0, RoundingMode.DOWN).intValue();
+	    // 🔹 Total months due since start-of-coverage
+	    int monthsDue = monthsBetween(dateOfCover, today) + 1;
 	
-	    // 🔹 Partial month remainder
-	    BigDecimal partialRemainder = totalPaid.remainder(monthlyFee);
-	
-	    // 🔹 Balance owed
-	    BigDecimal balance = totalOwed.subtract(totalPaid);
+	  
 	
 	    // 🔹 Months behind / ahead
 	    int adjustedMonthsBehind = monthsDue - monthsCovered;
 	    int monthsBehind = Math.max(adjustedMonthsBehind, 0);
 	    int monthsAhead = Math.max(monthsCovered - monthsDue, 0);
-	
+	    
+	    
+	    BigDecimal totalOwed = subscriptionAmount.multiply(BigDecimal.valueOf(monthsBehind));
 	
 	    // Next due date
 	    LocalDate nextDueDate = dateOfCover.plusMonths(monthsCovered);
@@ -481,14 +481,13 @@ public class ClientService{
 	    map.put("totalPaid", totalPaid);
 	    map.put("monthsDue", monthsDue);
 	    map.put("monthsCovered", monthsCovered);
-	    map.put("partialRemainder", partialRemainder);
 	    map.put("monthsBehind", Math.max(adjustedMonthsBehind, 0));
 	    map.put("monthsAhead", monthsAhead);
 	    map.put("status", status);
 	    map.put("lapseStatus", lapseStatus);
 	    map.put("lapsePeriod", lapsePeriod);
 	    map.put("nextDueDate", nextDueDate);
-	    map.put("balance", balance);
+	    map.put("montlhySubscriptionFee", subscriptionAmount);
 	    map.put("isOverdue", adjustedMonthsBehind > 0);
 	}
 

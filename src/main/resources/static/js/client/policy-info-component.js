@@ -1051,9 +1051,6 @@ customElements.define('policy-info-component', class extends HTMLElement{
                             <td><b>Months Due</b></td><td>${data.monthsDue}</td>
                         </tr>
                         <tr>
-                            <td><b>Balance Due</b></td><td>${data.balance}</td>
-                        </tr>
-                        <tr>
                             <td><b>Total owed</b></td><td>${data.totalOwed}</td>
                         </tr>
                         <tr>
