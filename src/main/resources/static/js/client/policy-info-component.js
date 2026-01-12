@@ -1,9 +1,9 @@
 /**
  * @Author Le-Roy S. Jongwe
- * @description This component is responsible for managing client dependencies such as:
- * creating dependency
- * updating dependency
- * deleting dependency
+ * @description This component is responsible for managing client info and policy such as:
+ * Manage policy holder info
+ * Manage addons
+ * Manage policy holder's policy
  */
 
 customElements.define('policy-info-component', class extends HTMLElement{
@@ -571,7 +571,12 @@ customElements.define('policy-info-component', class extends HTMLElement{
 			  }
 			}
 
-			/* Mobile phones (≤768px wide) */
+			/*
+			=============================================================================================
+			Mobile phones (≤768px wide)
+			=============================================================================================
+			*/
+			
 			@media (max-width: 768px) {
 				
 			/* Cards and wrappers fit better on tablets */
@@ -653,7 +658,11 @@ customElements.define('policy-info-component', class extends HTMLElement{
 			  }
 			}
 
-			/* Very small screens (≤480px wide) */
+			/*
+			=============================================================================================
+			Very small screens (≤480px wide)
+			=============================================================================================
+			*/
 			@media (max-width: 480px) {
 			  th, td {
 			    font-size: 0.8rem;
@@ -686,7 +695,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
             
             <!-- Policy information -->
             <div class="client-info-card" id="policy-info-card">
-                <!-- Display policy information-->
+                <!-- Display policy information -->
                 <div id="policy-info-div"></div>
                 <!-- Upgrade or downgrade current user policy -->
                 <div id="policies-div"></div>
