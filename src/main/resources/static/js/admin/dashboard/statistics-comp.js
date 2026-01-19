@@ -149,10 +149,9 @@ customElements.define('statistics-component', class extends HTMLElement{
 			alert(error.message);
 		}
 		
-	}
+	}	
 	
-	displayStatistics(){
-		await #fetchStatistics();
+	async #displayStatistics(){
+		await this.#fetchStatistics();
 	}
-
 });

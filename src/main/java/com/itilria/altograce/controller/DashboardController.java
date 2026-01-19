@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller 
 @RequiredArgsConstructor
-@RequestMapping("/dasboard")
+@RequestMapping("/dashboard")
 public class DashboardController {
 	
 	@Autowired
