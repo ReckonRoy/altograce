@@ -14,9 +14,11 @@
 		<!-- End Nav Component -->
 
 		<div id="main">
-			<statistics-comp></statistics-comp>
+			<div class="component-container">
+				<statistics-component></statistics-component>
+			</div>
                         
-            <div class="upfun-container">
+            <div class="component-container">
                 <upcoming-funeral></upcoming-funeral>
             </div>
 		</div>
@@ -25,7 +27,7 @@
 	</div>
 
 <script type="text/javascript" src="../static/js/admin/header.js" th:src="@{/js/admin/header.js}"></script>
-<script src="../static/js/admin/statistics-comp.js" th:src="@{/js/users/statistics-comp.js}"></script>
+<script type="text/javascript" src="../static/js/admin/dashboard/statistics-comp.js" th:src="@{/js/admin/dashboard/statistics-comp.js}"></script>
 <script src="../static/js/users/upcomingfuncomp.js" th:src="@{/js/users/upcomingfuncomp.js}"></script>
 <script type="text/javascript" src="../static/js/admin/dashboard/dashboard.js" th:src="@{/js/admin/dashboard/dashboard.js}"></script>
 </body>

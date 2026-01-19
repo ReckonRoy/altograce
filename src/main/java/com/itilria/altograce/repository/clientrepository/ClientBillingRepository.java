@@ -24,4 +24,5 @@ public interface ClientBillingRepository extends JpaRepository<ClientBilling, Lo
     Optional<ClientBilling> findByPrimaryClientIdAndPaymentDate(@Param("clientId") Long clientId,
                                                              @Param("paymentDate") LocalDate paymentDate);
 
+    List<ClientBilling> findAll();
 }

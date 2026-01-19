@@ -983,7 +983,6 @@ customElements.define('policy-info-component', class extends HTMLElement{
 			this.reloadUI();
 
 	    } catch (error) {
-	        console.error("Error updating policy holder:", error);
 	        alert(`Update failed: ${error.message}`);
 	    }
 	}

@@ -1,12 +1,23 @@
 /**
  * @Author Le-Roy S. Jongwe
- * @description This component is responsible for managing client info and policy such as:
+ * @description - Manage dashboard statistics
  * Manage policy holder info
  * Manage addons
  * Manage policy holder's policy
  */
 
-customElements.define('policy-info-component', class extends HTMLElement{
+customElements.define('statistics-component', class extends HTMLElement{
+	//Class Fields
+	__statisticsData;
+	
+	get statisticsData()
+	{
+		return this.__statisticsData;
+	}
+	
+	set statisticsData(statisticsData){
+		this.__statisticsData = statisticsData;
+	}
 
     /*___________________________________________________________________________________________________*/
 
@@ -19,6 +30,25 @@ customElements.define('policy-info-component', class extends HTMLElement{
                 :host{
                     width: 100%;
                 }
+				
+				.overview-cards {
+				  display: flex;
+				  gap: 20px;
+				  margin-bottom: 30px;
+				}
+
+				.card {
+				  flex: 1;
+				  background: #ffffff;
+				  border-radius: 10px;
+				  padding: 20px;
+				  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+				}
+
+				.card h3 {
+				  margin-bottom: 10px;
+				}
+
            
             /*__________________________________________________________________________________________________________________*/
 			/* =============================================================================================
@@ -62,6 +92,11 @@ customElements.define('policy-info-component', class extends HTMLElement{
 		        		<h3>Active Members</h3>
 		        		<p id="activeMembers">0</p>
 		      		</div>
+					
+					<div class="card">
+				        <h3>Clients in Arrears</h3>
+				        <p id="activeMembers">0</p>
+			      	</div>
 		   		</div>
 			</div>
             
@@ -80,7 +115,7 @@ customElements.define('policy-info-component', class extends HTMLElement{
             this.render();
             this.rendered = true;
 
-            
+           this.#displayStatistics();
         }
     }
     /*_______________________________________________________________________________________________*/
@@ -95,5 +130,29 @@ customElements.define('policy-info-component', class extends HTMLElement{
         this.render();
     }
     /*_______________________________________________________________________________________________*/
+	
+	/*-----------------------------------------------------------------------------------------------
+	* fetch dashboard statistics from server
+	* return fetched statistics for display
+	-----------------------------------------------------------------------------------------------*/
+	async #fetchStatistics(){
+		try{
+			let resolve = await fetch("/dashboard/stats");
+			
+			if(!resolve.ok){
+				const errorText = await resolve.text();
+				throw new Error(errorText);
+			}
+			
+			this.statisticsData = resolve.json();
+		}catch(error){
+			alert(error.message);
+		}
+		
+	}
+	
+	displayStatistics(){
+		await #fetchStatistics();
+	}
 
 });
