@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,14 +42,39 @@ public class DashboardService {
         companyRepository.findById(userAuth.getCompanyId())
                 .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
 
-		
-        List<PrimaryClient> clients = clientRepository.findAll();
+		long companyId = userAuth.getCompanyId();
+        List<PrimaryClient> clients = clientRepository.findByCompanyId_Id(companyId);
         //List<PrimaryClient> overdue = clientRepository.findByBalanceGreaterThan(BigDecimal.ZERO);
         int totalClients = clients.size();
-        int activeClients;
-        int inactiveClients;
-        int clientsInErrears;
-        //int overdueCount = overdue.size();
+        int activeClients = (int) clients.stream()
+        		.filter(c -> "ACTIVATED".equalsIgnoreCase(c.getActivationStatus()))
+        		.count();
+        int inactiveClients = (int) clients.stream()
+        		.filter(c -> "INACTIVE".equalsIgnoreCase(c.getActivationStatus()))
+        		.count();
+        
+        int clientsInErrears = ( int ) clients.stream()
+        		.filter(client -> {
+        			List<ClientBilling> billings = client.getClientBilling();
+        			
+        			//No payments at all
+        			if(billings == null || billings.isEmpty()) {
+        				return true;
+        			}
+        			
+        			//Latest payment
+        			LocalDate lastPaymentDate = billings.stream()
+        					.map(ClientBilling::getPaymentDate)
+        					.max(LocalDate::compareTo)
+        					.orElse(null);
+        			if(lastPaymentDate == null) {
+        				return true;
+        			}
+        			
+        			//3 months arrears rule
+        			return lastPaymentDate.isBefore(LocalDate.now().minusMonths(3));
+        		})
+        		.count();
         
         // 🔹 Sum of all payments
         List<ClientBilling> income = billingRepository.findAll();
@@ -58,7 +84,9 @@ public class DashboardService {
 	    
         return Map.of(
             "totalClients", totalClients,
-            //"overdueCount", overdueCount,
+            "activeClients", activeClients,
+            "inactiveClients", inactiveClients,
+            "clientsInErrears", clientsInErrears,
             "monthlyIncome", monthlyRevenue
         );
     }

@@ -1,6 +1,7 @@
 package com.itilria.altograce.repository.clientrepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -22,7 +23,7 @@ public interface ClientRepository extends JpaRepository<PrimaryClient, Long>{
     Optional<PrimaryClient> findByIdPassport(String idPassport);
     boolean existsById(long fileId);
     void deleteById(long fileId);
-    
+    List<PrimaryClient> findByCompanyId_Id(Long companyId);
     @Modifying
     @Transactional
     @Query("""
