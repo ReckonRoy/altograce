@@ -67,6 +67,7 @@ public class PremiumPolicyService{
         long count = premiumPolicyRepository.countByCompanyid_Id(userAuth.getCompanyId());
         if(count >= 1)
         {
+            //get policies that belong to this company
             List<PremiumPolicy> premiumPolicy = premiumPolicyRepository.findByCompanyid_Id(userAuth.getCompanyId());
             return premiumPolicy;
         }else{

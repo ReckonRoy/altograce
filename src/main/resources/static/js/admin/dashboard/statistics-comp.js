@@ -95,7 +95,7 @@ customElements.define('statistics-component', class extends HTMLElement{
 					
 					<div class="card">
 				        <h3>Clients in Arrears</h3>
-				        <p id="activeMembers">0</p>
+				        <p id="clientsInErrears">0</p>
 			      	</div>
 		   		</div>
 			</div>
@@ -144,7 +144,7 @@ customElements.define('statistics-component', class extends HTMLElement{
 				throw new Error(errorText);
 			}
 			
-			this.statisticsData = resolve.json();
+			this.statisticsData = await resolve.json();
 		}catch(error){
 			alert(error.message);
 		}
@@ -153,5 +153,14 @@ customElements.define('statistics-component', class extends HTMLElement{
 	
 	async #displayStatistics(){
 		await this.#fetchStatistics();
+		//populate div acrds with data
+		let totalClientsDiv = this.shadowRoot.getElementById("totalClients");
+		totalClientsDiv.textContent = this.statisticsData.totalClients;
+		
+		let activeClientsDiv = this.shadowRoot.getElementById("activeMembers");
+		activeClientsDiv.textContent = this.statisticsData.activeClients;
+		
+		let clientsInErrearsDiv = this.shadowRoot.getElementById("clientsInErrears");
+		clientsInErrearsDiv.textContent = this.statisticsData.clientsInErrears;
 	}
 });
