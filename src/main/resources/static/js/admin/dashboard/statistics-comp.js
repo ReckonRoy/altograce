@@ -94,6 +94,11 @@ customElements.define('statistics-component', class extends HTMLElement{
 		      		</div>
 					
 					<div class="card">
+		        		<h3>Inactive Members</h3>
+		        		<p id="inactiveMembers">0</p>
+		      		</div>
+					
+					<div class="card">
 				        <h3>Clients in Arrears</h3>
 				        <p id="clientsInErrears">0</p>
 			      	</div>
@@ -159,6 +164,9 @@ customElements.define('statistics-component', class extends HTMLElement{
 		
 		let activeClientsDiv = this.shadowRoot.getElementById("activeMembers");
 		activeClientsDiv.textContent = this.statisticsData.activeClients;
+		
+		let inactiveClientsDiv = this.shadowRoot.getElementById("inactiveMembers");
+		inactiveClientsDiv.textContent = this.statisticsData.inactiveClients;
 		
 		let clientsInErrearsDiv = this.shadowRoot.getElementById("clientsInErrears");
 		clientsInErrearsDiv.textContent = this.statisticsData.clientsInErrears;

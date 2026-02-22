@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.itilria.altograce.domain.Company;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -54,4 +55,9 @@ public class ClientBilling{
     @ManyToOne
     @JoinColumn(name = "primaryClient", referencedColumnName = "id")
     private PrimaryClient primaryClient;
+    
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "company", referencedColumnName = "id")
+    private Company company;
 }

@@ -55,24 +55,21 @@ public class DashboardService {
         
         int clientsInErrears = ( int ) clients.stream()
         		.filter(client -> {
-        			List<ClientBilling> billings = client.getClientBilling();
-        			
-        			//No payments at all
-        			if(billings == null || billings.isEmpty()) {
-        				return true;
-        			}
-        			
-        			//Latest payment
-        			LocalDate lastPaymentDate = billings.stream()
-        					.map(ClientBilling::getPaymentDate)
-        					.max(LocalDate::compareTo)
-        					.orElse(null);
-        			if(lastPaymentDate == null) {
-        				return true;
-        			}
-        			
-        			//3 months arrears rule
-        			return lastPaymentDate.isBefore(LocalDate.now().minusMonths(3));
+        		    List<ClientBilling> billings = client.getClientBilling();
+        		    if (billings == null || billings.isEmpty()) return 
+        		        "ACTIVE".equalsIgnoreCase(client.getActivationStatus());
+
+        		    LocalDate lastPaymentDate = billings.stream()
+        		            .map(ClientBilling::getPaymentDate)
+        		            .max(LocalDate::compareTo)
+        		            .orElse(null);
+
+        		    if (lastPaymentDate == null) return 
+        		        "ACTIVE".equalsIgnoreCase(client.getActivationStatus());
+
+        		    // Only count active clients whose last payment is > 3 months ago
+        		    return "ACTIVE".equalsIgnoreCase(client.getActivationStatus())
+        		            && lastPaymentDate.isBefore(LocalDate.now().minusMonths(3));
         		})
         		.count();
         

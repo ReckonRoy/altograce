@@ -11,6 +11,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.itilria.altograce.domain.client.ClientBilling;
 import com.itilria.altograce.domain.client.ClientSettings;
 import com.itilria.altograce.domain.client.PrimaryClient;
 import com.itilria.altograce.domain.funeral.Funeral;
@@ -101,6 +102,10 @@ public class Company
     @JsonIgnore
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrimaryClient> primaryClient;
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClientBilling> clientBilling;
     
     @JsonIgnore
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
