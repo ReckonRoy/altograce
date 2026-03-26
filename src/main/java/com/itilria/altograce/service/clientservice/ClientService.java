@@ -522,7 +522,20 @@ public class ClientService{
     
     
     // PROCESS CLIENT PAYMENT 
-    public List<ClientBilling> billClient(long clientId, ClientBilling billingData) {
+    public List<ClientBilling> billClient(String username, long clientId, ClientBilling billingData) {
+    	
+    	//check if staff is registered in database 
+    	UserAuthentication userAuth = userAuthRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+    	
+    	//check if staff belongs to this company
+    	Optional<Company> company = companyRepository.findById(userAuth.getCompanyId());
+        
+        if(!company.isPresent()){
+            throw new IllegalArgumentException("Failed to save your details, Company was not found in our database!");
+        }
+
+		long companyId = userAuth.getCompanyId();
     	
         PrimaryClient client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Client does not exist"));
@@ -541,7 +554,7 @@ public class ClientService{
         LocalDate paymentDate = billingData.getPaymentDate() != null ? billingData.getPaymentDate() : LocalDate.now();
         BigDecimal amountPaid = billingData.getAmountPaid();
         String paymentMethod = billingData.getPaymentMethod();
-    
+        
         List<ClientBilling> createdBillings = new ArrayList<>();
     
         //  Get last billing entry
@@ -559,22 +572,22 @@ public class ClientService{
         // 🔹 Generate billing entries for full months
         for (int i = 0; i < fullMonths; i++) {
             LocalDate billingMonth = startDate.plusMonths(i);
-            mergeOrCreateBilling(client, policy, billingMonth, monthlyFee, createdBillings, paymentMethod);
+            mergeOrCreateBilling(company.get(), client, policy, billingMonth, monthlyFee, createdBillings, paymentMethod);
         }
     
         // 🔹 Handle partial first/last month
         if (remainder.compareTo(BigDecimal.ZERO) > 0) {
             LocalDate partialMonth = startDate.plusMonths(fullMonths);
-            mergeOrCreateBilling(client, policy, partialMonth, remainder, createdBillings, paymentMethod);
+            mergeOrCreateBilling(company.get(), client, policy, partialMonth, remainder, createdBillings, paymentMethod);
         }
-    
+        
         return clientBillingRepository.saveAll(createdBillings);
     }
 
     /**
      * Merges the amount into an existing month if present, otherwise creates a new record.
      */
-    private void mergeOrCreateBilling(PrimaryClient client,PremiumPolicy premiumPolicy, LocalDate month, BigDecimal amount, List<ClientBilling> billings, String paymentMethod) {
+    private void mergeOrCreateBilling(Company company, PrimaryClient client,PremiumPolicy premiumPolicy, LocalDate month, BigDecimal amount, List<ClientBilling> billings, String paymentMethod) {
         // Check DB for an existing payment in the same month
         ClientBilling existing = clientBillingRepository
                 .findByPrimaryClientIdAndPaymentDate(client.getId(), month)
@@ -596,6 +609,7 @@ public class ClientService{
             billing.setAmountPaid(amount);
             billing.setPartialPayment(amount.compareTo(premiumPolicy.getPremiumAmount()) < 0);
             billing.setPaymentMethod(paymentMethod);
+            billing.setCompany(company);
             billings.add(billing);
         }
     }

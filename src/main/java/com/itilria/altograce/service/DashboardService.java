@@ -40,9 +40,11 @@ public class DashboardService {
     	
     	//check if staff belongs to this company
         companyRepository.findById(userAuth.getCompanyId())
-                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+                .orElseThrow(() -> new IllegalArgumentException("This account does not have a company registered to it."
+                		+ " Please register a company in order to view dashboard analytics"));
 
 		long companyId = userAuth.getCompanyId();
+		
         List<PrimaryClient> clients = clientRepository.findByCompanyId_Id(companyId);
         //List<PrimaryClient> overdue = clientRepository.findByBalanceGreaterThan(BigDecimal.ZERO);
         int totalClients = clients.size();
@@ -74,7 +76,7 @@ public class DashboardService {
         		.count();
         
         // 🔹 Sum of all payments
-        List<ClientBilling> income = billingRepository.findAll();
+        List<ClientBilling> income = billingRepository.findByCompany_Id(companyId);
 	    BigDecimal monthlyRevenue = income.stream()
 	            .map(b -> Optional.ofNullable(b.getAmountPaid()).orElse(BigDecimal.ZERO))
 	            .reduce(BigDecimal.ZERO, BigDecimal::add);

@@ -295,7 +295,7 @@ public class ClientManagementController{
             @RequestBody ClientBilling request) {
 
         UserAuthentication result = userAuthService.findByUsername(userDetails.getUsername()).get();
-        List<ClientBilling> billingResults = clientService.billClient(clientId, request);
+        List<ClientBilling> billingResults = clientService.billClient(userDetails.getUsername(), clientId, request);
 
         if (!billingResults.isEmpty()) {
             clientService.staffAudit("Billing", userDetails.getUsername(), clientId, result.getId());

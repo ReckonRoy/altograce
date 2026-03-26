@@ -42,14 +42,13 @@ public class PackageController{
     @PostMapping("/add-package")
     public ResponseEntity<?> addPremiumPolicy(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PremiumPolicy request)
     {
-        PremiumPolicy result = premiumPolicyService.addPremiumPolicy(userDetails.getUsername(), request);
-        if(result != null)
-        {
-            return ResponseEntity.ok(result);
-        }else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body("Sorry policy could not be saved");
-        }
+    	try {
+	        PremiumPolicy result = premiumPolicyService.addPremiumPolicy(userDetails.getUsername(), request);
+	        return ResponseEntity.ok(result);
+    	}catch(Exception ex) {
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    	    .body(ex.getMessage());
+    	}
     }
 
     @GetMapping("/packages")

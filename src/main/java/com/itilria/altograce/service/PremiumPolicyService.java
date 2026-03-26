@@ -40,24 +40,28 @@ public class PremiumPolicyService{
     //habndle add premium policy
     public PremiumPolicy addPremiumPolicy(String username, PremiumPolicy policyData)
     {
-        UserAuthentication userAuth = userAuthenticationRepository.findByUsername(username).orElse(null);
+        UserAuthentication userAuth = userAuthenticationRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Access denied! Please login."));
+
         Optional<Company> company = companyRepository.findById(userAuth.getCompanyId());
-        if(userAuth != null)
-        {
-            PremiumPolicy premiumPolicy = new PremiumPolicy();
-            premiumPolicy.setPolicyName(policyData.getPolicyName());
-            premiumPolicy.setMembersCount(policyData.getMembersCount());
-            premiumPolicy.setPremiumAmount(policyData.getPremiumAmount());
-            premiumPolicy.setMinAge(policyData.getMinAge());
-            premiumPolicy.setMaxAge(policyData.getMaxAge());
-            premiumPolicy.setLapsePeriod(policyData.getLapsePeriod());
-            premiumPolicy.setWaitPeriod(policyData.getWaitPeriod());
-            premiumPolicy.setPolicyBenefits(policyData.getPolicyBenefits());
-            premiumPolicy.setCompanyid(company.get());
-            return premiumPolicyRepository.save(premiumPolicy);
-        }else{
-            return null;
+        if(!company.isPresent()) {
+        	throw new IllegalArgumentException("This account does not have a company registered to it."
+        			+ " Please register a company in order to add policies");
         }
+        
+        //Proceed to adding Policy Package
+        PremiumPolicy premiumPolicy = new PremiumPolicy();
+        premiumPolicy.setPolicyName(policyData.getPolicyName());
+        premiumPolicy.setMembersCount(policyData.getMembersCount());
+        premiumPolicy.setPremiumAmount(policyData.getPremiumAmount());
+        premiumPolicy.setMinAge(policyData.getMinAge());
+        premiumPolicy.setMaxAge(policyData.getMaxAge());
+        premiumPolicy.setLapsePeriod(policyData.getLapsePeriod());
+        premiumPolicy.setWaitPeriod(policyData.getWaitPeriod());
+        premiumPolicy.setPolicyBenefits(policyData.getPolicyBenefits());
+        premiumPolicy.setCompanyid(company.get());
+        
+        return premiumPolicyRepository.save(premiumPolicy);
     }
     
     //handle get policies

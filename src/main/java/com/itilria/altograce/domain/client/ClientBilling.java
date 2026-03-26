@@ -56,7 +56,7 @@ public class ClientBilling{
     @JoinColumn(name = "primaryClient", referencedColumnName = "id")
     private PrimaryClient primaryClient;
     
-    @JsonBackReference
+  
     @ManyToOne
     @JoinColumn(name = "company", referencedColumnName = "id")
     private Company company;

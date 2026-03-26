@@ -645,21 +645,15 @@
                 body: JSON.stringify(packageData),
             })
             .then(response => {
-                if (response.status !== 200) {
+                if (!response.ok) {
                     flashMessage("error-flash-message", "Error saving premium policy");
-                    return;
+                }else{
+                	flashMessage("success-message", "Package has been successfuly saved");
+                	updatePackageTable();
                 }
-                return response.json()
+                closePackageForm();
+                
             })
-            .then(data => {
-                //pass message to modal box
-                let message = `Package has been successfuly saved`;
-                // Update the table with the new data
-                updatePackageTable();
-
-                flashMessage("success-message", message);
-            })
-            closePackageForm();
         }
     }
 
@@ -920,7 +914,7 @@ let updatePackageTable = () => {
             })
             .then(response => {
                 if (response.status !== 200) {
-                    return errorFlashMessage("Error saving addtional policy");
+                    return errorFlashMessage(response.text());
                     
                 }else{
                     let message = `Addtitional policy has been successfuly saved!`;
